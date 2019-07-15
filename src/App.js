@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 import "./App.css";
 
-import Event from "./components/Event.js";
+import CoreEvent from "./components/CORE_Event.js";
+import CoreStructure from "./components/CORE_Structure.js";
 
 import { Provider as ReduxProvider } from "react-redux";
 import configureStore from "./modules/store";
@@ -14,7 +15,8 @@ class App extends Component {
     return (
       <ReduxProvider store={reduxStore}>
         <div className="App">
-          <Event/>
+          <CoreEvent/>
+          <CoreStructure/>
         </div>
       </ReduxProvider>
     );

@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form'
 
 import { connect } from "react-redux";
 
-class Event extends Component {
+class CORE_Event extends Component {
     constructor(props) {
         super(props);
         this.state = { event_type: null};
@@ -11,10 +11,6 @@ class Event extends Component {
     }
 
   handleChange(event) {
-    console.log(event.target.value);
-    this.setState({
-      event_type: event.target.value
-    });
     this.props.update({
       event_type: event.target.value
     });
@@ -54,4 +50,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Event);
+)(CORE_Event);
