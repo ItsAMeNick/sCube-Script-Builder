@@ -12,7 +12,7 @@ const sCubeReducer = (state = initialState, action) => {
     switch (action.type) {
     case "dump_store": {
         console.log(state);
-        break;
+        return state;
     }
 
     case "update_event_type": {
