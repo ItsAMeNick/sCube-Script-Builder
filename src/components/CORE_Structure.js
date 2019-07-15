@@ -11,7 +11,6 @@ class CORE_Structure extends Component {
     }
 
   handleChange(event) {
-      console.log(this.props)
     if (event.target.id === "module") {
         this.props.update({
             module: event.target.value,

@@ -1,11 +1,20 @@
 import _ from "lodash";
 
 const initialState = {
-  event_type: null
+    event_type: null,
+    structure_module: null,
+    structure_type: null,
+    structure_subtype: null,
+    structure_category: null
 };
 
 const sCubeReducer = (state = initialState, action) => {
-  switch (action.type) {
+    switch (action.type) {
+    case "dump_store": {
+        console.log(state);
+        break;
+    }
+
     case "update_event_type": {
         let newState = _.cloneDeep(state);
         newState["event_type"] = action.payload.event_type;
@@ -21,8 +30,8 @@ const sCubeReducer = (state = initialState, action) => {
     }
 
     default:
-      return state;
-  }
+        return state;
+    }
 };
 
 export default sCubeReducer;
