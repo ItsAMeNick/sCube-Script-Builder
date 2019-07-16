@@ -28,6 +28,7 @@ class App extends Component {
         <ReduxProvider store={reduxStore}>
         <div>
         <Container>
+            <Row> <h6>&nbsp;</h6> </Row>
             <Row>
                 <h1>[s]Cube Script Builder</h1>
             </Row> <hr/> <Row>

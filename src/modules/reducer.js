@@ -3,14 +3,15 @@ import _ from "lodash";
 const initialState = {
     event_type: null,
     show_debug: false,
-    conditions: [{
-        key: 0,
+    conditions: { "1": {
+        key: 1,
+        condition_type: null,
         comparison_x: null,
         comparison_type: null,
         comparison_y: null,
-        sub_conditions: [],
+        sub_conditions: {},
         actions: []
-    }],
+    }},
     structure: {
         module: "NA",
         type: "NA",
@@ -66,6 +67,11 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "update_fees": {
+        let newState = _.cloneDeep(state);
+        newState.fees = action.payload.fees;
+        return newState;
+    }
     case "add_fee": {
         let newState = _.cloneDeep(state);
         newState.fees.push(
@@ -82,9 +88,15 @@ const sCubeReducer = (state = initialState, action) => {
         );
         return newState;
     }
-    case "update_fees": {
+
+    case "update_conditions": {
         let newState = _.cloneDeep(state);
-        newState.fees = action.payload.fees;
+        newState.conditions = action.payload.conditions;
+        return newState;
+    }
+    case "add_condit_flat": {
+        let newState = _.cloneDeep(state);
+
         return newState;
     }
 
