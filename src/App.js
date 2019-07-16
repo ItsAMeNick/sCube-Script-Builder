@@ -1,13 +1,18 @@
 import React, { Component } from "react";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 import "./App.css";
 
-import CoreEvent from "./components/CORE_Event.js";
-import CoreStructure from "./components/CORE_Structure.js";
+import Core from "./components/CORE.js";
 import CoreFunction from "./components/CORE_Function.js";
+
 import TestShowDebug from "./components/TEST_ShowDebug.js";
 
-import Fees from "./components/FEE_FeeContainer.js";
+import Fees from "./components/FEE_Container.js";
+
+import ConditContainer from "./components/CONDIT_Container.js"
 
 import Generate from "./components/CORE_GenerateOutput.js";
 import TestDump from "./components/TEST_DUMP.js";
@@ -21,14 +26,26 @@ class App extends Component {
     render() {
         return (
         <ReduxProvider store={reduxStore}>
-        <div className="App">
-            <CoreEvent/>
-            <CoreStructure/>
-            <CoreFunction/>
-            <TestShowDebug/>
-            <Fees/>
+        <div>
+        <Container>
+            <Row>
+                <h1>[s]Cube Script Builder</h1>
+            </Row> <hr/> <Row>
+                <Col>
+                    <Core/>
+                </Col> <Col>
+                    <CoreFunction/>
+                    <hr/>
+                    <TestShowDebug/>
+                </Col>
+            </Row> <Row>
+                <Fees/>
+            </Row> <Row>
+                <ConditContainer/>
+            </Row>
             <Generate/>
             <TestDump/>
+        </Container>
         </div>
         </ReduxProvider>
         );

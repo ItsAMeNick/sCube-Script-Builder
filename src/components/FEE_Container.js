@@ -8,13 +8,8 @@ class FEE_FeeContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.handleChange = this.handleChange.bind(this);
         this.generateFeeItem = this.generateFeeItem.bind(this);
     }
-
-    handleChange(event) {
-        console.log(this.props);
-    };
 
     addFee = () => {
         this.props.add();
@@ -34,6 +29,8 @@ class FEE_FeeContainer extends Component {
         <div>
         {this.props.functionality ?
         <div>
+            <hr/>
+            <h3>Fee Portlet</h3>
             <Table striped bordered hover>
                 <thead>
                     <tr>
