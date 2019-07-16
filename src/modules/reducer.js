@@ -4,10 +4,10 @@ const initialState = {
     event_type: null,
     show_debug: false,
     structure: {
-        module: null,
-        type: null,
-        subtype: null,
-        category: null
+        module: "NA",
+        type: "NA",
+        subtype: "NA",
+        category: "NA"
     },
     functionality: {
         fees: false,
@@ -21,8 +21,8 @@ const initialState = {
         schedule: null,
         period: "FINAL",
         quantity: null,
-        invoice: false,
-        duplicate: false,
+        invoice: null,
+        duplicate: null,
         sequence: null
     }]
 

@@ -37,16 +37,16 @@ class FEE_FeeItem extends Component {
             </td>
             <td>
                 <Form.Control id="invoice" as="select" onChange={this.handleChange}>
-                    <option></option>
-                    <option value={true}>Yes</option>
-                    <option value={false}>No</option>
+                    <option value={null}></option>
+                    <option value={"Y"}>Yes</option>
+                    <option value={"N"}>No</option>
                 </Form.Control>
             </td>
             <td>
                 <Form.Control id="duplicate" as="select" onChange={this.handleChange}>
-                    <option></option>
-                    <option value={true}>Yes</option>
-                    <option value={false}>No</option>
+                    <option value={null}></option>
+                    <option value={"Y"}>Yes</option>
+                    <option value={"N"}>No</option>
                 </Form.Control>
             </td>
             <td>
