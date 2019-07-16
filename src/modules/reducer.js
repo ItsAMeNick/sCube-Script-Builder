@@ -5,7 +5,13 @@ const initialState = {
     structure_module: null,
     structure_type: null,
     structure_subtype: null,
-    structure_category: null
+    structure_category: null,
+    functionality: {
+        fees: false,
+        notification_send: false,
+        status_update: false,
+        inspection_schedule: false
+    }
 };
 
 const sCubeReducer = (state = initialState, action) => {
@@ -26,6 +32,13 @@ const sCubeReducer = (state = initialState, action) => {
         newState["structure_type"] = action.payload.type;
         newState["structure_subtype"] = action.payload.subtype;
         newState["structure_category"] = action.payload.category;
+        return newState;
+    }
+
+    case "update_functionality": {
+        console.log(action)
+        let newState = _.cloneDeep(state);
+        newState["functionality"] = action.payload.functionality;
         return newState;
     }
 
