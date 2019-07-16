@@ -6,7 +6,7 @@ import CoreEvent from "./components/CORE_Event.js";
 import CoreStructure from "./components/CORE_Structure.js";
 import CoreFunction from "./components/CORE_Function.js";
 
-import FeeItem from "./components/FEE_FeeItem.js";
+import Fees from "./components/FEE_FeeContainer.js";
 
 import TestDump from "./components/TEST_DUMP.js";
 
@@ -23,7 +23,7 @@ class App extends Component {
             <CoreEvent/>
             <CoreStructure/>
             <CoreFunction/>
-            <FeeItem/>
+            <Fees/>
             <TestDump/>
         </div>
         </ReduxProvider>
