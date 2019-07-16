@@ -5,6 +5,7 @@ import "./App.css";
 import CoreEvent from "./components/CORE_Event.js";
 import CoreStructure from "./components/CORE_Structure.js";
 import CoreFunction from "./components/CORE_Function.js";
+import TestShowDebug from "./components/TEST_ShowDebug.js";
 
 import Fees from "./components/FEE_FeeContainer.js";
 
@@ -24,6 +25,7 @@ class App extends Component {
             <CoreEvent/>
             <CoreStructure/>
             <CoreFunction/>
+            <TestShowDebug/>
             <Fees/>
             <Generate/>
             <TestDump/>

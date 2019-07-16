@@ -52,6 +52,12 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "update_show_debug": {
+        let newState = _.cloneDeep(state);
+        newState.show_debug = action.payload.show_debug;
+        return newState;
+    }
+
     case "add_fee": {
         let newState = _.cloneDeep(state);
         newState.fees.push(
