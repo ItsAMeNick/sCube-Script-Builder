@@ -25,6 +25,9 @@ class CORE_GenerateOutput extends Component {
                                             + today.getDate() + "/"
                                             + today.getFullYear() + "\n";
             initialComment += "\n";
+        } else {
+            //Must provide event and module before anything can generate.
+            return "";
         }
 
         if (this.props.state.show_debug === true) {
