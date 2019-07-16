@@ -8,6 +8,7 @@ import CoreFunction from "./components/CORE_Function.js";
 
 import Fees from "./components/FEE_FeeContainer.js";
 
+import Generate from "./components/CORE_GenerateOutput.js";
 import TestDump from "./components/TEST_DUMP.js";
 
 import { Provider as ReduxProvider } from "react-redux";
@@ -24,6 +25,7 @@ class App extends Component {
             <CoreStructure/>
             <CoreFunction/>
             <Fees/>
+            <Generate/>
             <TestDump/>
         </div>
         </ReduxProvider>

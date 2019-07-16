@@ -6,7 +6,7 @@ class TEST_DUMP extends Component {
     render() {
         return (
         <button onClick={lol => (this.props.dump())}>
-            SHOW ALL
+            PRINT STORE TO CONSOLE
         </button>
         );
     }

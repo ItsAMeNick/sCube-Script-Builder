@@ -2,6 +2,7 @@ import _ from "lodash";
 
 const initialState = {
     event_type: null,
+    show_debug: false,
     structure: {
         module: null,
         type: null,
@@ -15,10 +16,10 @@ const initialState = {
         inspection_schedule: false
     },
     fees: [{
-        key: 1,
+        key: 0,
         code: null,
         schedule: null,
-        period: null,
+        period: "FINAL",
         quantity: null,
         invoice: false,
         duplicate: false,
@@ -65,6 +66,11 @@ const sCubeReducer = (state = initialState, action) => {
                 sequence: null
             }
         );
+        return newState;
+    }
+    case "update_fees": {
+        let newState = _.cloneDeep(state);
+        newState.fees = action.payload.fees;
         return newState;
     }
 

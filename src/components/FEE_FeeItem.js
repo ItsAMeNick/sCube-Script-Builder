@@ -10,16 +10,17 @@ class FEE_FeeItem extends Component {
     }
 
     handleChange(event) {
+        let newFees = this.props.fees;
+        newFees[this.props.fee_number][event.target.id] = event.target.value;
         this.props.update({
-            event_type: event.target.value
+            fees: newFees
         });
-        event.preventDefault();
     };
 
     render() {
         return (
         <tr>
-            <td>{this.props.fee_number}</td>
+            <td>{this.props.fee_number + 1}</td>
             <td>
                 <Form.Control id="code" type="text" onChange={this.handleChange}/>
             </td>
