@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form'
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 import { connect } from "react-redux";
 
@@ -21,16 +24,36 @@ class CORE_Structure extends Component {
     render() {
         return (
         <div>
-            <Form>
-            <Form.Label>Module:</Form.Label>
-                <Form.Control id="module" type="text" onChange={this.handleChange}/>
-            <Form.Label>Type:</Form.Label>
-                <Form.Control id="type" type="text" onChange={this.handleChange}/>
-            <Form.Label>SubType:</Form.Label>
-                <Form.Control id="subtype" type="text" onChange={this.handleChange}/>
-            <Form.Label>Category:</Form.Label>
-                <Form.Control id="category" type="text" onChange={this.handleChange}/>
-            </Form>
+        <Container>
+            <Row>
+                <Form.Label>Please define the four level structure:</Form.Label>
+            </Row>
+            <Row>
+                <Col>
+                    <Form.Label>Module:</Form.Label>
+                </Col> <Col>
+                    <Form.Control id="module" type="text" onChange={this.handleChange}/>
+                </Col>
+            </Row> <br/> <Row>
+                <Col>
+                    <Form.Label>Type: </Form.Label>
+                </Col> <Col>
+                    <Form.Control id="type" type="text" onChange={this.handleChange}/>
+                </Col>
+            </Row> <br/> <Row>
+                <Col>
+                    <Form.Label>SubType:</Form.Label>
+                </Col> <Col>
+                    <Form.Control id="subtype" type="text" onChange={this.handleChange}/>
+                </Col>
+            </Row> <br/> <Row>
+                <Col>
+                    <Form.Label>Category:</Form.Label>
+                </Col> <Col>
+                    <Form.Control id="category" type="text" onChange={this.handleChange}/>
+                </Col>
+            </Row>
+        </Container>
         </div>
         );
     }

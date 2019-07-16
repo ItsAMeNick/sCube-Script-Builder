@@ -3,6 +3,14 @@ import _ from "lodash";
 const initialState = {
     event_type: null,
     show_debug: false,
+    conditions: [{
+        key: 0,
+        comparison_x: null,
+        comparison_type: null,
+        comparison_y: null,
+        sub_conditions: [],
+        actions: []
+    }],
     structure: {
         module: "NA",
         type: "NA",
