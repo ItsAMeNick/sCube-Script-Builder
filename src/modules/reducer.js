@@ -35,7 +35,6 @@ const sCubeReducer = (state = initialState, action) => {
     }
 
     case "update_functionality": {
-        console.log(action)
         let newState = _.cloneDeep(state);
         newState["functionality"] = action.payload.functionality;
         return newState;

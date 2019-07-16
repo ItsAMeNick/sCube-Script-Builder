@@ -3,26 +3,23 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 class TEST_DUMP extends Component {
-  render() {
-    return (
-    <button onClick={lol => (this.props.dump())}>
-      SHOW ALL
-    </button>
-    );
-  }
+    render() {
+        return (
+        <button onClick={lol => (this.props.dump())}>
+            SHOW ALL
+        </button>
+        );
+    }
 }
 
 const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  dump: item => dispatch({
-      type: "dump_store",
-      payload: null
-  })
+    dump: item => dispatch({
+        type: "dump_store",
+        payload: null
+    })
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TEST_DUMP);
+export default connect(mapStateToProps, mapDispatchToProps)(TEST_DUMP);

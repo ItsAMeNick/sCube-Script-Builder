@@ -16,19 +16,19 @@ import configureStore from "./modules/store";
 const reduxStore = configureStore(window.REDUX_INITIAL_DATA);
 
 class App extends Component {
-  render() {
-    return (
-      <ReduxProvider store={reduxStore}>
+    render() {
+        return (
+        <ReduxProvider store={reduxStore}>
         <div className="App">
-          <CoreEvent/>
-          <CoreStructure/>
-          <CoreFunction/>
-          <FeeItem/>
-          <TestDump/>
+            <CoreEvent/>
+            <CoreStructure/>
+            <CoreFunction/>
+            <FeeItem/>
+            <TestDump/>
         </div>
-      </ReduxProvider>
-    );
-  }
+        </ReduxProvider>
+        );
+    }
 }
 
 export default App;
