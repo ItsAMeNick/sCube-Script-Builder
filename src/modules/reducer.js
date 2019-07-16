@@ -2,10 +2,12 @@ import _ from "lodash";
 
 const initialState = {
     event_type: null,
-    structure_module: null,
-    structure_type: null,
-    structure_subtype: null,
-    structure_category: null,
+    structure: {
+        module: null,
+        type: null,
+        subtype: null,
+        category: null
+    },
     functionality: {
         fees: false,
         notification_send: false,
@@ -28,10 +30,7 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "update_structure": {
         let newState = _.cloneDeep(state);
-        newState["structure_module"] = action.payload.module;
-        newState["structure_type"] = action.payload.type;
-        newState["structure_subtype"] = action.payload.subtype;
-        newState["structure_category"] = action.payload.category;
+        newState["structure"] = action.payload.structure;
         return newState;
     }
 
