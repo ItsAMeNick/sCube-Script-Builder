@@ -96,10 +96,15 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "add_condit_flat": {
         let newState = _.cloneDeep(state);
-        let k = Object.keys(state.conditions);
-        newState.conditions["2"] =
+        let ids = Object.keys(state.conditions).map(c => {return c.split(".")});
+        let m = 0;
+        for (let k in ids) {
+            m = Math.max(m,ids[k][0]);
+        }
+        m+=1;
+        newState.conditions[m.toString()] =
             {
-                key: "2",
+                key: m.toString(),
                 condition_type: null,
                 comparison_x: null,
                 comparison_type: null,

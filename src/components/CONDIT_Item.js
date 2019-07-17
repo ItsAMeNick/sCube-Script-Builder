@@ -114,10 +114,10 @@ class CONDIT_Item extends Component {
                 <Form.Control id={"comparison_y-"+this.props.id} type="text" placeholder="Compare Against" onChange={this.handleChange}/>
             </td>
             <td>
-                add action
+                AA
             </td>
             <td>
-                add subcondition
+                ASC
             </td>
         </tr>
         );
