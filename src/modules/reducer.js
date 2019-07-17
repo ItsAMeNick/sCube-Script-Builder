@@ -4,7 +4,7 @@ const initialState = {
     event_type: null,
     show_debug: false,
     conditions: { "1": {
-        key: 1,
+        key: "1",
         condition_type: null,
         comparison_x: null,
         comparison_type: null,
@@ -96,7 +96,17 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "add_condit_flat": {
         let newState = _.cloneDeep(state);
-
+        let k = Object.keys(state.conditions);
+        newState.conditions["2"] =
+            {
+                key: "2",
+                condition_type: null,
+                comparison_x: null,
+                comparison_type: null,
+                comparison_y: null,
+                sub_conditions: {},
+                actions: []
+            }
         return newState;
     }
 

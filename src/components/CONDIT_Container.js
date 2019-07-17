@@ -11,7 +11,14 @@ class CONDIT extends Component {
     }
 
     generateConditTable = () => {
-
+        let cons_ids = Object.keys(this.props.conditions);
+        cons_ids.sort();
+        let cons = [];
+        for (let c in cons_ids) {
+            let cc = cons_ids[c];
+            cons.push(<ConditItem  key={this.props.conditions[cc].key} id={this.props.conditions[cc].key}/>)
+        }
+        return cons;
     }
 
     render() {
@@ -29,21 +36,24 @@ class CONDIT extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {/*this.generateConditTable()*/}
-                    <ConditItem key="1" id="1"/>
-
+                    {this.generateConditTable()}
                 </tbody>
             </Table>
-            <button onClick={this.addFee}> Add Fee </button>
+            <button onClick={this.props.addConditFlat}> Add Condition </button>
         </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
+    conditions: state.conditions
 });
 
 const mapDispatchToProps = dispatch => ({
+    addConditFlat: () => dispatch({
+        type: "add_condit_flat",
+        payload: null
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CONDIT);

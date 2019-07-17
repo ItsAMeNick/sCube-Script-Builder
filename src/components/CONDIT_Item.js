@@ -55,14 +55,16 @@ class CONDIT_Item extends Component {
     }
 
     generateCompTypes = () => {
-        if (this.props.conditions[this.props.id] === null) return (<option/>);
+        if (this.props.conditions[this.props.id].comparison_x === null) return (<option/>);
         let types = [];
-        let x = data.comparison_x[this.props.conditions[this.props.id].comparison_x];
+        let x = data.comparison_x[this.props.conditions[this.props.id].condition_type];
+        //Get the Type of the comparison_x
         for (let i in x) {
             if (x[i].value === this.props.conditions[this.props.id].comparison_x) {
-                var type = data.comparison_x[this.props.conditions[this.props.id].comparison_x][i].type;
+                var type = x[i].type;
             }
         }
+        if (x[0].label === "cf") type = "string";
         let options = data.comparison_types[type];
         for (let t in options) {
             types.push(<option key={t} value={options[t].value}>{options[t].label}</option>);
@@ -74,7 +76,7 @@ class CONDIT_Item extends Component {
         return (
         <tr>
             <td>
-                1
+                {this.props.id}
             </td>
             <td>
                 <Form.Control id="condition_type" as="select" onChange={this.handleChange}>
@@ -108,8 +110,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addFlat: () => dispatch({
-        type: "add_condit_flat",
+    addAction: () => dispatch({
+        type: "add_condit_action",
         payload: null
     }),
     addSub: () => dispatch({
