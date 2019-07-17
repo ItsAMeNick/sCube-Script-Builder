@@ -9,7 +9,6 @@ const initialState = {
         comparison_x: null,
         comparison_type: null,
         comparison_y: null,
-        sub_conditions: {},
         actions: [],
         level: 1
     }},
@@ -110,7 +109,6 @@ const sCubeReducer = (state = initialState, action) => {
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,
-                sub_conditions: {},
                 actions: [],
                 level: 1
             }
@@ -136,7 +134,6 @@ const sCubeReducer = (state = initialState, action) => {
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,
-                sub_conditions: {},
                 actions: [],
                 level: myLevel
             }

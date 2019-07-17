@@ -128,8 +128,12 @@ var data = {
                 value: null
             },
             {
-                label: "=",
-                value: "equal"
+                label: "Equal To",
+                value: "=="
+            },
+            {
+                label: "Not Equal To",
+                value: "!="
             }
         ]
     }

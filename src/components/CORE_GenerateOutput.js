@@ -1,17 +1,31 @@
 import React, { Component } from 'react';
-
 import { connect } from "react-redux";
+import _ from "lodash";
+
+var script_text = "";
 
 class CORE_GenerateOutput extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.parseConditions = this.parseConditions.bind(this);
+    }
+
+    genName = u => {
+        if (this.props.state.event_type != null && this.props.state.structure.module !== "NA") {
+            let n = this.props.state.event_type+":"
+                +this.props.state.structure.module+"/"
+                +this.props.state.structure.type+"/"
+                +this.props.state.structure.subtype+"/"
+                +this.props.state.structure.category+"\n";
+            if (u) n = n.toUpperCase();
+            return n;
+            }
     }
 
     generateScript = () => {
         let today = new Date();
-
-        let script_text = "";
+        script_text = "";
         let initialComment_text = "";
         let showDebug_text = "";
         let fees_text = "";
@@ -22,13 +36,13 @@ class CORE_GenerateOutput extends Component {
                                 +this.props.state.structure.type+"/"
                                 +this.props.state.structure.subtype+"/"
                                 +this.props.state.structure.category+"\n";
-            initialComment_text += "Created: " + (today.getMonth()+1) +"/"
+            initialComment_text += "//Created: " + (today.getMonth()+1) +"/"
                                                 + today.getDate() + "/"
                                                 + today.getFullYear() + "\n";
             initialComment_text += "\n";
         } else {
             //Must provide event and module before anything can generate.
-            return "";
+            return "Please provide an Event and a Module.";
         }
 
         if (this.props.state.show_debug === true) {
@@ -54,8 +68,49 @@ class CORE_GenerateOutput extends Component {
 
         script_text += initialComment_text;
         script_text += showDebug_text;
+
+        //NEED TO ADD "DEFINE VARIABLES" !!!
+
         script_text += fees_text;
+        this.parseConditions(1, "");
         return script_text;
+    }
+
+    parseConditions = (level, parent) => {
+        console.log(level, parent);
+        //Create a list of condition only at my level.
+        let conditions = Object.keys(this.props.state.conditions).map(c => {
+            console.log("BOI: "+this.props.state.conditions[c]);
+            if (this.props.state.conditions[c].level === level) {
+                return this.props.state.conditions[c];
+            } else {
+                return null;
+            }
+        }).filter(c => {
+            return (c !== null);
+        }).filter(c => {
+            return (_.initial(c.key.split(".")).join(".") === parent);
+        });
+        //Escape
+        console.log(conditions);
+        if (conditions.length === 0) return null;
+        for (let c in conditions) {
+            script_text += "if (";
+            if (conditions[c].condition_type === "cf") {
+                //Will use variable mapper later !!!
+                script_text += "getAppSpecific(\"" + conditions[c].comparison_x + "\") ";
+            } else {
+                script_text += conditions[c].comparison_x + " ";
+            }
+
+            script_text += conditions[c].comparison_type + " ";
+
+            script_text += "\"" + conditions[c].comparison_y + "\") {\n";
+
+            this.parseConditions(level+1, conditions[c].key);
+
+            script_text += "}\n"
+        }
     }
 
     render() {
@@ -63,6 +118,8 @@ class CORE_GenerateOutput extends Component {
         <div>
             <button>Generate Script</button>
             <br/>
+            <p>Script Code: {this.genName(true)}</p>
+            <p>Script Name: {this.genName()}</p>
             <textarea rows="20" cols="100" value={this.generateScript()} readOnly={true} />
         </div>
         );

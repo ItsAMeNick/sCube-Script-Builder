@@ -93,8 +93,7 @@ class CONDIT_Item extends Component {
     }
 
     handleAddSub() {
-        console.log(this.props.id)
-        this.props.addSub(this.props.id)
+        this.props.addSub(this.props.id);
     }
 
     render() {
@@ -120,7 +119,7 @@ class CONDIT_Item extends Component {
                 <Form.Control id={"comparison_y-"+this.props.id} type="text" placeholder="Compare Against" onChange={this.handleChange}/>
             </td>
             <td>
-                <button>+ Action</button>
+                <button onClick={this.props.addAction(this.props.id)}>+ Action</button>
             </td>
             <td>
                 <button onClick={this.handleAddSub}>+ SubCondition</button>
