@@ -15,7 +15,26 @@ class CONDIT_Item extends Component {
 
     handleChange(event) {
         let newConditions = this.props.conditions;
-        newConditions[this.props.id][event.target.id] = event.target.value;
+        let type = event.target.id.split("-");
+        newConditions[this.props.id][type[0]] = event.target.value;
+        //Need to be very carseful with the condition Builder
+        //Adding in checks to make sure that all fields to the "right" are cleared
+        if (event.target.id === "condition_type-"+this.props.id) {
+            document.getElementById("comparison_x-"+this.props.id).value = "";
+            newConditions[this.props.id].comparison_x = "";
+            document.getElementById("comparison_type-"+this.props.id).value = "";
+            newConditions[this.props.id].comparison_type = "";
+            document.getElementById("comparison_y-"+this.props.id).value = "";
+            newConditions[this.props.id].comparison_y = "";
+        } else if (event.target.id === "comparison_x-"+this.props.id) {
+            document.getElementById("comparison_type-"+this.props.id).value = "";
+            newConditions[this.props.id].comparison_type = "";
+            document.getElementById("comparison_y-"+this.props.id).value = "";
+            newConditions[this.props.id].comparison_y = "";
+        } else if (event.target.id === "comparison_type-"+this.props.id) {
+            document.getElementById("comparison_y-"+this.props.id).value = "";
+            newConditions[this.props.id].comparison_y = "";
+        }
         this.props.update({
             conditions: newConditions
         });
@@ -33,11 +52,11 @@ class CONDIT_Item extends Component {
     handleX = () => {
         if (this.props.conditions[this.props.id].condition_type === "cf") {
             return (
-                <Form.Control id="comparison_x" type="text" placeholder="Custom Field Name" onChange={this.handleChange}/>
+                <Form.Control id={"comparison_x-"+this.props.id} type="text" placeholder="Custom Field Name" onChange={this.handleChange}/>
             );
         } else {
             return (
-                <Form.Control id="comparison_x" as="select" onChange={this.handleChange}>
+                <Form.Control id={"comparison_x-"+this.props.id} as="select" onChange={this.handleChange}>
                     {this.generateX()}
                 </Form.Control>
             );
@@ -79,7 +98,7 @@ class CONDIT_Item extends Component {
                 {this.props.id}
             </td>
             <td>
-                <Form.Control id="condition_type" as="select" onChange={this.handleChange}>
+                <Form.Control id={"condition_type-"+this.props.id} as="select" onChange={this.handleChange}>
                     {this.generateConditTypes()}
                 </Form.Control>
             </td>
@@ -87,12 +106,12 @@ class CONDIT_Item extends Component {
                 {this.handleX()}
             </td>
             <td>
-                <Form.Control id="comparison_type" as="select" onChange={this.handleChange}>
+                <Form.Control id={"comparison_type-"+this.props.id} as="select" onChange={this.handleChange}>
                     {this.generateCompTypes()}
                 </Form.Control>
             </td>
             <td>
-                <Form.Control id="comparison_y" type="text" placeholder="Compare Against" onChange={this.handleChange}/>
+                <Form.Control id={"comparison_y-"+this.props.id} type="text" placeholder="Compare Against" onChange={this.handleChange}/>
             </td>
             <td>
                 add action
