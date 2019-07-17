@@ -109,7 +109,7 @@ const sCubeReducer = (state = initialState, action) => {
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,
-                actions: [],
+                actions: {},
                 level: 1
             }
         return newState;
@@ -134,14 +134,30 @@ const sCubeReducer = (state = initialState, action) => {
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,
-                actions: [],
+                actions: {},
                 level: myLevel
             }
         return newState;
     }
     case "add_condit_action": {
         let newState = _.cloneDeep(state);
-        newState.conditions[action.payload].actions.push("Do Something...");
+        let newActions = newState.conditions[action.payload].actions;
+        let newId = "";
+        console.log(action.payload);
+        console.log(newState.conditions[action.payload].actions);
+        let m = 0;
+        if (_.isEmpty(newActions)) {
+            m = 1;
+        } else {
+            for (let a in newActions) {
+                console.log(a.split("A")[1]);
+                m = Math.max(m, a.split("A")[1]);
+            }
+            m += 1;
+        }
+        newId = action.payload + "-A" + m;
+        newActions[newId] = "";
+        newState.conditions[action.payload].actions = newActions;
         return newState;
     }
 

@@ -12,12 +12,11 @@ class CONDIT_Action extends Component {
     }
 
     handleChange(event) {
-        let newConditions = this.props.conditions
-        newConditions[this.props.parent].actions[event.target.id] = event.target.value;
+        let newConditions = this.props.conditions;
+        newConditions[this.props.parent].actions[this.props.id] = event.target.value;
         this.props.update({
             conditions: newConditions
         });
-        this.forceUpdate();
     };
 
     gatherActions = () => {
@@ -30,6 +29,7 @@ class CONDIT_Action extends Component {
                 actions.push("Fee-"+this.props.fees[f].key);
             }
         }
+
         return actions.map(a => {
             return <option key={a} value={a}>{a}</option>;
         });
