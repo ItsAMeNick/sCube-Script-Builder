@@ -139,6 +139,11 @@ const sCubeReducer = (state = initialState, action) => {
             }
         return newState;
     }
+    case "add_condit_action": {
+        let newState = _.cloneDeep(state);
+        newState.conditions[action.payload].actions.push("Do Something...");
+        return newState;
+    }
 
     default:
         return state;

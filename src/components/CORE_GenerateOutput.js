@@ -77,10 +77,8 @@ class CORE_GenerateOutput extends Component {
     }
 
     parseConditions = (level, parent) => {
-        console.log(level, parent);
         //Create a list of condition only at my level.
         let conditions = Object.keys(this.props.state.conditions).map(c => {
-            console.log("BOI: "+this.props.state.conditions[c]);
             if (this.props.state.conditions[c].level === level) {
                 return this.props.state.conditions[c];
             } else {
@@ -92,10 +90,11 @@ class CORE_GenerateOutput extends Component {
             return (_.initial(c.key.split(".")).join(".") === parent);
         });
         //Escape
-        console.log(conditions);
         if (conditions.length === 0) return null;
+        var set_tab = "\t".repeat(level-1);
+        var set_tab1 = "\t".repeat(level);
         for (let c in conditions) {
-            script_text += "if (";
+            script_text += set_tab + "if (";
             if (conditions[c].condition_type === "cf") {
                 //Will use variable mapper later !!!
                 script_text += "getAppSpecific(\"" + conditions[c].comparison_x + "\") ";
@@ -109,7 +108,11 @@ class CORE_GenerateOutput extends Component {
 
             this.parseConditions(level+1, conditions[c].key);
 
-            script_text += "}\n"
+            for (let a in conditions[c].actions) {
+                script_text += set_tab1 + conditions[c].actions[a] + "\n";
+            }
+
+            script_text += set_tab + "}\n"
         }
     }
 
