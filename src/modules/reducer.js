@@ -10,7 +10,8 @@ const initialState = {
         comparison_type: null,
         comparison_y: null,
         sub_conditions: {},
-        actions: []
+        actions: [],
+        level: 1
     }},
     structure: {
         module: "NA",
@@ -110,7 +111,34 @@ const sCubeReducer = (state = initialState, action) => {
                 comparison_type: null,
                 comparison_y: null,
                 sub_conditions: {},
-                actions: []
+                actions: [],
+                level: 1
+            }
+        return newState;
+    }
+    case "add_condit_sub": {
+        let newState = _.cloneDeep(state);
+        let myId = action.payload.toString().split(".");
+        let myLevel = action.payload.toString().split(".").length+1;
+        let ids = Object.keys(state.conditions);
+        let ids_split = ids.map(c => {return c.split(".")});
+        let m = 0;
+        for (let k in ids_split) {
+            if (myLevel+1 !== ids_split[k].length+1) continue;
+            if (myId.join(".") !== _.initial(ids_split[k]).join(".")) continue;
+            m = Math.max(m,ids_split[k][myLevel-1]);
+        }
+        myId = (myId.join(".") + "." + (m+1)).toString();
+        newState.conditions[myId] =
+            {
+                key: myId,
+                condition_type: null,
+                comparison_x: null,
+                comparison_type: null,
+                comparison_y: null,
+                sub_conditions: {},
+                actions: [],
+                level: myLevel
             }
         return newState;
     }

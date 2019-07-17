@@ -11,6 +11,7 @@ class CONDIT_Item extends Component {
             local_comp_type: null
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleAddSub = this.handleAddSub.bind(this);
     }
 
     handleChange(event) {
@@ -91,6 +92,11 @@ class CONDIT_Item extends Component {
         return types;
     }
 
+    handleAddSub() {
+        console.log(this.props.id)
+        this.props.addSub(this.props.id)
+    }
+
     render() {
         return (
         <tr>
@@ -114,10 +120,10 @@ class CONDIT_Item extends Component {
                 <Form.Control id={"comparison_y-"+this.props.id} type="text" placeholder="Compare Against" onChange={this.handleChange}/>
             </td>
             <td>
-                AA
+                <button>+ Action</button>
             </td>
             <td>
-                ASC
+                <button onClick={this.handleAddSub}>+ SubCondition</button>
             </td>
         </tr>
         );
@@ -129,13 +135,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addAction: () => dispatch({
+    addAction: id => dispatch({
         type: "add_condit_action",
-        payload: null
+        payload: id
     }),
-    addSub: () => dispatch({
+    addSub: id => dispatch({
         type: "add_condit_sub",
-        payload: null
+        payload: id
     }),
     update: conditions => dispatch({
         type: "update_conditions",
