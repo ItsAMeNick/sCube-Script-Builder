@@ -29,13 +29,22 @@ class CONDIT extends Component {
             <Table bordered>
                 <thead>
                     <tr>
-                    <th>ID #</th>
+                    <th rowSpan="2">ID #</th>
                     <th colSpan="4">Conditional Statement</th>
                     <th></th>
                     <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td></td>
+                        <td>Portlet</td>
+                        <td>Variable</td>
+                        <td>Comparator</td>
+                        <td>Compared Value</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                     {this.generateConditTable()}
                 </tbody>
             </Table>

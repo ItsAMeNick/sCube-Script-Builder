@@ -30,7 +30,7 @@ class FEE_FeeContainer extends Component {
         {this.props.functionality ?
         <div>
             <hr/>
-            <h1>Fee Portlet</h1>
+            <h3>Fee Manager</h3>
             <Table striped bordered hover>
                 <thead>
                     <tr>
