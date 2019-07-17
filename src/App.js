@@ -43,9 +43,11 @@ class App extends Component {
                 <Fees/>
             </Row> <Row>
                 <ConditContainer/>
+            </Row> <hr/> <Row>
+                <Generate/>
+            </Row> <hr/> <Row>
+                <TestDump/>
             </Row>
-            <Generate/>
-            <TestDump/>
         </Container>
         </div>
         </ReduxProvider>

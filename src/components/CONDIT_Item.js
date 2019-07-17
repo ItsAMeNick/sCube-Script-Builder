@@ -121,7 +121,7 @@ class CONDIT_Item extends Component {
                 </Form.Control>
             </td>
             <td>
-                <Form.Control id={"comparison_y-"+this.props.id} type="text" placeholder="Compare Against" onChange={this.handleChange}/>
+                <Form.Control id={"comparison_y-"+this.props.id} type="text" placeholder="Compared Against" onChange={this.handleChange}/>
             </td>
             <td>
                 <button onClick={this.handleAddAction}>+ Action</button>

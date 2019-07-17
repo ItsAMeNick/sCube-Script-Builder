@@ -5,8 +5,8 @@ var data = {
             value: null
         },
         {
-            label: "Application Status",
-            value: "appStatus"
+            label: "Summary",
+            value: "summary"
         },
         {
             label: "Workflow",
@@ -17,7 +17,7 @@ var data = {
             value: "cf"
         },
         {
-            label: "CAP",
+            label: "Record",
             value: "cap"
         },
         {
@@ -30,7 +30,7 @@ var data = {
         },
     ],
     comparison_x: {
-        "appStatus": [
+        "summary": [
             {
                 label: "",
                 value: null,

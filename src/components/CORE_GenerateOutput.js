@@ -119,8 +119,7 @@ class CORE_GenerateOutput extends Component {
     render() {
         return (
         <div>
-            <button>Generate Script</button>
-            <br/>
+            {/*<button>Generate Script</button>*/}
             <p>Script Code: {this.genName(true)}</p>
             <p>Script Name: {this.genName()}</p>
             <textarea rows="20" cols="100" value={this.generateScript()} readOnly={true} />

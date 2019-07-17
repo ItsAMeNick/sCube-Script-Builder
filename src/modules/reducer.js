@@ -9,7 +9,7 @@ const initialState = {
         comparison_x: null,
         comparison_type: null,
         comparison_y: null,
-        actions: [],
+        actions: {},
         level: 1
     }},
     structure: {

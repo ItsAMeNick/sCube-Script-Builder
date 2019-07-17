@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
 
 import ConditItem from "./CONDIT_Item.js";
+import ConditAction from "./CONDIT_Action.js";
 
 class CONDIT extends Component {
     constructor(props) {
@@ -29,23 +30,16 @@ class CONDIT extends Component {
             <Table bordered>
                 <thead>
                     <tr>
-                    <th rowSpan="2">ID #</th>
-                    <th colSpan="4">Conditional Statement</th>
-                    <th></th>
-                    <th></th>
+                        <th>ID&nbsp;#</th>
+                        <th>Portlet</th>
+                        <th>Variable</th>
+                        <th>Comparator</th>
+                        <th>Compared Value</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td></td>
-                        <td>Portlet</td>
-                        <td>Variable</td>
-                        <td>Comparator</td>
-                        <td>Compared Value</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
                     {this.generateConditTable()}
+                    <ConditAction key="1" parent="1" id="1-A1"/>
                 </tbody>
             </Table>
             <button onClick={this.props.addConditFlat}> Add Condition </button>
