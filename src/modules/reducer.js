@@ -25,7 +25,7 @@ const initialState = {
         inspection_schedule: false
     },
     fees: [{
-        key: 0,
+        key: 1,
         code: null,
         schedule: null,
         period: "FINAL",

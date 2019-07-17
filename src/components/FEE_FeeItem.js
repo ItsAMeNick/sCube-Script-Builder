@@ -20,7 +20,7 @@ class FEE_FeeItem extends Component {
     render() {
         return (
         <tr>
-            <td>{this.props.fee_number + 1}</td>
+            <td>{this.props.fee_number}</td>
             <td>
                 <Form.Control id="code" type="text" onChange={this.handleChange}/>
             </td>
