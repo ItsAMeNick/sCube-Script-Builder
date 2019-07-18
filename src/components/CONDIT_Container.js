@@ -28,7 +28,7 @@ class CONDIT extends Component {
     render() {
         return (
         <div>
-            {this.props.functionality.conditions ?
+            {this.props.isOn ?
                 <div>
                     <hr/>
                     <h3>Conditions Manager</h3>
@@ -55,7 +55,7 @@ class CONDIT extends Component {
 
 const mapStateToProps = state => ({
     conditions: state.conditions,
-    functionality: state.functionality
+    isOn: state.functionality.conditions
 });
 
 const mapDispatchToProps = dispatch => ({

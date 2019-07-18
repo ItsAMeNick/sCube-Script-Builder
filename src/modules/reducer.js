@@ -26,6 +26,15 @@ const initialState = {
         status_update: false,
         inspection_schedule: false
     },
+    status: {
+        "1": {
+            key: 1,
+            label: null,
+            comment: null,
+            optional_cap: false,
+            cap: null
+        }
+    },
     fees: {
         "1": {
         key: 1,

@@ -29,7 +29,7 @@ class FEE_FeeContainer extends Component {
         <div>
             <hr/>
             <h3>Fee Manager</h3>
-            <Table striped bordered hover>
+            <Table striped bordered>
                 <thead>
                     <tr>
                     <th>#</th>
