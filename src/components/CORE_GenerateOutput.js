@@ -44,7 +44,7 @@ class CORE_GenerateOutput extends Component {
             script_text += "\n";
         } else {
             //Must provide event and module before anything can generate.
-            //return "Please provide an Event and a Module.";
+            return "Please provide an Event and a Module.";
         }
 
         if (this.props.state.show_debug === true) {

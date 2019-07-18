@@ -28,30 +28,34 @@ class CONDIT extends Component {
     render() {
         return (
         <div>
-            <hr/>
-            <h3>Conditions Manager</h3>
-            <Table bordered>
-                <thead>
-                    <tr>
-                        <th>ID&nbsp;#</th>
-                        <th>Portlet</th>
-                        <th>Variable</th>
-                        <th>Comparator</th>
-                        <th>Compared Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.generateConditTable()}
-                </tbody>
-            </Table>
-            <button onClick={this.props.addConditFlat}> Add Condition </button>
+            {this.props.functionality.conditions ?
+                <div>
+                    <hr/>
+                    <h3>Conditions Manager</h3>
+                    <Table bordered>
+                        <thead>
+                            <tr>
+                                <th>ID&nbsp;#</th>
+                                <th>Portlet</th>
+                                <th>Variable</th>
+                                <th>Comparator</th>
+                                <th>Compared Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.generateConditTable()}
+                        </tbody>
+                    </Table>
+                    <button onClick={this.props.addConditFlat}> Add Condition </button>
+                </div> : null}
         </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    conditions: state.conditions
+    conditions: state.conditions,
+    functionality: state.functionality
 });
 
 const mapDispatchToProps = dispatch => ({
