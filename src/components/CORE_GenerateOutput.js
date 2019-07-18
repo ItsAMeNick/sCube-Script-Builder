@@ -112,7 +112,7 @@ class CORE_GenerateOutput extends Component {
 
             //Fees
             for (let f in this.props.state.fees) {
-                console.log("")
+                this.appendScript("", this.genFeeText(f));
             }
         }
     }
@@ -126,7 +126,7 @@ class CORE_GenerateOutput extends Component {
         switch (action[0]) {
             case "Fee": {
                 if (this.props.state.functionality.fees === true) {
-                    action_text = this.addFeeText(action[1]);
+                    action_text = this.genFeeText(action[1]);
                 }
                 break;
             }
@@ -135,7 +135,7 @@ class CORE_GenerateOutput extends Component {
         this.appendScript(tab, action_text);
     }
 
-    addFeeText = fee_num => {
+    genFeeText = fee_num => {
         let fees_text = "";
         let fee = this.props.state.fees[fee_num];
         //Fix up the parameters
@@ -143,7 +143,7 @@ class CORE_GenerateOutput extends Component {
                                 + "\"" + fee.schedule + "\", "
                                 + "\"" + fee.period + "\", "
                                 + fee.quantity + ", "
-                                + "\"" + fee.invoice + ");"
+                                + "\"" + fee.invoice + "\");"
         return fees_text;
     }
 
