@@ -17,7 +17,10 @@ class CONDIT extends Component {
         let cons = [];
         for (let c in cons_ids) {
             let cc = cons_ids[c];
-            cons.push(<ConditItem  key={this.props.conditions[cc].key} id={this.props.conditions[cc].key}/>)
+            cons.push(<ConditItem  key={this.props.conditions[cc].key} id={this.props.conditions[cc].key}/>);
+            for (let a in this.props.conditions[cc].actions) {
+                cons.push(<ConditAction key={cc+a} parent={cc} id={a}/>);
+            }
         }
         return cons;
     }
@@ -39,7 +42,6 @@ class CONDIT extends Component {
                 </thead>
                 <tbody>
                     {this.generateConditTable()}
-                    <ConditAction key="1" parent="1" id="1-A1"/>
                 </tbody>
             </Table>
             <button onClick={this.props.addConditFlat}> Add Condition </button>

@@ -143,14 +143,11 @@ const sCubeReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
         let newActions = newState.conditions[action.payload].actions;
         let newId = "";
-        console.log(action.payload);
-        console.log(newState.conditions[action.payload].actions);
         let m = 0;
         if (_.isEmpty(newActions)) {
             m = 1;
         } else {
             for (let a in newActions) {
-                console.log(a.split("A")[1]);
                 m = Math.max(m, a.split("A")[1]);
             }
             m += 1;
