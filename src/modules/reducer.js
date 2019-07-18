@@ -3,7 +3,8 @@ import _ from "lodash";
 const initialState = {
     event_type: null,
     show_debug: false,
-    conditions: { "1": {
+    conditions: {
+        "1": {
         key: "1",
         condition_type: null,
         comparison_x: null,
@@ -19,19 +20,21 @@ const initialState = {
         category: "NA"
     },
     functionality: {
+        conditions: true,
         fees: false,
         notification_send: false,
         status_update: false,
         inspection_schedule: false
     },
-    fees: [{
+    fees: {
+        "1": {
         key: 1,
         code: null,
         schedule: null,
         period: "FINAL",
         quantity: null,
         invoice: null
-    }]
+    }}
 
 };
 
@@ -72,16 +75,22 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "add_fee": {
         let newState = _.cloneDeep(state);
-        newState.fees.push(
+        let fee_codes = Object.keys(state.fees);
+        let m = 0;
+        for (let f in fee_codes) {
+            m = Math.max(m,state.fees[fee_codes[f]].key);
+            console.log(state.fees[fee_codes[f]])
+        }
+        m+=1;
+        newState.fees[m] =
             {
-                key: state.fees[state.fees.length-1].key+1,
+                key: m,
                 code: null,
                 schedule: null,
                 period: null,
                 quantity: null,
                 invoice: false
             }
-        );
         return newState;
     }
 

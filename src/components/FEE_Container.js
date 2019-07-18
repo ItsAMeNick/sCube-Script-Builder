@@ -8,7 +8,6 @@ class FEE_FeeContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.generateFeeItem = this.generateFeeItem.bind(this);
     }
 
     addFee = () => {
@@ -16,12 +15,11 @@ class FEE_FeeContainer extends Component {
     }
 
     generateFeeItems = () => {
-        var fees = this.props.fees;
-        return fees.map(this.generateFeeItem);
-    }
-
-    generateFeeItem = (fee) => {
-        return <FeeItem key={fee.key} fee_number={fee.key}/>;
+        let fees = [];
+        for (let fee in this.props.fees) {
+            fees.push(<FeeItem key={this.props.fees[fee].key} fee_number={this.props.fees[fee].key}/>)
+        }
+        return fees;
     }
 
     render() {
