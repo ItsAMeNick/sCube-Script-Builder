@@ -11,7 +11,7 @@ class FEE_FeeItem extends Component {
 
     handleChange(event) {
         let newFees = this.props.fees;
-        newFees[this.props.fee_number-1][event.target.id] = event.target.value;
+        newFees[this.props.fee_number][event.target.id] = event.target.value;
         this.props.update({
             fees: newFees
         });
@@ -29,6 +29,7 @@ class FEE_FeeItem extends Component {
             </td>
             <td>
                 <Form.Control id="period" as="select" onChange={this.handleChange}>
+                    <option></option>
                     <option>FINAL</option>
                 </Form.Control>
             </td>

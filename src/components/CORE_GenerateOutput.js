@@ -23,56 +23,38 @@ class CORE_GenerateOutput extends Component {
             }
     }
 
+    appendScript = (tab, text) => {
+        //This function will add one line to the script text with tabbing of tab
+        script_text += tab + text + "\n";
+    }
+
     generateScript = () => {
         let today = new Date();
         script_text = "";
-        let initialComment_text = "";
-        let showDebug_text = "";
-        let fees_text = "";
 
         if (this.props.state.event_type != null && this.props.state.structure.module !== "NA") {
-            initialComment_text += "//"+this.props.state.event_type+":"
+            script_text += "//"+this.props.state.event_type+":"
                                 +this.props.state.structure.module+"/"
                                 +this.props.state.structure.type+"/"
                                 +this.props.state.structure.subtype+"/"
                                 +this.props.state.structure.category+"\n";
-            initialComment_text += "//Created: " + (today.getMonth()+1) +"/"
+            script_text += "//Created: " + (today.getMonth()+1) +"/"
                                                 + today.getDate() + "/"
                                                 + today.getFullYear() + "\n";
-            initialComment_text += "\n";
+            script_text += "\n";
         } else {
             //Must provide event and module before anything can generate.
-            return "Please provide an Event and a Module.";
+            //return "Please provide an Event and a Module.";
         }
 
         if (this.props.state.show_debug === true) {
-            showDebug_text += "showDebug = true;\n";
-            showDebug_text += "\n";
+            script_text += "showDebug = true;\n";
+            script_text += "\n";
         }
-
-        if (this.props.state.functionality.fees === true) {
-            let local_fees = this.props.state.fees;
-            for (var f in local_fees) {
-                if (local_fees[f].invoice === null) local_fees[f].invoice = "N";
-                if (local_fees[f].duplicate === null) local_fees[f].duplicate = "Y";
-                fees_text += "updateFee(\"" + local_fees[f].code + "\", "
-                                        + "\"" + local_fees[f].schedule + "\", "
-                                        + "\"" + local_fees[f].period + "\", "
-                                        + local_fees[f].quantity + ", "
-                                        + "\"" + local_fees[f].invoice + "\", "
-                                        + "\"" + local_fees[f].duplicate + "\", "
-                                        + local_fees[f].sequence + ");\n"
-            }
-            fees_text += "\n";
-        }
-
-        script_text += initialComment_text;
-        script_text += showDebug_text;
 
         //NEED TO ADD "DEFINE VARIABLES" !!!
-
-        script_text += fees_text;
         this.parseConditions(1, "");
+
         return script_text;
     }
 
@@ -91,29 +73,78 @@ class CORE_GenerateOutput extends Component {
         });
         //Escape
         if (conditions.length === 0) return null;
+
         var set_tab = "\t".repeat(level-1);
-        var set_tab1 = "\t".repeat(level);
-        for (let c in conditions) {
-            script_text += set_tab + "if (";
-            if (conditions[c].condition_type === "cf") {
-                //Will use variable mapper later !!!
-                script_text += "getAppSpecific(\"" + conditions[c].comparison_x + "\") ";
-            } else {
-                script_text += conditions[c].comparison_x + " ";
-            }
-
-            script_text += conditions[c].comparison_type + " ";
-
-            script_text += "\"" + conditions[c].comparison_y + "\") {\n";
-
-            this.parseConditions(level+1, conditions[c].key);
-
-            for (let a in conditions[c].actions) {
-                script_text += set_tab1 + conditions[c].actions[a] + "\n";
-            }
-
-            script_text += set_tab + "}\n"
+        var set_tab_in = set_tab + "\t";
+        if (!this.props.state.functionality.conditions) {
+            set_tab = "";
+            set_tab_in = "";
         }
+
+        //BEGIN CONDTION PARSEING
+        if (this.props.state.functionality.conditions) {
+            for (let c in conditions) {
+
+                //Build the if statement
+                let condition_start = "if (";
+                if (conditions[c].condition_type === "cf") {
+                    //Creating some kind of variable mapper would look nice
+                    condition_start += "getAppSpecific(\"" + conditions[c].comparison_x + "\") ";
+                } else {
+                    condition_start += conditions[c].comparison_x + " ";
+                }
+                condition_start += conditions[c].comparison_type + " ";
+                condition_start += "\"" + conditions[c].comparison_y + "\")";
+
+                this.appendScript(set_tab, condition_start);
+                this.appendScript(set_tab, "{");
+
+                for (let a in conditions[c].actions) {
+                    this.parseAction(set_tab_in, conditions[c].actions[a]);
+                }
+
+                this.parseConditions(set_tab_in, conditions[c].key);
+
+                this.appendScript(set_tab, "}");
+            }
+        } else {
+            //Parse everything individually
+
+            //Fees
+            for (let f in this.props.state.fees) {
+                console.log("")
+            }
+        }
+    }
+
+    parseAction = (tab, action) => {
+        if (action === null) {
+            return null;
+        }
+        action = action.split("-");
+        let action_text = "";
+        switch (action[0]) {
+            case "Fee": {
+                if (this.props.state.functionality.fees === true) {
+                    action_text = this.addFeeText(action[1]);
+                }
+                break;
+            }
+            default: return null;
+        }
+        this.appendScript(tab, action_text);
+    }
+
+    addFeeText = fee_num => {
+        let fees_text = "";
+        let fee = this.props.state.fees[fee_num];
+        //Fix up the parameters
+        fees_text += "updateFee(\"" + fee.code + "\", "
+                                + "\"" + fee.schedule + "\", "
+                                + "\"" + fee.period + "\", "
+                                + fee.quantity + ", "
+                                + "\"" + fee.invoice + ");"
+        return fees_text;
     }
 
     render() {

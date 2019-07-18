@@ -31,7 +31,7 @@ const initialState = {
         key: 1,
         code: null,
         schedule: null,
-        period: "FINAL",
+        period: null,
         quantity: null,
         invoice: null
     }}
