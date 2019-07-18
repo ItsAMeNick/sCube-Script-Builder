@@ -30,9 +30,7 @@ const initialState = {
         schedule: null,
         period: "FINAL",
         quantity: null,
-        invoice: null,
-        duplicate: null,
-        sequence: null
+        invoice: null
     }]
 
 };
@@ -81,9 +79,7 @@ const sCubeReducer = (state = initialState, action) => {
                 schedule: null,
                 period: null,
                 quantity: null,
-                invoice: false,
-                duplicate: false,
-                sequence: null
+                invoice: false
             }
         );
         return newState;

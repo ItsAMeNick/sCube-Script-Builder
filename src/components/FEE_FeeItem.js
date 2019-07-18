@@ -42,16 +42,6 @@ class FEE_FeeItem extends Component {
                     <option value={"N"}>No</option>
                 </Form.Control>
             </td>
-            <td>
-                <Form.Control id="duplicate" as="select" onChange={this.handleChange}>
-                    <option value={null}></option>
-                    <option value={"Y"}>Yes</option>
-                    <option value={"N"}>No</option>
-                </Form.Control>
-            </td>
-            <td>
-                <Form.Control id="sequence" type="text" onChange={this.handleChange}/>
-            </td>
         </tr>
         );
     }
