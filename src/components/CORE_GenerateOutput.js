@@ -109,6 +109,10 @@ class CORE_GenerateOutput extends Component {
             }
         } else {
             //Parse everything individually
+            //StatusItem
+            for (let s in this.props.state.status) {
+                this.appendScript("", this.genStatusText(s));
+            }
 
             //Fees
             for (let f in this.props.state.fees) {
@@ -124,6 +128,12 @@ class CORE_GenerateOutput extends Component {
         action = action.split("-");
         let action_text = "";
         switch (action[0]) {
+            case "Status": {
+                if (this.props.state.functionality.status_update === true) {
+                    action_text = this.genStatusText(action[1]);
+                }
+                break;
+            }
             case "Fee": {
                 if (this.props.state.functionality.fees === true) {
                     action_text = this.genFeeText(action[1]);
@@ -133,6 +143,25 @@ class CORE_GenerateOutput extends Component {
             default: return null;
         }
         this.appendScript(tab, action_text);
+    }
+
+    genStatusText = status_num => {
+        let status_text = "";
+        let stat = this.props.state.status[status_num];
+        let comment_text = "";
+        let optional_text = "";
+        //Fix up the parameters
+        if (!(stat.comment === "" || stat.comment === null)) {
+            comment_text = " - " + stat.comment;
+        }
+        if (stat.cap !== null && stat.cap !== "" && stat.optional_cap === true) {
+            optional_text = ", " + stat.cap.toString();
+        }
+        status_text += "updateAppStatus(\"" + stat.label + "\", "
+                                + "\"Updated via Script" + comment_text + "\""
+                                + optional_text
+                                + ");"
+        return status_text;
     }
 
     genFeeText = fee_num => {
