@@ -33,8 +33,8 @@ class FEE_FeeContainer extends Component {
                 <thead>
                     <tr>
                     <th>#</th>
-                    <th>Fee Code</th>
                     <th>Fee Schedule</th>
+                    <th>Fee Code</th>
                     <th>Fee Period</th>
                     <th>Quantity</th>
                     <th>Invoice</th>

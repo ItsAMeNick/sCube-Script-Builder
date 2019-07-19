@@ -22,10 +22,10 @@ class FEE_FeeItem extends Component {
         <tr>
             <td>{this.props.fee_number}</td>
             <td>
-                <Form.Control id="code" type="text" onChange={this.handleChange}/>
+                <Form.Control id="schedule" type="text" onChange={this.handleChange}/>
             </td>
             <td>
-                <Form.Control id="schedule" type="text" onChange={this.handleChange}/>
+                <Form.Control id="code" type="text" onChange={this.handleChange}/>
             </td>
             <td>
                 <Form.Control id="period" as="select" onChange={this.handleChange}>
