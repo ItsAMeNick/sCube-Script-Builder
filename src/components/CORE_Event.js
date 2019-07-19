@@ -22,13 +22,13 @@ class CORE_Event extends Component {
         <div>
             <Form>
             <Form.Label>
-                Please select when this event script will be running:
+                When will this script run?
             </Form.Label>
             <Form.Control as="select" onChange={this.handleChange}>
                 <option></option>
-                <option value="ASA">When a backoffice user submits an application.</option>
-                <option value="WTUA">When the workflow has successfully advanced.</option>
-                <option value="WTUB">Beore the workflow is able to advance.</option>
+                <option value="ASA">ASA - A backoffice user submits an application.</option>
+                <option value="WTUA">WTUA - The workflow has successfully advanced.</option>
+                <option value="WTUB">WTUB - Before the workflow is able to advance.</option>
             </Form.Control>
             </Form>
         </div>
