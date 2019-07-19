@@ -77,6 +77,30 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "update_status": {
+        let newState = _.cloneDeep(state);
+        newState.status = action.payload.status;
+        return newState;
+    }
+    case "add_status": {
+        let newState = _.cloneDeep(state);
+        let status_codes = Object.keys(state.status);
+        let m = 0;
+        for (let s in status_codes) {
+            m = Math.max(m,state.status[status_codes[s]].key);
+        }
+        m+=1;
+        newState.status[m] =
+            {
+                key: m,
+                label: null,
+                comment: null,
+                optional_cap: false,
+                cap: null
+            }
+        return newState;
+    }
+
     case "update_fees": {
         let newState = _.cloneDeep(state);
         newState.fees = action.payload.fees;
@@ -88,7 +112,6 @@ const sCubeReducer = (state = initialState, action) => {
         let m = 0;
         for (let f in fee_codes) {
             m = Math.max(m,state.fees[fee_codes[f]].key);
-            console.log(state.fees[fee_codes[f]])
         }
         m+=1;
         newState.fees[m] =

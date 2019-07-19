@@ -10,38 +10,35 @@ class STATUS_Item extends Component {
     }
 
     handleChange(event) {
-        let newFees = this.props.fees;
-        newFees[this.props.fee_number][event.target.id] = event.target.value;
+        let newStatus = this.props.status;
+        let newValue = event.target.value;
+        if (event.target.id === "optional_cap") {
+            newValue = event.target.checked;
+        }
+        newStatus[this.props.status_number][event.target.id] = newValue;
         this.props.update({
-            fees: newFees
+            status: newStatus
         });
+        this.forceUpdate();
     };
 
     render() {
         return (
         <tr>
-            <td>{this.props.fee_number}</td>
+            <td>{this.props.status_number}</td>
             <td>
-                <Form.Control id="code" type="text" onChange={this.handleChange}/>
+                <Form.Control id="label" type="text" onChange={this.handleChange}/>
             </td>
             <td>
-                <Form.Control id="schedule" type="text" onChange={this.handleChange}/>
+                <Form.Control id="comment" type="text" onChange={this.handleChange}/>
             </td>
             <td>
-                <Form.Control id="period" as="select" onChange={this.handleChange}>
-                    <option></option>
-                    <option>FINAL</option>
-                </Form.Control>
+                <Form.Check id="optional_cap" onChange={this.handleChange}/>
             </td>
             <td>
-                <Form.Control id="quantity" type="number" onChange={this.handleChange}/>
-            </td>
-            <td>
-                <Form.Control id="invoice" as="select" onChange={this.handleChange}>
-                    <option value={null}></option>
-                    <option value={"Y"}>Yes</option>
-                    <option value={"N"}>No</option>
-                </Form.Control>
+                {this.props.status[this.props.status_number].optional_cap ?
+                    <Form.Control id="cap" type="text" onChange={this.handleChange}/>
+                : null}
             </td>
         </tr>
         );
@@ -49,13 +46,13 @@ class STATUS_Item extends Component {
 }
 
 const mapStateToProps = state => ({
-    fees: state.fees
+    status: state.status
 });
 
 const mapDispatchToProps = dispatch => ({
-    update: fees => dispatch({
-        type: "update_fees",
-        payload: fees
+    update: s => dispatch({
+        type: "update_status",
+        payload: s
     })
 });
 

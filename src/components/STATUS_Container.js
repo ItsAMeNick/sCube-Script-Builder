@@ -22,10 +22,6 @@ class STATUS_Container extends Component {
         return stats;
     }
 
-    componentDidMount() {
-        console.log(this.props.isOn);
-    }
-
     render() {
         return (
         <div>
@@ -38,7 +34,7 @@ class STATUS_Container extends Component {
                     <tr>
                     <th>#</th>
                     <th>Status</th>
-                    <th>Comment</th>
+                    <th>Comment*</th>
                     <th>Optional</th>
                     <th>Optional CAP</th>
                     </tr>
@@ -47,6 +43,7 @@ class STATUS_Container extends Component {
                     {this.generateStatusItems()}
                 </tbody>
             </Table>
+            <p>*Comments will be preceeded by "Updated via Script - (Your Text Here)"</p>
             <button onClick={this.addStatus}> Add Status </button>
         </div> : null}
         </div>
@@ -56,7 +53,7 @@ class STATUS_Container extends Component {
 
 const mapStateToProps = state => ({
     isOn: state.functionality.status_update,
-    status: state.fees
+    status: state.status
 });
 
 const mapDispatchToProps = dispatch => ({
