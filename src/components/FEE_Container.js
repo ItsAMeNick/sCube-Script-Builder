@@ -35,9 +35,13 @@ class FEE_FeeContainer extends Component {
                     <th>#</th>
                     <th>Fee Schedule</th>
                     <th>Fee Code</th>
-                    <th>Fee Period</th>
+                    {this.props.isAdvanced ?
+                        <th>Fee Period</th>
+                    : null}
                     <th>Quantity</th>
-                    <th>Invoice</th>
+                    {this.props.isAdvanced ?
+                        <th>Invoice</th>
+                    : null}
                     </tr>
                 </thead>
                 <tbody>
@@ -53,6 +57,7 @@ class FEE_FeeContainer extends Component {
 
 const mapStateToProps = state => ({
     functionality: state.functionality.fees,
+    isAdvanced: state.functionality.fees_advanced,
     fees: state.fees
 });
 

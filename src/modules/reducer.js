@@ -22,6 +22,7 @@ const initialState = {
     functionality: {
         conditions: true,
         fees: false,
+        fees_advanced: false,
         notification_send: false,
         status_update: false,
         inspection_schedule: false
@@ -40,9 +41,9 @@ const initialState = {
         key: 1,
         code: null,
         schedule: null,
-        period: null,
+        period: "FINAL",
         quantity: null,
-        invoice: null
+        invoice: "Y"
     }}
 
 };
@@ -119,9 +120,9 @@ const sCubeReducer = (state = initialState, action) => {
                 key: m,
                 code: null,
                 schedule: null,
-                period: null,
+                period: "FINAL",
                 quantity: null,
-                invoice: false
+                invoice: "Y"
             }
         return newState;
     }
