@@ -100,10 +100,11 @@ class CORE_GenerateOutput extends Component {
                 this.appendScript(set_tab, "{");
 
                 for (let a in conditions[c].actions) {
+                    console.log(a);
                     this.parseAction(set_tab_in, conditions[c].actions[a]);
                 }
 
-                this.parseConditions(set_tab_in, conditions[c].key);
+                this.parseConditions(level+1, conditions[c].key);
 
                 this.appendScript(set_tab, "}");
             }
@@ -129,15 +130,11 @@ class CORE_GenerateOutput extends Component {
         let action_text = "";
         switch (action[0]) {
             case "Status": {
-                if (this.props.state.functionality.status_update === true) {
-                    action_text = this.genStatusText(action[1]);
-                }
+                action_text = this.genStatusText(action[1]);
                 break;
             }
             case "Fee": {
-                if (this.props.state.functionality.fees === true) {
-                    action_text = this.genFeeText(action[1]);
-                }
+                action_text = this.genFeeText(action[1]);
                 break;
             }
             default: return null;
@@ -147,32 +144,36 @@ class CORE_GenerateOutput extends Component {
 
     genStatusText = status_num => {
         let status_text = "";
-        let stat = this.props.state.status[status_num];
-        let comment_text = "";
-        let optional_text = "";
-        //Fix up the parameters
-        if (!(stat.comment === "" || stat.comment === null)) {
-            comment_text = " - " + stat.comment;
+        if (this.props.state.functionality.status_update === true) {
+            let stat = this.props.state.status[status_num];
+            let comment_text = "";
+            let optional_text = "";
+            //Fix up the parameters
+            if (!(stat.comment === "" || stat.comment === null)) {
+                comment_text = " - " + stat.comment;
+            }
+            if (stat.cap !== null && stat.cap !== "" && stat.optional_cap === true) {
+                optional_text = ", " + stat.cap.toString();
+            }
+            status_text += "updateAppStatus(\"" + stat.label + "\", "
+                                    + "\"Updated via Script" + comment_text + "\""
+                                    + optional_text
+                                    + ");"
         }
-        if (stat.cap !== null && stat.cap !== "" && stat.optional_cap === true) {
-            optional_text = ", " + stat.cap.toString();
-        }
-        status_text += "updateAppStatus(\"" + stat.label + "\", "
-                                + "\"Updated via Script" + comment_text + "\""
-                                + optional_text
-                                + ");"
         return status_text;
     }
 
     genFeeText = fee_num => {
         let fees_text = "";
-        let fee = this.props.state.fees[fee_num];
-        //Fix up the parameters
-        fees_text += "updateFee(\"" + fee.code + "\", "
-                                + "\"" + fee.schedule + "\", "
-                                + "\"" + fee.period + "\", "
-                                + fee.quantity + ", "
-                                + "\"" + fee.invoice + "\");"
+        if (this.props.state.functionality.fees === true) {
+            let fee = this.props.state.fees[fee_num];
+            //Fix up the parameters
+            fees_text += "updateFee(\"" + fee.code + "\", "
+                                    + "\"" + fee.schedule + "\", "
+                                    + "\"" + fee.period + "\", "
+                                    + fee.quantity + ", "
+                                    + "\"" + fee.invoice + "\");"
+        }
         return fees_text;
     }
 
