@@ -103,7 +103,6 @@ class CORE_GenerateOutput extends Component {
                 this.appendScript(set_tab, "{");
 
                 for (let a in conditions[c].actions) {
-                    console.log(a);
                     this.parseAction(set_tab_in, conditions[c].actions[a]);
                 }
 

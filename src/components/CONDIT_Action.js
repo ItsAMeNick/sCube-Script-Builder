@@ -9,6 +9,7 @@ class CONDIT_Action extends Component {
             local_comp_type: null
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     handleChange(event) {
@@ -18,6 +19,14 @@ class CONDIT_Action extends Component {
             conditions: newConditions
         });
     };
+
+    handleDelete = event => {
+        console.log("Beginning Delete");
+        this.props.delete({
+            id: this.props.id,
+            parent: this.props.parent
+        });
+    }
 
     gatherActions = () => {
         let actions = [];
@@ -61,7 +70,7 @@ class CONDIT_Action extends Component {
                 </Form.Control>
             </td>
             <td>
-                <button onClick={this.handleAddAction}>- Action</button>
+                <button id={this.props.id} onClick={this.handleDelete}>- Action</button>
             </td>
             <td>
 
@@ -82,6 +91,10 @@ const mapDispatchToProps = dispatch => ({
     update: actions => dispatch({
         type: "update_conditions",
         payload: actions
+    }),
+    delete: a => dispatch({
+        type: "delete_action",
+        payload: a
     })
 });
 

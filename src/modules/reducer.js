@@ -214,6 +214,11 @@ const sCubeReducer = (state = initialState, action) => {
         newState.conditions[action.payload].actions = newActions;
         return newState;
     }
+    case "delete_action": {
+        let newState = _.cloneDeep(state);
+        delete newState.conditions[action.payload.parent].actions[action.payload.id];
+        return newState;
+    }
 
     default:
         return state;
