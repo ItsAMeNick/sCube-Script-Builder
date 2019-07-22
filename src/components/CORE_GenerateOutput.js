@@ -47,9 +47,12 @@ class CORE_GenerateOutput extends Component {
             return "Please provide an Event and a Module.";
         }
 
+        script_text += "eval(\"INCLUDES_CUSTOMGENERATE_SCRIPTS\");\n"
+
         if (this.props.state.show_debug === true) {
-            script_text += "showDebug = true;\n";
-            script_text += "\n";
+            script_text += "showDebug = true;\n\n";
+        } else {
+            script_text += "showDebug = false;\n\n";
         }
 
         //NEED TO ADD "DEFINE VARIABLES" !!!
