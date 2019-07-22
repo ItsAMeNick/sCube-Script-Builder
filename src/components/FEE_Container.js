@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Table from "react-bootstrap/Table";
+import Form from "react-bootstrap/Form";
 
 import FeeItem from "./FEE_FeeItem.js";
 
@@ -14,6 +15,16 @@ class FEE_FeeContainer extends Component {
         this.props.add();
     }
 
+    goAdvanced = event => {
+        let newFunctionality = this.props.functionality;
+        console.log(newFunctionality)
+        newFunctionality[event.target.id] = event.target.checked;
+        this.props.update_isAdvanced({
+            functionality: newFunctionality
+        });
+        console.log(newFunctionality);
+    }
+
     generateFeeItems = () => {
         let fees = [];
         for (let fee in this.props.fees) {
@@ -25,10 +36,11 @@ class FEE_FeeContainer extends Component {
     render() {
         return (
         <div>
-        {this.props.functionality ?
+        {this.props.functionality.fees ?
         <div>
             <hr/>
             <h3>Fee Manager</h3>
+            <Form.Check label="Advanced Mode" id="fees_advanced" onChange={this.goAdvanced}/>
             <Table striped bordered>
                 <thead>
                     <tr>
@@ -56,7 +68,7 @@ class FEE_FeeContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-    functionality: state.functionality.fees,
+    functionality: state.functionality,
     isAdvanced: state.functionality.fees_advanced,
     fees: state.fees
 });
@@ -66,9 +78,9 @@ const mapDispatchToProps = dispatch => ({
         type: "add_fee",
         payload: null
     }),
-    update: fees => dispatch({
-        type: "update_fees",
-        payload: fees
+    update_isAdvanced: item => dispatch({
+        type: "update_functionality",
+        payload: item
     })
 });
 

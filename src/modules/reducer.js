@@ -127,6 +127,13 @@ const sCubeReducer = (state = initialState, action) => {
             }
         return newState;
     }
+    case "delete_fee": {
+        let newState = _.cloneDeep(state);
+        if (action.payload === "1") {
+            return newState;
+        }
+        return newState;
+    }
 
     case "update_conditions": {
         let newState = _.cloneDeep(state);
