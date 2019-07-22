@@ -40,6 +40,7 @@ class CONDIT extends Component {
                                 <th>Variable</th>
                                 <th>Comparator</th>
                                 <th>Compared Value</th>
+                                <th colSpan="3"></th>
                             </tr>
                         </thead>
                         <tbody>
