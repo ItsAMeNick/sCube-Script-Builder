@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 
 import "./App.css";
 
+import CoreMode from "./components/CORE_Mode.js";
 import Core from "./components/CORE.js";
 import CoreFunction from "./components/CORE_Function.js";
 
@@ -32,7 +33,11 @@ class App extends Component {
             <Row> <h6>&nbsp;</h6> </Row>
             <Row>
                 <h1>[s]Cube Script Builder</h1>
-            </Row> <hr/> <Row>
+            </Row>
+            <hr/>
+            <CoreMode/>
+            <hr/>
+            <Row>
                 <Col>
                     <Core/>
                 </Col> <Col>

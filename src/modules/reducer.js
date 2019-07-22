@@ -3,6 +3,7 @@ import _ from "lodash";
 const initialState = {
     event_type: null,
     show_debug: false,
+    mode: "event_script",
     conditions: {
         "1": {
         key: "1",

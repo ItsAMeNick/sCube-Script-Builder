@@ -22,6 +22,7 @@ class CORE extends Component {
 }
 
 const mapStateToProps = state => ({
+    mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({
