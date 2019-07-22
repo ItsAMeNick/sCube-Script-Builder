@@ -101,6 +101,15 @@ const sCubeReducer = (state = initialState, action) => {
             }
         return newState;
     }
+    case "delete_status": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the Fee_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.status[action.payload]
+        return newState;
+    }
 
     case "update_fees": {
         let newState = _.cloneDeep(state);
@@ -129,9 +138,11 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "delete_fee": {
         let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the Fee_Item
         if (action.payload === "1") {
             return newState;
         }
+        delete newState.fees[action.payload]
         return newState;
     }
 

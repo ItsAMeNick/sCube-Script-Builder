@@ -18,10 +18,6 @@ class FEE_FeeItem extends Component {
         });
     }
 
-    conponenetDidMount() {
-        //document.getElementbyName("period-"+this.props.fee_number).innerHTML = this.props.fees[this.props.fee_number].period;
-    }
-
     render() {
         return (
         <tr>
@@ -50,6 +46,15 @@ class FEE_FeeItem extends Component {
                 </Form.Control>
             </td>
             : null}
+            {this.props.fee_number !== 1 ?
+            <td>
+                <button onClick={() => {
+                    this.props.delete(this.props.fee_number);
+                }}>
+                    Delete
+                </button>
+            </td>
+            : <td></td>}
         </tr>
         );
     }
@@ -64,6 +69,10 @@ const mapDispatchToProps = dispatch => ({
     update: fees => dispatch({
         type: "update_fees",
         payload: fees
+    }),
+    delete: f => dispatch({
+        type: "delete_fee",
+        payload: f
     })
 });
 

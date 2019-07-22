@@ -17,12 +17,10 @@ class FEE_FeeContainer extends Component {
 
     goAdvanced = event => {
         let newFunctionality = this.props.functionality;
-        console.log(newFunctionality)
         newFunctionality[event.target.id] = event.target.checked;
         this.props.update_isAdvanced({
             functionality: newFunctionality
         });
-        console.log(newFunctionality);
     }
 
     generateFeeItems = () => {

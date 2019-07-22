@@ -40,6 +40,15 @@ class STATUS_Item extends Component {
                     <Form.Control id="cap" type="text" onChange={this.handleChange}/>
                 : null}
             </td>
+            {this.props.status_number !== 1 ?
+            <td>
+                <button onClick={() => {
+                    this.props.delete(this.props.status_number);
+                }}>
+                    Delete
+                </button>
+            </td>
+            : <td></td>}
         </tr>
         );
     }
@@ -52,6 +61,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     update: s => dispatch({
         type: "update_status",
+        payload: s
+    }),
+    delete: s => dispatch({
+        type: "delete_status",
         payload: s
     })
 });
