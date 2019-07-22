@@ -114,12 +114,13 @@ const sCubeReducer = (state = initialState, action) => {
         for (let f in fee_codes) {
             m = Math.max(m,state.fees[fee_codes[f]].key);
         }
+        let prev = m;
         m+=1;
         newState.fees[m] =
             {
                 key: m,
                 code: null,
-                schedule: null,
+                schedule: state.fees[prev].schedule,
                 period: "FINAL",
                 quantity: null,
                 invoice: "Y"

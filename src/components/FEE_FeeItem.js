@@ -27,7 +27,7 @@ class FEE_FeeItem extends Component {
         <tr>
             <td>{this.props.fee_number}</td>
             <td>
-                <Form.Control id={"schedule-"+this.props.fee_number} defaultValue={this.props.fees["1"].schedule} type="text" onChange={this.handleChange}/>
+                <Form.Control id={"schedule-"+this.props.fee_number} defaultValue={this.props.fees[this.props.fee_number].schedule} type="text" onChange={this.handleChange}/>
             </td>
             <td>
                 <Form.Control id={"code-"+this.props.fee_number} type="text" onChange={this.handleChange}/>
