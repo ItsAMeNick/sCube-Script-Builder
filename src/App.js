@@ -27,7 +27,7 @@ class App extends Component {
     render() {
         return (
         <ReduxProvider store={reduxStore}>
-        <div>
+        <div className="App">
         <Container>
             <Row> <h6>&nbsp;</h6> </Row>
             <Row>
@@ -40,15 +40,15 @@ class App extends Component {
                     <hr/>
                     <TestShowDebug/>
                 </Col>
-            </Row> <Row>
+            </Row> <Col>
                 <Status/>
-            </Row>  <Row>
+            </Col>  <Col>
                 <Fees/>
-            </Row> <Row>
+            </Col> <Col>
                 <ConditContainer/>
-            </Row> <hr/> <Row>
+            </Col> <hr/> <Col>
                 <Generate/>
-            </Row> <hr/> <Row>
+            </Col> <hr/> <Row>
                 <TestDump/>
             </Row>
         </Container>
