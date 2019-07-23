@@ -45,7 +45,20 @@ const initialState = {
         period: "FINAL",
         quantity: null,
         invoice: "Y"
-    }}
+    }},
+    notifications: {
+        "1": {
+            key: 1,
+            template: null,
+            from: null,
+            contacts: [],
+            professionals: [],
+            reportName: null,
+            reportParameter: null,
+            reportModule: null,
+            emailParams: null
+        }
+    }
 
 };
 
@@ -149,6 +162,44 @@ const sCubeReducer = (state = initialState, action) => {
             return newState;
         }
         delete newState.fees[action.payload]
+        return newState;
+    }
+
+    case "update_note": {
+        let newState = _.cloneDeep(state);
+        newState.notification = action.payload.notification;
+        return newState;
+    }
+    case "add_note": {
+        let newState = _.cloneDeep(state);
+        let note_codes = Object.keys(state.notifications);
+        let m = 0;
+        for (let s in note_codes) {
+            m = Math.max(m,state.notifications[note_codes[s]].key);
+        }
+        m+=1;
+        newState.notifications[m] =
+            {
+                key: m,
+                template: null,
+                from: null,
+                contacts: [],
+                professionals: [],
+                report_bool: false,
+                report_name: null,
+                report_parameter: null,
+                report_module: null,
+                email_params: null
+            }
+        return newState;
+    }
+    case "delete_note": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the Fee_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.notifications[action.payload]
         return newState;
     }
 

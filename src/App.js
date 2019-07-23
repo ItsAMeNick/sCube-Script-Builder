@@ -11,6 +11,7 @@ import CoreFunction from "./components/CORE_Function.js";
 
 import TestShowDebug from "./components/TEST_ShowDebug.js";
 
+import Notes from "./components/NOTE_Container.js"
 import Fees from "./components/FEE_Container.js";
 import Status from "./components/STATUS_Container.js";
 
@@ -47,8 +48,10 @@ class App extends Component {
                 </Col>
             </Row> <Col>
                 <Status/>
-            </Col>  <Col>
+            </Col> <Col>
                 <Fees/>
+            </Col> <Col>
+                <Notes/>
             </Col> <Col>
                 <ConditContainer/>
             </Col> <hr/> <Col>
