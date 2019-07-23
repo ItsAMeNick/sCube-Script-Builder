@@ -56,6 +56,11 @@ const sCubeReducer = (state = initialState, action) => {
         return state;
     }
 
+    case "update_mode": {
+        let newState = _.cloneDeep(state);
+        newState.mode = action.payload.mode;
+        return newState;
+    }
     case "update_event_type": {
         let newState = _.cloneDeep(state);
         newState.event_type = action.payload.event_type;

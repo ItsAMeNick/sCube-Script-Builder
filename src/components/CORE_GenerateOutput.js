@@ -179,6 +179,10 @@ class CORE_GenerateOutput extends Component {
         return fees_text;
     }
 
+    getNoteText = note_num => {
+        //sendNotificationSCUBE(notificationTemplateName, fromEmail, contacts, professionals, reportName, reportParameter, reportModule, capId, emailParams)
+    }
+
     render() {
         return (
         <div>

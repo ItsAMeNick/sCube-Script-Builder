@@ -14,13 +14,12 @@ class CORE_Event extends Component {
 
     handleChange(event) {
         this.props.update({
-            event_type: event.target.value
+            mode: event.target.id
         });
-        event.preventDefault();
     };
 
     componentDidMount() {
-        //Have Conditions be on by default
+        //Set default
         document.getElementById("event_script").checked = true;
     };
 
@@ -28,11 +27,13 @@ class CORE_Event extends Component {
         return (
         <Row>
             <Col>
-                <Form.Check id="event_script" type="radio" name = "mode" label="Event Script"/>
+                <Form.Check id="event_script" label="Event Script" type="radio" name = "mode" onChange={this.handleChange}/>
             </Col> <Col>
-                <Form.Check id="function" type="radio" name = "mode" label="Function"/>
+                <Form.Check id="function" type="radio" name = "mode" label="Function" onChange={this.handleChange}/>
             </Col> <Col>
-                <Form.Check id="batch_script" type="radio" name = "mode" label="Batch Script"/>
+                <Form.Check id="batch_script" type="radio" name = "mode" label="Batch Script" onChange={this.handleChange}/>
+            </Col> <Col>
+                <Form.Check id="pageflow" type="radio" name = "mode" label="Pageflow Script" onChange={this.handleChange}/>
             </Col>
         </Row>
         );
