@@ -12,8 +12,12 @@ class PARAM_Container extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange() {
-
+    handleChange(event) {
+        let newSets = this.props.parameter_sets;
+        newSets[this.props.set_number][event.target.id] = event.target.value;
+        this.props.update({
+            parameter_sets: newSets
+        });
     }
 
     generateItems() {
@@ -75,7 +79,7 @@ const mapDispatchToProps = dispatch => ({
         payload: s
     }),
     update: s => dispatch({
-        type: "update_set",
+        type: "update_parameter_set",
         payload: s
     })
 });

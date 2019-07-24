@@ -220,6 +220,16 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "update_parameter_set": {
+        let newState = _.cloneDeep(state);
+        newState.parameter_sets = action.payload.parameter_sets;
+        return newState;
+    }
+    case "update_parameter": {
+        let newState = _.cloneDeep(state);
+        newState.notification = action.payload.notification;
+        return newState;
+    }
     case "add_parameter_set": {
         let newState = _.cloneDeep(state);
         let set_codes = Object.keys(state.parameter_sets);
