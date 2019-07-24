@@ -28,7 +28,17 @@ class CORE_GenerateOutput extends Component {
         script_text += tab + text + "\n";
     }
 
-    generateScript = () => {
+    generateHelper() {
+        switch(this.props.state.mode) {
+            case "event_script": {
+                return this.generateEventScript();
+            }
+            default:
+                return "ERROR: A Script can not be generated for this mode"
+        }
+    }
+
+    generateEventScript = () => {
         let today = new Date();
         script_text = "";
 
@@ -186,10 +196,18 @@ class CORE_GenerateOutput extends Component {
     render() {
         return (
         <div>
-            {/*<button>Generate Script</button>*/}
-            <p>Script Code: {this.genName(true)}</p>
-            <p>Script Name: {this.genName()}</p>
-            <textarea rows="20" cols="100" value={this.generateScript()} readOnly={true} />
+            {this.props.state.mode === "event_script" ? <div>
+                <p>Script Code: {this.genName(true)}</p>
+                <p>Script Name: {this.genName()}</p>
+            </div> : null }
+            {this.props.state.mode === "function" ? <div>
+                <p>Function Name: {this.props.state.mode}</p>
+            </div> : null }
+            {this.props.state.mode === "batch_script" ? <div>
+            </div> : null }
+            {this.props.state.mode === "pageflow" ? <div>
+            </div> : null }
+            <textarea rows="20" cols="100" value={this.generateHelper()} readOnly={true} />
         </div>
         );
     }

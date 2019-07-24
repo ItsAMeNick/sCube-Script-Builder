@@ -1,9 +1,18 @@
 import _ from "lodash";
 
 const initialState = {
-    event_type: null,
     show_debug: false,
     mode: "event_script",
+    event_type: null,
+    structure: {
+        module: "NA",
+        type: "NA",
+        subtype: "NA",
+        category: "NA"
+    },
+    mode_extras: {
+
+    },
     conditions: {
         "1": {
         key: "1",
@@ -14,12 +23,6 @@ const initialState = {
         actions: {},
         level: 1
     }},
-    structure: {
-        module: "NA",
-        type: "NA",
-        subtype: "NA",
-        category: "NA"
-    },
     functionality: {
         conditions: true,
         fees: false,

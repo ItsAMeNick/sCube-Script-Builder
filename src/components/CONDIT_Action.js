@@ -32,17 +32,24 @@ class CONDIT_Action extends Component {
         let actions = [];
         actions.push("");
 
-        //Handle Status
+        //Gather Status
         if (this.props.functionality.status_update) {
             for (let s in this.props.status)  {
                 actions.push("Status-"+this.props.status[s].key);
             }
         }
 
-        //Handle Fees
+        //Gather Fees
         if (this.props.functionality.fees) {
             for (let f in this.props.fees)  {
                 actions.push("Fee-"+this.props.fees[f].key);
+            }
+        }
+
+        //Gather Notifications
+        if (this.props.functionality.notification_send) {
+            for (let n in this.props.notifications)  {
+                actions.push("Notification-"+this.props.notifications[n].key);
             }
         }
 
@@ -84,7 +91,8 @@ const mapStateToProps = state => ({
     functionality: state.functionality,
     conditions: state.conditions,
     status: state.status,
-    fees: state.fees
+    fees: state.fees,
+    notifications: state.notifications
 });
 
 const mapDispatchToProps = dispatch => ({
