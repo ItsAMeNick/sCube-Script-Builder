@@ -33,9 +33,16 @@ class CORE_GenerateOutput extends Component {
             case "event_script": {
                 return this.generateEventScript();
             }
+            case "function": {
+                return this.generateFunctionScript();
+            }
             default:
                 return "ERROR: A Script can not be generated for this mode"
         }
+    }
+
+    generateFunctionScript = () => {
+
     }
 
     generateEventScript = () => {
@@ -149,6 +156,10 @@ class CORE_GenerateOutput extends Component {
                 action_text = this.genFeeText(action[1]);
                 break;
             }
+            case "Notification": {
+                action_text = this.genNoteText(action[1]);
+                break;
+            }
             default: return null;
         }
         this.appendScript(tab, action_text);
@@ -189,8 +200,29 @@ class CORE_GenerateOutput extends Component {
         return fees_text;
     }
 
-    getNoteText = note_num => {
+    genNoteText = note_num => {
+        let note_text = "";
+        if (this.props.state.functionality.notifications) {
+            console.log(this.props.state.notifications[note_num])
+            let note = this.props.state.notifications[note_num];
+            let contacts = note.contacts;
+            let professionals = note.professionals;
+            let reportName = null;
+            let reportModule = null;
+            let reportParameter = null;
+            let emailParams = null;
+            note_text += "sendNotificationSCUBE(\"" + note.template + "\", "
+                                                + "\"" + note.from + "\", "
+                                                + "\"" + contacts + "\", "
+                                                + "\"" + professionals + "\", "
+                                                + "\"" + reportName + "\", "
+                                                + reportParameter + ", "
+                                                + "\"" + reportModule + "\", "
+                                                + "capId, "
+                                                + emailParams;
+        }
         //sendNotificationSCUBE(notificationTemplateName, fromEmail, contacts, professionals, reportName, reportParameter, reportModule, capId, emailParams)
+        return note_text;
     }
 
     render() {

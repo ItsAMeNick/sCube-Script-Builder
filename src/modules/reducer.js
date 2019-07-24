@@ -27,7 +27,7 @@ const initialState = {
         conditions: true,
         fees: false,
         fees_advanced: false,
-        notification_send: false,
+        notifications: false,
         status_update: false,
         workflow: false,
         inspection_schedule: false

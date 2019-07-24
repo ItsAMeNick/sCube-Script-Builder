@@ -47,7 +47,7 @@ class CONDIT_Action extends Component {
         }
 
         //Gather Notifications
-        if (this.props.functionality.notification_send) {
+        if (this.props.functionality.notifications) {
             for (let n in this.props.notifications)  {
                 actions.push("Notification-"+this.props.notifications[n].key);
             }
