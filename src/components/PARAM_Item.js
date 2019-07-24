@@ -10,7 +10,12 @@ class PARAM_Item extends Component {
     }
 
     handleChange(event) {
-
+        let newParameters = this.props.parameter_sets[this.props.set_number].parameters;
+        newParameters[this.props.param_number][event.target.id] = event.target.value;
+        this.props.update({
+            set_number: this.props.set_number,
+            parameters: newParameters
+        });
     };
 
     render() {
@@ -41,17 +46,13 @@ class PARAM_Item extends Component {
 }
 
 const mapStateToProps = state => ({
-
+    parameter_sets: state.parameter_sets
 });
 
 const mapDispatchToProps = dispatch => ({
-    update: n => dispatch({
-        type: "update_notes",
-        payload: n
-    }),
-    delete: n => dispatch({
-        type: "delete_note",
-        payload: n
+    update: p => dispatch({
+        type: "update_parameter",
+        payload: p
     })
 });
 

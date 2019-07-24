@@ -227,7 +227,7 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "update_parameter": {
         let newState = _.cloneDeep(state);
-        newState.notification = action.payload.notification;
+        newState.parameter_sets[action.payload.set_number].parameters = action.payload.parameters;
         return newState;
     }
     case "add_parameter_set": {

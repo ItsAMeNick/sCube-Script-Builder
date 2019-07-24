@@ -24,7 +24,7 @@ class PARAM_Container extends Component {
         let items = [];
         let parameters = this.props.parameter_sets[this.props.set_number].parameters;
         for (let p in parameters) {
-            items.push(<ParamItem key={parameters[p].key} param_number={parameters[p].key}/>)
+            items.push(<ParamItem key={parameters[p].key} param_number={parameters[p].key} set_number={this.props.set_number}/>)
         }
         return items;
     }
@@ -44,7 +44,7 @@ class PARAM_Container extends Component {
                     <tr>
                         <th>#</th>
                         <th>Reference Name</th>
-                        <th>Module</th>
+                        <th>Portlet</th>
                         <th>Level 1</th>
                         <th>Level 2</th>
                         <th>Level 3</th>
