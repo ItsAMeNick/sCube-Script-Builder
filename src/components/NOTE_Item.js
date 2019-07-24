@@ -46,7 +46,7 @@ class NOTE_Item extends Component {
                 <Form.Control id="template" type="text" onChange={this.handleChange}/>
             </td>
             <td>
-                <Form.Control id="fromEmail" type="email" onChange={this.handleChange}/>
+                <Form.Control id="from" type="email" onChange={this.handleChange}/>
             </td>
             <td>
                 <Form.Control id="contacts" type="text" onChange={this.handleChange}/>
@@ -58,7 +58,7 @@ class NOTE_Item extends Component {
                 <Form.Check id="report_bool" onChange={this.handleChange}/>
             </td>
             <td>
-                <Form.Control id="parameters" as="select" onChange={this.handleChange}>
+                <Form.Control id="email_params" as="select" onChange={this.handleChange}>
                     {this.generateOptions()}
                 </Form.Control>
             </td>
