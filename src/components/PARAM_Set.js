@@ -9,6 +9,20 @@ class PARAM_Container extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange() {
+
+    }
+
+    generateItems() {
+        let items = [];
+        let parameters = this.props.parameter_sets[this.props.set_number].parameters;
+        for (let p in parameters) {
+            items.push(<ParamItem key={parameters[p].key} param_number={parameters[p].key}/>)
+        }
+        return items;
     }
 
     render() {
@@ -34,13 +48,13 @@ class PARAM_Container extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    <ParamItem param_number={1}/>
+                    {this.generateItems()}
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colSpan={6}/>
                         <td>
-                        <button onClick={() => {this.props.add()}}> Add Parameter</button>
+                        <button onClick={() => {this.props.add(this.props.set_number)}}> Add Parameter</button>
                         </td>
                     </tr>
                 </tfoot>
@@ -52,17 +66,16 @@ class PARAM_Container extends Component {
 }
 
 const mapStateToProps = state => ({
-    isOn: state.functionality.notification_send,
-    notifications: state.notifications
+    parameter_sets: state.parameter_sets
 });
 
 const mapDispatchToProps = dispatch => ({
-    add: () => dispatch({
-        type: "add_note",
-        payload: null
+    add: s => dispatch({
+        type: "add_parameter",
+        payload: s
     }),
     update: s => dispatch({
-        type: "update_notes",
+        type: "update_set",
         payload: s
     })
 });

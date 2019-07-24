@@ -41,7 +41,7 @@ class PARAM_Item extends Component {
 }
 
 const mapStateToProps = state => ({
-    notifications: state.notifications
+
 });
 
 const mapDispatchToProps = dispatch => ({

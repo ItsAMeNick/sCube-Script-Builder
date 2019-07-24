@@ -49,8 +49,10 @@ const initialState = {
     parameter_sets: {
         "1": {
             key: 1,
+            name: null,
             parameters: {
                 "1": {
+                    key: 1,
                     ref: null,
                     porlet: null,
                     level1: null,
@@ -189,8 +191,8 @@ const sCubeReducer = (state = initialState, action) => {
         let newState = _.cloneDeep(state);
         let note_codes = Object.keys(state.notifications);
         let m = 0;
-        for (let s in note_codes) {
-            m = Math.max(m,state.notifications[note_codes[s]].key);
+        for (let n in note_codes) {
+            m = Math.max(m,state.notifications[note_codes[n]].key);
         }
         m+=1;
         newState.notifications[m] =
@@ -215,6 +217,55 @@ const sCubeReducer = (state = initialState, action) => {
             return newState;
         }
         delete newState.notifications[action.payload]
+        return newState;
+    }
+
+    case "add_parameter_set": {
+        let newState = _.cloneDeep(state);
+        let set_codes = Object.keys(state.parameter_sets);
+        let m = 0;
+        for (let s in set_codes) {
+            m = Math.max(m,state.parameter_sets[set_codes[s]].key);
+        }
+        m+=1;
+        newState.parameter_sets[m] =
+            {
+                key: m,
+                name: null,
+                parameters: {
+                    "1": {
+                        key: 1,
+                        ref: null,
+                        porlet: null,
+                        level1: null,
+                        level2: null,
+                        level3: null,
+                        level4: null
+                    }
+                }
+            }
+        return newState;
+    }
+    case "add_parameter": {
+        let newState = _.cloneDeep(state);
+        let myParams = newState.parameter_sets[action.payload].parameters
+        let param_codes = Object.keys(myParams);
+        let m = 0;
+        for (let p in param_codes) {
+            m = Math.max(m,myParams[param_codes[p]].key);
+        }
+        m+=1;
+        myParams[m] =
+            {
+                key: m,
+                ref: null,
+                porlet: null,
+                level1: null,
+                level2: null,
+                level3: null,
+                level4: null
+            }
+        newState.parameter_sets[action.payload].parameters = myParams;
         return newState;
     }
 
