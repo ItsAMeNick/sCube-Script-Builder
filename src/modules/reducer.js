@@ -70,10 +70,10 @@ const initialState = {
             from: null,
             contacts: [],
             professionals: [],
-            reportName: null,
-            reportParameter: null,
-            reportModule: null,
-            emailParams: null
+            report_name: null,
+            report_parameters: null,
+            report_module: null,
+            email_params: null
         }
     }
 
@@ -204,7 +204,7 @@ const sCubeReducer = (state = initialState, action) => {
                 professionals: [],
                 report_bool: false,
                 report_name: null,
-                report_parameter: null,
+                report_parameters: null,
                 report_module: null,
                 email_params: null
             }

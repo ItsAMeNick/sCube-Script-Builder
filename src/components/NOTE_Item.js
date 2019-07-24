@@ -25,6 +25,18 @@ class NOTE_Item extends Component {
         this.forceUpdate();
     };
 
+    generateOptions() {
+        let options = [<option key="0"/>];
+        for (let s in this.props.parameter_sets) {
+            let displayName = "Set " + this.props.parameter_sets[s].key + ": Unnamed"
+            if (this.props.parameter_sets[s].name !== null) {
+                displayName = "Set " + this.props.parameter_sets[s].key + ": " + this.props.parameter_sets[s].name;
+            }
+            options.push(<option label={displayName} value={this.props.parameter_sets[s].key} key={s}/>)
+        }
+        return options;
+    }
+
     render() {
         return (
         <React.Fragment>
@@ -45,6 +57,11 @@ class NOTE_Item extends Component {
             <td>
                 <Form.Check id="report_bool" onChange={this.handleChange}/>
             </td>
+            <td>
+                <Form.Control id="parameters" as="select" onChange={this.handleChange}>
+                    {this.generateOptions()}
+                </Form.Control>
+            </td>
             {this.props.note_number !== 1 ?
             <td>
                 <button onClick={() => {
@@ -53,22 +70,40 @@ class NOTE_Item extends Component {
                     Delete
                 </button>
             </td>
-            : <td></td>}
+            : null}
         </tr>
         {this.props.notifications[this.props.note_number].report_bool ?
+            <React.Fragment>
             <tr>
                 <td colSpan="4"/>
-                <td>
-                    <p>Report Module:</p>
-                    <p>Report Name:</p>
-                    <p>Report Parameter:</p>
+                <td colSpan="2">
+                    <p>Report&nbsp;Module:</p>
                 </td>
                 <td>
                     <Form.Control id="report_module" type="text" onChange={this.handleChange}/>
-                    <Form.Control id="report_name" type="text" onChange={this.handleChange}/>
-                    <Form.Control id="report_parameter" type="text" onChange={this.handleChange}/>
                 </td>
             </tr>
+            <tr>
+                <td colSpan="4"/>
+                <td colSpan="2">
+                    Report&nbsp;Name:
+                </td>
+                <td>
+                    <Form.Control id="report_name" type="text" onChange={this.handleChange}/>
+                </td>
+            </tr>
+            <tr>
+                <td colSpan="4"/>
+                <td colSpan="2">
+                    <p>Report&nbsp;Parameters:</p>
+                </td>
+                <td>
+                    <Form.Control id="report_parameters" as="select" onChange={this.handleChange}>
+                        {this.generateOptions()}
+                    </Form.Control>
+                </td>
+            </tr>
+            </React.Fragment>
         : null}
         </React.Fragment>
         );
@@ -76,7 +111,8 @@ class NOTE_Item extends Component {
 }
 
 const mapStateToProps = state => ({
-    notifications: state.notifications
+    notifications: state.notifications,
+    parameter_sets: state.parameter_sets
 });
 
 const mapDispatchToProps = dispatch => ({
