@@ -12,7 +12,6 @@ class NOTE_Container extends Component {
 
     generateNoteItems = () => {
         let stats = [];
-        console.log(this.props.notifications)
         for (let n in this.props.notifications) {
             stats.push(<NoteItem key={this.props.notifications[n].key} note_number={this.props.notifications[n].key}/>)
         }

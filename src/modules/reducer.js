@@ -46,6 +46,21 @@ const initialState = {
         quantity: null,
         invoice: "Y"
     }},
+    parameter_sets: {
+        "1": {
+            key: 1,
+            parameters: {
+                "1": {
+                    ref: null,
+                    porlet: null,
+                    level1: null,
+                    level2: null,
+                    level3: null,
+                    level4: null
+                }
+            }
+        }
+    },
     notifications: {
         "1": {
             key: 1,
