@@ -58,11 +58,8 @@ const initialState = {
                 "1": {
                     key: 1,
                     ref: null,
-                    porlet: null,
-                    level1: null,
-                    level2: null,
-                    level3: null,
-                    level4: null
+                    script: null,
+                    portlet: null,
                 }
             }
         }
@@ -250,11 +247,8 @@ const sCubeReducer = (state = initialState, action) => {
                     "1": {
                         key: 1,
                         ref: null,
-                        porlet: null,
-                        level1: null,
-                        level2: null,
-                        level3: null,
-                        level4: null
+                        script: null,
+                        portlet: null,
                     }
                 }
             }
@@ -273,11 +267,8 @@ const sCubeReducer = (state = initialState, action) => {
             {
                 key: m,
                 ref: null,
-                porlet: null,
-                level1: null,
-                level2: null,
-                level3: null,
-                level4: null
+                script: null,
+                portlet: null,
             }
         newState.parameter_sets[action.payload].parameters = myParams;
         return newState;
