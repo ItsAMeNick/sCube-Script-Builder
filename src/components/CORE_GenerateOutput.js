@@ -29,16 +29,29 @@ class CORE_GenerateOutput extends Component {
     }
 
     generateHelper() {
+        script_text = "";
+
         switch(this.props.state.mode) {
             case "event_script": {
-                return this.generateEventScript();
+                if (this.props.state.event_type !== null && (this.props.state.structure.module !== "NA" && this.props.state.structure.module !== "")) {
+                    this.generateEventScript();
+                    break;
+                } else {
+                    //Must provide event and module before anything can generate.
+                    return "Please provide an Event and a Module";
+                }
             }
             case "function": {
-                return this.generateFunctionScript();
+                this.generateFunctionScript();
+                break;
             }
             default:
                 return "ERROR: A Script can not be generated for this mode"
         }
+
+        this.parseConditions(1, "");
+
+        return script_text;
     }
 
     generateFunctionScript = () => {
@@ -47,22 +60,16 @@ class CORE_GenerateOutput extends Component {
 
     generateEventScript = () => {
         let today = new Date();
-        script_text = "";
 
-        if (this.props.state.event_type != null && this.props.state.structure.module !== "NA") {
-            script_text += "//"+this.props.state.event_type+":"
-                                +this.props.state.structure.module+"/"
-                                +this.props.state.structure.type+"/"
-                                +this.props.state.structure.subtype+"/"
-                                +this.props.state.structure.category+"\n";
-            script_text += "//Created: " + (today.getMonth()+1) +"/"
-                                                + today.getDate() + "/"
-                                                + today.getFullYear() + "\n";
-            script_text += "\n";
-        } else {
-            //Must provide event and module before anything can generate.
-            return "Please provide an Event and a Module.";
-        }
+        script_text += "//"+this.props.state.event_type+":"
+                            +this.props.state.structure.module+"/"
+                            +this.props.state.structure.type+"/"
+                            +this.props.state.structure.subtype+"/"
+                            +this.props.state.structure.category+"\n";
+        script_text += "//Created: " + (today.getMonth()+1) +"/"
+                                            + today.getDate() + "/"
+                                            + today.getFullYear() + "\n";
+        script_text += "\n";
 
         script_text += "eval(\"INCLUDES_CUSTOMGENERATE_SCRIPTS\");\n"
 
@@ -71,11 +78,6 @@ class CORE_GenerateOutput extends Component {
         } else {
             script_text += "showDebug = false;\n\n";
         }
-
-        //NEED TO ADD "DEFINE VARIABLES" !!!
-        this.parseConditions(1, "");
-
-        return script_text;
     }
 
     parseConditions = (level, parent) => {
@@ -229,8 +231,12 @@ class CORE_GenerateOutput extends Component {
         return (
         <div>
             {this.props.state.mode === "event_script" ? <div>
-                <p>Script Code: {this.genName(true)}</p>
-                <p>Script Name: {this.genName()}</p>
+            { this.props.state.event_type !== null && (this.props.state.structure.module !== "NA" && this.props.state.structure.module !== "") ?
+                <React.Fragment>
+                    <p>Script Code: {this.genName(true)}</p>
+                    <p>Script Name: {this.genName()}</p>
+                </React.Fragment>
+            : null}
             </div> : null }
             {this.props.state.mode === "function" ? <div>
                 <p>Function Name: {this.props.state.mode}</p>
