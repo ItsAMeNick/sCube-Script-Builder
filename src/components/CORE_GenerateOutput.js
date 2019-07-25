@@ -166,6 +166,11 @@ class CORE_GenerateOutput extends Component {
             for (let f in this.props.state.fees) {
                 this.appendScript("", this.genFeeText(f));
             }
+
+            //Notifications
+            for (let n in this.props.state.notifications) {
+                this.appendScript("", this.genNoteText(n));
+            }
         }
     }
 
@@ -235,8 +240,18 @@ class CORE_GenerateOutput extends Component {
             let contacts = note.contacts;
             let professionals = note.professionals;
             let reportName = null;
+            if (this.props.state.notifications[note_num].report_name) {
+                reportName = "\""+this.props.state.notifications[note_num].report_name+"\"";
+            }
             let reportModule = null;
+            if (this.props.state.notifications[note_num].report_module) {
+                reportModule = "\""+this.props.state.notifications[note_num].report_module+"\"";
+            }
             let reportParameter = null;
+            if (this.props.state.notifications[note_num].report_parameters) {
+                let params = this.props.state.parameter_sets[this.props.state.notifications[note_num].report_parameters];
+                reportParameter = "set_" + params.key + "_" + params.name;
+            }
             let emailParams = null;
             if (this.props.state.notifications[note_num].email_params) {
                 let params = this.props.state.parameter_sets[this.props.state.notifications[note_num].email_params];
@@ -246,9 +261,9 @@ class CORE_GenerateOutput extends Component {
                                                 + "\"" + note.from + "\", "
                                                 + "\"" + contacts + "\", "
                                                 + "\"" + professionals + "\", "
-                                                + "\"" + reportName + "\", "
+                                                + reportName + ", "
                                                 + reportParameter + ", "
-                                                + "\"" + reportModule + "\", "
+                                                + reportModule + ", "
                                                 + "capId, "
                                                 + emailParams + ");";
         }
