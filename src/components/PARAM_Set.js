@@ -64,15 +64,8 @@ class PARAM_Container extends Component {
                 <tbody>
                     {this.generateItems()}
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colSpan={6}/>
-                        <td>
-                        <button onClick={() => {this.props.add(this.props.set_number)}}> Add Parameter</button>
-                        </td>
-                    </tr>
-                </tfoot>
             </Table>
+            <button onClick={() => {this.props.add(this.props.set_number)}}> Add Parameter</button>
             <hr/>
         </div>
         );

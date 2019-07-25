@@ -3,11 +3,12 @@
 //A branch terminates when a "script" is met
 //The words "free" and "type" allow for special funcationality
 //DO NOT USE SCRIPT/FREE/TYPE AS KEYS, THEY IMPLY SPECIAL FUNCTIONALITY
+//if script == "***ADD ME!" the parameter will go red to show this is not ready
 
 var variable_map = {
     "General": {
         "Date": {
-            script: "new Date()"
+            script: "new Date().toString()"
         }
     },
     "Record": {
@@ -40,88 +41,88 @@ var variable_map = {
     "Address": {
         "Street": {
             "Number": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Direction": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Type": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Name": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             }
         },
         "Line": {
             "1": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "2": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "3": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             }
         },
         "Unit": {
             "Number": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Type": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             }
         },
         "CSZ": {
             "City": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "State": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Zip": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             }
         }
     },
     "Parcel": {
-        script: "ADD ME!"
+        script: "***ADD ME!"
     },
     "Owner": {
         "Street": {
             "Number": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Direction": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Type": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             },
             "Name": {
-                script: "ADD ME!"
+                script: "***ADD ME!"
             }
         },
         "Address": {
             "Line": {
                 "1": {
-                    script: "ADD ME!"
+                    script: "***ADD ME!"
                 },
                 "2": {
-                    script: "ADD ME!"
+                    script: "***ADD ME!"
                 },
                 "3": {
-                    script: "ADD ME!"
+                    script: "***ADD ME!"
                 }
             },
             "CSZ": {
                 "City": {
-                    script: "ADD ME!"
+                    script: "***ADD ME!"
                 },
                 "State": {
-                    script: "ADD ME!"
+                    script: "***ADD ME!"
                 },
                 "Zip": {
-                    script: "ADD ME!"
+                    script: "***ADD ME!"
                 }
             }
         }

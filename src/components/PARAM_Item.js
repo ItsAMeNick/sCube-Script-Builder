@@ -69,7 +69,10 @@ class PARAM_Item extends Component {
             if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId]) {
                 levelValue = this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId];
             }
-            row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange}>
+            //REMOVE ERROR CHECK ON RELEASE
+            let errorCheck = {color: "black", background: "auto"};
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script === "***ADD ME!") errorCheck = {color: "white", background: "red"};
+            row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange} style={errorCheck}>
                 {keys.map((k) => {
                     c++;
                     return <option key={c} label={k} value={k}/>;
