@@ -183,7 +183,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
-    case "update_note": {
+    case "update_notes": {
         let newState = _.cloneDeep(state);
         newState.notification = action.payload.notification;
         return newState;
