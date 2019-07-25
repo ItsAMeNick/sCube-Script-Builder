@@ -26,6 +26,10 @@ class PARAM_Item extends Component {
             delete newParameters[this.props.param_number]["level"+level];
             level++;
         }
+
+        //Reset the Script upon a Change
+        newParameters[this.props.param_number].script = null;
+
         this.props.update({
             set_number: this.props.set_number,
             parameters: newParameters
@@ -33,9 +37,9 @@ class PARAM_Item extends Component {
     };
 
     addScript(text) {
+        console.log(text);
         let newParameters = this.props.parameter_sets[this.props.set_number].parameters;
         newParameters[this.props.param_number]["script"] = text;
-
         this.props.update({
             set_number: this.props.set_number,
             parameters: newParameters
@@ -47,15 +51,25 @@ class PARAM_Item extends Component {
         if (row === null) row = [];
         if (keys.length <= 1) return null;
         if (keys[1] === "script") {
-            //Set the script
+            if (map["script"] !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["script"]) {
+                this.addScript(map["script"]);
+            }
             return null;
         }
         let newId = "level"+level
         if (level === 0) newId = "portlet";
 
+        if (keys[1] === "type") {
+            return null;
+        }
+
         let c = 0;
         if (keys[1] !== "free") {
-            row.push(<td key={newId}><Form.Control id={newId} as="select" onChange={this.handleChange}>
+            let levelValue = "";
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId]) {
+                levelValue = this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId];
+            }
+            row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange}>
                 {keys.map((k) => {
                     c++;
                     return <option key={c} label={k} value={k}/>;
@@ -66,7 +80,6 @@ class PARAM_Item extends Component {
         //Check if you should go to the next level
         if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId]) {
             let v = this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId];
-            console.log("Going On");
             this.generateMap(map[v], level + 1, v, row);
         }
         return row;
