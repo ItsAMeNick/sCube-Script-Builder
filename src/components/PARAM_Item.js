@@ -70,7 +70,7 @@ class PARAM_Item extends Component {
                 levelValue = this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId];
             }
             //REMOVE ERROR CHECK ON RELEASE
-            let errorCheck = {color: "black", background: "auto"};
+            let errorCheck = {color: "black", background: "white"};
             if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script === "***ADD ME!") errorCheck = {color: "white", background: "red"};
             row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange} style={errorCheck}>
                 {keys.map((k) => {

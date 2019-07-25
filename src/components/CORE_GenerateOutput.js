@@ -49,6 +49,7 @@ class CORE_GenerateOutput extends Component {
                 return "ERROR: A Script can not be generated for this mode"
         }
 
+        this.parseVariables();
         this.parseConditions(1, "");
 
         return script_text;
@@ -77,6 +78,31 @@ class CORE_GenerateOutput extends Component {
             script_text += "showDebug = true;\n\n";
         } else {
             script_text += "showDebug = false;\n\n";
+        }
+    }
+
+    parseVariables() {
+        if (this.props.state.functionality.notifications) {
+            let sets = this.props.state.parameter_sets;
+            for (let s in sets) {
+                this.appendScript("", "//Generating the Hashtable for Set: "+sets[s].key+", Named: "+sets[s].name);
+                let hash_name = "set_"+sets[s].key+"_"+sets[s].name;
+                this.appendScript("", "var "+hash_name+" = aa.util.newHashtable();\n");
+                //First assign all variables
+                for (let p in sets[s].parameters) {
+                    let param = sets[s].parameters[p];
+                    let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param.ref;
+                    this.appendScript("","var "+param_name+" = "+param.script+";")
+                }
+                this.appendScript("",""); //Blank Line
+                //Add to hash
+                for (let p in sets[s].parameters) {
+                    let param = sets[s].parameters[p];
+                    let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param.ref;
+                    this.appendScript("","addParameter("+hash_name+", \"$$"+param.ref+"$$\", "+param_name+");");
+                }
+                this.appendScript("",""); //Blank Line
+            }
         }
     }
 
@@ -205,7 +231,6 @@ class CORE_GenerateOutput extends Component {
     genNoteText = note_num => {
         let note_text = "";
         if (this.props.state.functionality.notifications) {
-            console.log(this.props.state.notifications[note_num])
             let note = this.props.state.notifications[note_num];
             let contacts = note.contacts;
             let professionals = note.professionals;
@@ -213,6 +238,10 @@ class CORE_GenerateOutput extends Component {
             let reportModule = null;
             let reportParameter = null;
             let emailParams = null;
+            if (this.props.state.notifications[note_num].email_params) {
+                let params = this.props.state.parameter_sets[this.props.state.notifications[note_num].email_params];
+                emailParams = "set_" + params.key + "_" + params.name;
+            }
             note_text += "sendNotificationSCUBE(\"" + note.template + "\", "
                                                 + "\"" + note.from + "\", "
                                                 + "\"" + contacts + "\", "
@@ -221,7 +250,7 @@ class CORE_GenerateOutput extends Component {
                                                 + reportParameter + ", "
                                                 + "\"" + reportModule + "\", "
                                                 + "capId, "
-                                                + emailParams;
+                                                + emailParams + ");";
         }
         //sendNotificationSCUBE(notificationTemplateName, fromEmail, contacts, professionals, reportName, reportParameter, reportModule, capId, emailParams)
         return note_text;
