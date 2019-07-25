@@ -53,9 +53,9 @@ class App extends Component {
             </Col> <Col>
                 <Fees/>
             </Col> <Col>
-                <Notes/>
-            </Col> <Col>
                 <Params/>
+            </Col> <Col>
+                <Notes/>
             </Col> <Col>
                 <ConditContainer/>
             </Col> <hr/> <Col>

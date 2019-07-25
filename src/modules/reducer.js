@@ -30,7 +30,7 @@ const initialState = {
         notifications: false,
         status_update: false,
         workflow: false,
-        inspection_schedule: false
+        inspections: false
     },
     status: {
         "1": {

@@ -34,7 +34,7 @@ class NOTE_Container extends Component {
                     <th>Recipients*</th>
                     <th>Professionals*</th>
                     <th>Include Report?</th>
-                    <th>Parameters</th>
+                    <th>Notification Parameters</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -76,7 +76,7 @@ class NOTE_Item extends Component {
             <React.Fragment>
             <tr>
                 <td colSpan="4"/>
-                <td colSpan="2">
+                <td colSpan="1">
                     <p>Report&nbsp;Module:</p>
                 </td>
                 <td>
@@ -85,7 +85,7 @@ class NOTE_Item extends Component {
             </tr>
             <tr>
                 <td colSpan="4"/>
-                <td colSpan="2">
+                <td colSpan="1">
                     Report&nbsp;Name:
                 </td>
                 <td>
@@ -94,7 +94,7 @@ class NOTE_Item extends Component {
             </tr>
             <tr>
                 <td colSpan="4"/>
-                <td colSpan="2">
+                <td colSpan="1">
                     <p>Report&nbsp;Parameters:</p>
                 </td>
                 <td>
