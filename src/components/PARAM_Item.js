@@ -13,12 +13,11 @@ class PARAM_Item extends Component {
 
     handleChange(event) {
         let newParameters = this.props.parameter_sets[this.props.set_number].parameters;
-        newParameters[this.props.param_number][event.target.id] = event.target.value;
 
         //Reset the special values upon change
         newParameters[this.props.param_number].script = null;
-        newParameters[this.props.param_number].type = null;
-        newParameters[this.props.param_number].free = null;
+
+        newParameters[this.props.param_number][event.target.id] = event.target.value;
 
         //Need to remove any parameters past this one
         let level;
@@ -63,8 +62,18 @@ class PARAM_Item extends Component {
         }
 
         if (keys[1] === "script") {
-            if (map.script !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script) {
-                this.addScript(map.script);
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].type) {
+                console.log("TYPE!")
+                let newText = map.script;
+                newText = newText.replace("^$*$^", this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].type);
+                if (newText !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script) {
+                    this.addScript(newText);
+                }
+            } else {
+                console.log("NO TYPE!")
+                if (map.script !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script) {
+                    this.addScript(map.script);
+                }
             }
             return null;
         } else if (keys[1] === "free") {
@@ -93,7 +102,7 @@ class PARAM_Item extends Component {
         } else if (keys[1] === "free") {
             row.push(<td key={newId}><Form.Control id={"free"} onChange={this.handleChange}/></td>);
         } else if (keys[1] === "type") {
-            row.push(<td key={newId}>Type:<Form.Control id={"type"} onChange={this.handleChange}/></td>);
+            row.push(<td key={newId}><Form.Control id={"type"} placeholder="Type" onChange={this.handleChange}/></td>);
         }
 
         //Check if you should go to the next level
