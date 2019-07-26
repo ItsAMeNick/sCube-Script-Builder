@@ -3,6 +3,8 @@
 //A branch terminates when a "script" is met
 //The words "free" and "type" allow for special funcationality
 //DO NOT USE SCRIPT/FREE/TYPE AS KEYS, THEY IMPLY SPECIAL FUNCTIONALITY
+//Free has a child of script and the *** in the script is replaced with the
+//  value of free.
 //if script == "***ADD ME!" the parameter will go red to show this is not ready
 
 var variable_map = {
@@ -127,14 +129,63 @@ var variable_map = {
             }
         }
     },
-    "Contacts": {
+    "Contact": {
         type: {
-
+            "Personal Information": {
+                "First Name": {
+                    script: "***ADD ME!"
+                },
+                "Last Name": {
+                    script: "***ADD ME!"
+                },
+                "Middle Name": {
+                    script: "***ADD ME!"
+                },
+                "Email": {
+                    script: "***ADD ME!"
+                },
+                "Phone 1": {
+                    script: "***ADD ME!"
+                },
+                "Phone 2": {
+                    script: "***ADD ME!"
+                },
+                "Phone 3": {
+                    script: "***ADD ME!"
+                },
+                "Fax?": {
+                    script: "***ADD ME!"
+                }
+            },
+            "Address": {
+                "Line": {
+                    "1": {
+                        script: "***ADD ME!"
+                    },
+                    "2": {
+                        script: "***ADD ME!"
+                    },
+                    "3": {
+                        script: "***ADD ME!"
+                    }
+                }
+            },
+            "CSZ": {
+                "City": {
+                    script: "***ADD ME!"
+                },
+                "State": {
+                    script: "***ADD ME!"
+                },
+                "Zip": {
+                    script: "***ADD ME!"
+                }
+            }
         }
     },
     "Custom Field": {
         free: {
-            script: "getAppSpecific(\"FREE\")"
+            script: "getAppSpecific(\"***\")"
         }
     },
     "Event Specific": {
