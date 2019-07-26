@@ -35,9 +35,10 @@ class NOTE_Item extends Component {
         this.forceUpdate();
     };
 
-    generateOptions() {
+    generateOptions(type) {
         let options = [<option key="0"/>];
         for (let s in this.props.parameter_sets) {
+            if (this.props.parameter_sets[s].style !== type) continue;
             let displayName = "Set " + this.props.parameter_sets[s].key + ": Unnamed"
             if (this.props.parameter_sets[s].name !== null) {
                 displayName = "Set " + this.props.parameter_sets[s].key + ": " + this.props.parameter_sets[s].name;
@@ -69,7 +70,7 @@ class NOTE_Item extends Component {
             </td>
             <td>
                 <Form.Control id="email_params" as="select" onChange={this.handleChange}>
-                    {this.generateOptions()}
+                    {this.generateOptions("email")}
                 </Form.Control>
             </td>
             {this.props.note_number !== 1 ?
@@ -109,7 +110,7 @@ class NOTE_Item extends Component {
                 </td>
                 <td>
                     <Form.Control id="report_parameters" as="select" onChange={this.handleChange}>
-                        {this.generateOptions()}
+                        {this.generateOptions("report")}
                     </Form.Control>
                 </td>
             </tr>
