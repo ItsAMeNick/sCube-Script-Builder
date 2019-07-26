@@ -12,9 +12,24 @@ class PARAM_Container extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentDidMount() {
+        if (this.props.parameter_sets[this.props.set_number].style === "email") {
+            document.getElementById("email."+this.props.set_number).checked = true;
+        }
+    }
+
     handleChange(event) {
         let newSets = this.props.parameter_sets;
-        newSets[this.props.set_number][event.target.id] = event.target.value;
+        if (event.target.id === "name") {
+            newSets[this.props.set_number][event.target.id] = event.target.value;
+        } else {
+            let id = event.target.id.split(".");
+            if (id[0] === "email") {
+                newSets[this.props.set_number].style = "email";
+            } else {
+                newSets[this.props.set_number].style = "report";
+            }
+        }
         this.props.update({
             parameter_sets: newSets
         });
@@ -52,6 +67,12 @@ class PARAM_Container extends Component {
                         <td>Set Name: </td>
                         <td>
                             <Form.Control id="name" type="text" onChange={this.handleChange}/>
+                        </td>
+                        <td>
+                            <Form.Check id={"email."+this.props.set_number} label="Email Parameters" type="radio" name = {"style."+this.props.set_number} onChange={this.handleChange}/>
+                        </td>
+                        <td>
+                            <Form.Check id={"report."+this.props.set_number} label="Report Parameters" type="radio" name = {"style."+this.props.set_number} onChange={this.handleChange}/>
                         </td>
                     </tr>
                     <tr>

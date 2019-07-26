@@ -49,7 +49,7 @@ class CORE_GenerateOutput extends Component {
                 return "ERROR: A Script can not be generated for this mode"
         }
 
-        this.parseVariables();
+        this.parseParameters();
         this.parseConditions(1, "");
 
         return script_text;
@@ -81,25 +81,39 @@ class CORE_GenerateOutput extends Component {
         }
     }
 
-    parseVariables() {
+    parseParameters() {
         if (this.props.state.functionality.notifications) {
             let sets = this.props.state.parameter_sets;
             for (let s in sets) {
-                this.appendScript("", "//Generating the Hashtable for Set: "+sets[s].key+", Named: "+sets[s].name);
-                let hash_name = "set_"+sets[s].key+"_"+sets[s].name;
-                this.appendScript("", "var "+hash_name+" = aa.util.newHashtable();\n");
+                this.appendScript("", "//Generating the Hashtable for Set: "+sets[s].key+", Named: "+sets[s].name+", Style: "+sets[s].style);
+                let clean_name = null;
+                if (sets[s].name) clean_name = sets[s].name.replace(/\W/g, '_');
+                let hash_name = "set_"+sets[s].key+"_"+clean_name;
+                if (sets[s].style === "email") {
+                    this.appendScript("", "var "+hash_name+" = aa.util.newHashtable();\n");
+                } else if (sets[s].style === "report") {
+                    this.appendScript("", "var "+hash_name+" = aa.util.newHashMap();\n");
+                }
                 //First assign all variables
                 for (let p in sets[s].parameters) {
                     let param = sets[s].parameters[p];
-                    let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param.ref;
+                    let param_ref = null;
+                    if (param.ref) param_ref = param.ref.replace(/\W/g, '_');
+                    let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param_ref;
                     this.appendScript("","var "+param_name+" = "+param.script+";")
                 }
                 this.appendScript("",""); //Blank Line
                 //Add to hash
                 for (let p in sets[s].parameters) {
                     let param = sets[s].parameters[p];
-                    let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param.ref;
-                    this.appendScript("","addParameter("+hash_name+", \"$$"+param.ref+"$$\", "+param_name+");");
+                    let param_ref = null;
+                    if (param.ref) param_ref = param.ref.replace(/\W/g, '_');
+                    let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param_ref;
+                    if (sets[s].style === "email") {
+                        this.appendScript("","addParameter("+hash_name+", \"$$"+param.ref+"$$\", "+param_name+");");
+                    } else if (sets[s].style === "report") {
+                        this.appendScript("",hash_name+".put(\""+param.ref+"\", "+param_name+");");
+                    }
                 }
                 this.appendScript("",""); //Blank Line
             }

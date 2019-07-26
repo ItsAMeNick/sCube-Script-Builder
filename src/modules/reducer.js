@@ -54,6 +54,7 @@ const initialState = {
         "1": {
             key: 1,
             name: null,
+            style: "email",
             parameters: {
                 "1": {
                     key: 1,
@@ -243,6 +244,7 @@ const sCubeReducer = (state = initialState, action) => {
             {
                 key: m,
                 name: null,
+                style: "email",
                 parameters: {
                     "1": {
                         key: 1,

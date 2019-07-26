@@ -27,11 +27,6 @@ class PARAM_Item extends Component {
             level++;
         }
 
-        if (event.target.id === "ref") {
-            console.log("Hello");
-            newParameters[this.props.param_number][event.target.id] = event.target.value.replace(/\W/g, '_');
-        }
-
         //Reset the Script upon a Change
         newParameters[this.props.param_number].script = null;
 
