@@ -48,7 +48,27 @@ class PARAM_Item extends Component {
     }
 
     generateMap(map, level, parent, row) {
+
+
+        //FILTER BASED ON PARENT
+        if (parent === "Event Specific") {
+            if (["ASA", "ASB"].includes(this.props.event_type)) {
+                return null;
+            } else if (["CTRCA"].includes(this.props.event_type)) {
+                return null;
+            } else if (["IRSA", "IRSB"].includes(this.props.event_type)) {
+                map = map.Inspection;
+            } else if (["PRA"].includes(this.props.event_type)) {
+                return null;
+            } else if (["WTUA","WTUB"].includes(this.props.event_type)) {
+                map = map.Workflow;
+            } else {
+                return null;
+            }
+        }
+
         let keys = [""].concat(Object.keys(map));
+
         keys.sort();
         if (row === null) row = [];
         if (keys.length <= 1) return null;
@@ -107,6 +127,7 @@ class PARAM_Item extends Component {
 
         //Check if you should go to the next level
         if (levelValue) {
+            console.log(levelValue);
             this.generateMap(map[levelValue], level + 1, levelValue, row);
         }
         return row;
@@ -126,7 +147,8 @@ class PARAM_Item extends Component {
 }
 
 const mapStateToProps = state => ({
-    parameter_sets: state.parameter_sets
+    parameter_sets: state.parameter_sets,
+    event_type: state.event_type
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -7,6 +7,8 @@
 //  value of free.
 //if script == "***ADD ME!" the parameter will go red to show this is not ready
 
+//EVENT SPECIFIC ALSO HAS CUSTOM SCRIPTING, contact Nick Zoner for information.
+
 var variable_map = {
     "General": {
         "Date": {
@@ -189,7 +191,7 @@ var variable_map = {
         }
     },
     "Event Specific": {
-        'Workflow': {
+        "Workflow": {
             "Task": {
                 script: "wfTask"
             },
@@ -201,6 +203,17 @@ var variable_map = {
             },
             "Comment": {
                 script: "wfComment"
+            }
+        },
+        "Inspection": {
+            "Type": {
+                script: "inspTypeArr[0]"
+            },
+            "Result": {
+                script: "inspResultArr[0]"
+            },
+            "ID": {
+                script: "inspIdArr[0]"
             }
         }
     },

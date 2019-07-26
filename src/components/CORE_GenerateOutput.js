@@ -273,8 +273,8 @@ class CORE_GenerateOutput extends Component {
             }
             note_text += "sendNotificationSCUBE(\"" + note.template + "\", "
                                                 + "\"" + note.from + "\", "
-                                                + "\"" + contacts + "\", "
-                                                + "\"" + professionals + "\", "
+                                                + contacts + ", "
+                                                + professionals + ", "
                                                 + reportName + ", "
                                                 + reportParameter + ", "
                                                 + reportModule + ", "

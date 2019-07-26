@@ -11,13 +11,13 @@ class NOTE_Item extends Component {
 
     handleChange(event) {
         let newNotifications = this.props.notifications;
-        let newValue = event.target.value;
+        let newValue = "";
         if (event.target.id === "report_bool") {
             newValue = event.target.checked;
         }
         if (event.target.id === "contacts" || event.target.id === "professionals") {
             if (event.target.value.trim().toLowerCase() === "all") {
-                newValue = "ALL";
+                newValue = "\"ALL\"";
             } else {
                 let people = event.target.value;
                 people = people.split(",").map(p => {
@@ -25,6 +25,8 @@ class NOTE_Item extends Component {
                 })
                 newValue = JSON.stringify(people);
             }
+        } else {
+            newValue = "\""+event.target.value+"\"";
         }
         newNotifications[this.props.note_number][event.target.id] = newValue;
         this.props.update({
