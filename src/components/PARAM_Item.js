@@ -83,14 +83,12 @@ class PARAM_Item extends Component {
 
         if (keys[1] === "script") {
             if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].type) {
-                console.log("TYPE!")
                 let newText = map.script;
                 newText = newText.replace("^$*$^", this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].type);
                 if (newText !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script) {
                     this.addScript(newText);
                 }
             } else {
-                console.log("NO TYPE!")
                 if (map.script !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script) {
                     this.addScript(map.script);
                 }
