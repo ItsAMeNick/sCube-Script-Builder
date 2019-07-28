@@ -45,46 +45,43 @@ var variable_map = {
     "Address": {
         "Street": {
             "Number": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'houseNumber')"
             },
             "Direction": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'streetDirection')"
             },
             "Type": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'streetSuffix')"
             },
             "Name": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'streetName')"
             }
         },
         "Line": {
             "1": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'addressLine1')"
             },
             "2": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'addressLine2')"
             },
-            "3": {
-                script: "***ADD ME!"
-            }
         },
         "Unit": {
             "Number": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'unitStart')"
             },
             "Type": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'unitType')"
             }
         },
         "CSZ": {
             "City": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'city')"
             },
             "State": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'state')"
             },
             "Zip": {
-                script: "***ADD ME!"
+                script: "getAddressComponent(capId, 'zip')"
             }
         }
     },
