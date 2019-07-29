@@ -72,7 +72,7 @@ class CORE_GenerateOutput extends Component {
                                             + today.getFullYear() + "\n";
         script_text += "\n";
 
-        script_text += "eval(\"INCLUDES_CUSTOMGENERATE_SCRIPTS\");\n"
+        script_text += "eval(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\");\n"
 
         if (this.props.state.show_debug === true) {
             script_text += "showDebug = true;\n\n";
