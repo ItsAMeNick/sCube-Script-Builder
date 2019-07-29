@@ -11,7 +11,8 @@ const initialState = {
         category: "NA"
     },
     mode_extras: {
-
+        function_name: "",
+        function_desc: "",
     },
     conditions: {
         "1": {
@@ -100,6 +101,12 @@ const sCubeReducer = (state = initialState, action) => {
     case "update_structure": {
         let newState = _.cloneDeep(state);
         newState.structure = action.payload.structure;
+        return newState;
+    }
+
+    case "update_mode_extras": {
+        let newState = _.cloneDeep(state);
+        newState.mode_extras = action.payload.mode_extras;
         return newState;
     }
 
