@@ -12,7 +12,7 @@
 var variable_map = {
     "General": {
         "Date": {
-            script: "new Date().toString()" //This could be better
+            script: "new Date().toString()"
         }
     },
     "Record": {
@@ -157,19 +157,15 @@ var variable_map = {
                 }
             },
             "Address": {
-                "Line": {
-                    "1": {
-                        script: "***ADD ME!"
-                    },
-                    "2": {
-                        script: "***ADD ME!"
-                    },
-                    "3": {
-                        script: "***ADD ME!"
-                    }
-                }
-            },
-            "CSZ": {
+                "Line 1": {
+                    script: "***ADD ME!"
+                },
+                "Line 2": {
+                    script: "***ADD ME!"
+                },
+                "Line 3": {
+                    script: "***ADD ME!"
+                },
                 "City": {
                     script: "***ADD ME!"
                 },
@@ -179,7 +175,27 @@ var variable_map = {
                 "Zip": {
                     script: "***ADD ME!"
                 }
-            }
+            },
+            "External Address": {
+                "Line 1": {
+                    script: "***ADD ME!"
+                },
+                "Line 2": {
+                    script: "***ADD ME!"
+                },
+                "Line 3": {
+                    script: "***ADD ME!"
+                },
+                "City": {
+                    script: "***ADD ME!"
+                },
+                "State": {
+                    script: "***ADD ME!"
+                },
+                "Zip": {
+                    script: "***ADD ME!"
+                }
+            },
         }
     },
     "Custom Field": {
