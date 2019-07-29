@@ -25,12 +25,14 @@ class NOTE_Item extends Component {
                 })
                 newValue = JSON.stringify(people);
             }
+        } else if (event.target.id === "email_params" || event.target.id === "report_parameters") {
+            newValue = event.target.value;
         } else {
             newValue = "\""+event.target.value+"\"";
         }
         newNotifications[this.props.note_number][event.target.id] = newValue;
         this.props.update({
-            note: newNotifications
+            notifications: newNotifications
         });
         this.forceUpdate();
     };
@@ -127,9 +129,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    update: n => dispatch({
+    update: notifications => dispatch({
         type: "update_notes",
-        payload: n
+        payload: notifications
     }),
     delete: n => dispatch({
         type: "delete_note",
