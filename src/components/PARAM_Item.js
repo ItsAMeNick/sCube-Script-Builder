@@ -49,27 +49,34 @@ class PARAM_Item extends Component {
 
     //Changes made to this function should be checked in CONDIT_Item
     generateMap(map, level, parent, row) {
+        if (row === null) row = [];
+
         //FILTER BASED ON PARENT
         if (parent === "Event Specific") {
             if (["ASA", "ASB"].includes(this.props.event_type)) {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control placeholder="None" readOnly/></td>)
+                return row;
             } else if (["CTRCA"].includes(this.props.event_type)) {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="None" readOnly/></td>)
+                return row;
             } else if (["IRSA", "IRSB"].includes(this.props.event_type)) {
                 map = map.Inspection;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="Inspection" readOnly/></td>)
             } else if (["PRA"].includes(this.props.event_type)) {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="None" readOnly/></td>)
+                return row;
             } else if (["WTUA","WTUB"].includes(this.props.event_type)) {
                 map = map.Workflow;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="Workflow" readOnly/></td>)
             } else {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="Select Event Type" readOnly/></td>)
+                return row;
             }
         }
 
         let keys = [""].concat(Object.keys(map));
 
         keys.sort();
-        if (row === null) row = [];
         if (keys.length <= 1) return null;
 
         let newId = "level"+level

@@ -58,6 +58,7 @@ class CONDIT_Item extends Component {
 
     genPortlet = () => {
         let types = [""].concat(Object.keys(variable_map.variable_map));
+        types.sort();
         types = types.map(t => {
             return <option key={t} value={t} label={t}/>
         });
@@ -66,27 +67,34 @@ class CONDIT_Item extends Component {
 
     //Based off generateMap from PARAM_Item
     generateX = (map, level, parent, row) => {
+        if (row === null) row = [];
+
         //FILTER BASED ON PARENT
         if (parent === "Event Specific") {
             if (["ASA", "ASB"].includes(this.props.event_type)) {
-                return null;
+                row.push(<Form.Control key="Event Specific" placeholder="None" readOnly/>)
+                return row;
             } else if (["CTRCA"].includes(this.props.event_type)) {
-                return null;
+                row.push(<Form.Control key="Event Specific" placeholder="None" readOnly/>)
+                return row;
             } else if (["IRSA", "IRSB"].includes(this.props.event_type)) {
                 map = map.Inspection;
+                row.push(<Form.Control key="Event Specific" placeholder="Inspection" readOnly/>)
             } else if (["PRA"].includes(this.props.event_type)) {
-                return null;
+                row.push(<Form.Control key="Event Specific" placeholder="None" readOnly/>)
+                return row;
             } else if (["WTUA","WTUB"].includes(this.props.event_type)) {
                 map = map.Workflow;
+                row.push(<Form.Control key="Event Specific" placeholder="Workflow" readOnly/>)
             } else {
-                return null;
+                row.push(<Form.Control key="Event Specific" placeholder="Select Event Type" readOnly/>)
+                return row;
             }
         }
 
         let keys = [""].concat(Object.keys(map));
 
         keys.sort();
-        if (row === null) row = [];
         if (keys.length <= 1) return null;
 
         let newId = "x."+level
