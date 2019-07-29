@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+
 import Form from "react-bootstrap/Form";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 class FEE_FeeItem extends Component {
     constructor(props) {
@@ -16,6 +19,7 @@ class FEE_FeeItem extends Component {
         this.props.update({
             fees: newFees
         });
+        this.forceUpdate();
     }
 
     render() {
@@ -36,7 +40,11 @@ class FEE_FeeItem extends Component {
             </td>
             : null}
             <td>
-                <Form.Control id={"quantity-"+this.props.fee_number} type="number" onChange={this.handleChange}/>
+                <OverlayTrigger overlay={<Tooltip>
+                    This field will accept either a number or text.  If text is provided, the quantity will be set using a custom field. This field will become bold if text is detected.
+                </Tooltip>}>
+                    <Form.Control varient="danger" id={"quantity-"+this.props.fee_number} onChange={this.handleChange} style={{fontWeight: (this.props.fees[this.props.fee_number].quantity && !isNaN(parseFloat(this.props.fees[this.props.fee_number].quantity))) ? "normal":"bold"}}/>
+                </OverlayTrigger>
             </td>
             {this.props.isAdvanced ?
             <td>

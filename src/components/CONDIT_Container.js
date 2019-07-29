@@ -47,7 +47,7 @@ class CONDIT extends Component {
                             {this.generateConditTable()}
                         </tbody>
                     </Table>
-                    <button onClick={this.props.addConditFlat}> Add Condition </button>
+                    <button onClick={this.props.addConditFlat}>Add Condition</button>
                 </div> : null}
         </div>
         );

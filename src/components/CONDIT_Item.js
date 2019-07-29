@@ -4,7 +4,8 @@ import _ from "lodash";
 
 import Form from "react-bootstrap/Form";
 
-import { data } from "./CONDIT_data.js";
+import condit_data from "./CONDIT_data.js";
+import variable_map from "./PARAM_data.js"
 
 class CONDIT_Item extends Component {
     constructor(props) {
@@ -17,79 +18,145 @@ class CONDIT_Item extends Component {
 
     handleChange(event) {
         let newConditions = this.props.conditions;
-        let type = event.target.id.split("-");
-        newConditions[this.props.id][type[0]] = event.target.value;
+
+        //Clear some things
+        newConditions[this.props.id].comparison_x = null;
+
+
+        let type = event.target.id.split("-")[0];
+        newConditions[this.props.id][type] = event.target.value;
         //Need to be very carseful with the condition Builder
         //Adding in checks to make sure that all fields to the "right" are cleared
-        if (event.target.id === "condition_type-"+this.props.id) {
-            document.getElementById("comparison_x-"+this.props.id).value = "";
-            newConditions[this.props.id].comparison_x = "";
-            document.getElementById("comparison_type-"+this.props.id).value = "";
-            newConditions[this.props.id].comparison_type = "";
-            document.getElementById("comparison_y-"+this.props.id).value = "";
-            newConditions[this.props.id].comparison_y = "";
-        } else if (event.target.id === "comparison_x-"+this.props.id) {
-            document.getElementById("comparison_type-"+this.props.id).value = "";
-            newConditions[this.props.id].comparison_type = "";
-            document.getElementById("comparison_y-"+this.props.id).value = "";
-            newConditions[this.props.id].comparison_y = "";
-        } else if (event.target.id === "comparison_type-"+this.props.id) {
-            document.getElementById("comparison_y-"+this.props.id).value = "";
-            newConditions[this.props.id].comparison_y = "";
+        //Actually I'm not doing that anymore lol
+        let level;
+        if (type === "portlet") {
+            level = 0;
+        } else if (type[0] === "x") {
+            level = parseInt(event.target.id.split(".")[1]);
         }
+
+        //Do the map clearing
+        level++;
+        while (newConditions[this.props.id]["x."+level]) {
+            delete newConditions[this.props.id]["x."+level];
+            level++;
+        }
+
         this.props.update({
             conditions: newConditions
         });
         this.forceUpdate();
     };
 
-    generateConditTypes = () => {
-        let types = [];
-        for (let t in data.condition_types) {
-            types.push(<option key={t} value={data.condition_types[t].value}>{data.condition_types[t].label}</option>);
-        }
+    addX(text) {
+        let newConditions = this.props.conditions;
+        newConditions[this.props.id].comparison_x = text;
+        this.props.update({
+            conditions: newConditions
+        });
+    }
+
+    genPortlet = () => {
+        let types = [""].concat(Object.keys(variable_map.variable_map));
+        types.sort();
+        types = types.map(t => {
+            return <option key={t} value={t} label={t}/>
+        });
         return types;
     }
 
-    handleX = () => {
-        if (this.props.conditions[this.props.id].condition_type === "cf") {
-            return (
-                <Form.Control id={"comparison_x-"+this.props.id} type="text" placeholder="Custom Field Name" onChange={this.handleChange}/>
-            );
-        } else {
-            return (
-                <Form.Control id={"comparison_x-"+this.props.id} as="select" onChange={this.handleChange}>
-                    {this.generateX()}
-                </Form.Control>
-            );
-        }
-    }
+    //Based off generateMap from PARAM_Item
+    generateX = (map, level, parent, row) => {
+        if (row === null) row = [];
 
-    generateX = () => {
-        let types = [];
-        if (this.props.conditions[this.props.id].condition_type === "--Select--" || this.props.conditions[this.props.id].condition_type === null) return (<option/>);
-        let options = data.comparison_x[this.props.conditions[this.props.id].condition_type];
-        for (let t in options) {
-            types.push(<option key={t} value={options[t].value}>{options[t].label}</option>);
+        //FILTER BASED ON PARENT
+        if (parent === "Event Specific") {
+            if (["ASA", "ASB"].includes(this.props.event_type)) {
+                row.push(<Form.Control key="Event Specific" placeholder="None" readOnly/>)
+                return row;
+            } else if (["CTRCA"].includes(this.props.event_type)) {
+                row.push(<Form.Control key="Event Specific" placeholder="None" readOnly/>)
+                return row;
+            } else if (["IRSA", "IRSB"].includes(this.props.event_type)) {
+                map = map.Inspection;
+                row.push(<Form.Control key="Event Specific" placeholder="Inspection" readOnly/>)
+            } else if (["PRA"].includes(this.props.event_type)) {
+                row.push(<Form.Control key="Event Specific" placeholder="None" readOnly/>)
+                return row;
+            } else if (["WTUA","WTUB"].includes(this.props.event_type)) {
+                map = map.Workflow;
+                row.push(<Form.Control key="Event Specific" placeholder="Workflow" readOnly/>)
+            } else {
+                row.push(<Form.Control key="Event Specific" placeholder="Select Event Type" readOnly/>)
+                return row;
+            }
         }
-        return types;
+
+        let keys = [""].concat(Object.keys(map));
+
+        keys.sort();
+        if (keys.length <= 1) return null;
+
+        let newId = "x."+level
+        if (level === 0) newId = "portlet";
+
+        let levelValue = "";
+        if (this.props.conditions[this.props.id][newId]) {
+            levelValue = this.props.conditions[this.props.id][newId];
+        }
+
+        //Handle Special Cases
+        if (keys[1] === "script") {
+            if (this.props.conditions[this.props.id].type) {
+                let newText = map.script;
+                newText = newText.replace("^$*$^", this.props.conditions[this.props.id].type);
+                if (newText !== this.props.conditions[this.props.id].comparison_x) {
+                    this.addX(newText);
+                }
+            } else {
+                if (map.script !== this.props.conditions[this.props.id].comparison_x) {
+                    this.addX(map.script);
+                }
+            }
+            return null;
+        } else if (keys[1] === "free") {
+            let free_text = map.free.script;
+            let free_value = this.props.conditions[this.props.id].free;
+            if (!this.props.conditions[this.props.id].free) free_value = "";
+            free_text = free_text.replace("***", free_value);
+            if (free_text !== this.props.conditions[this.props.id].script) {
+                this.addX(free_text);
+            }
+        } else if (keys[1] === "type") {
+            levelValue = "type";
+        }
+
+        if (keys[1] !== "free" && keys[1] !== "type") {
+            let c = 0;
+            row.push(<Form.Control key={newId} id={newId} as="select" value={levelValue} onChange={this.handleChange}>
+                {keys.map((k) => {
+                    c++;
+                    return <option key={c} label={k} value={k}/>;
+                })}
+            </Form.Control>);
+        } else if (keys[1] === "free") {
+            row.push(<Form.Control id={"free"} onChange={this.handleChange} key={newId}/>);
+        } else if (keys[1] === "type") {
+            row.push(<Form.Control id={"type"} placeholder="Type" onChange={this.handleChange} key={newId}/>);
+        }
+
+        //Check if you should go to the next level
+        if (levelValue) {
+            this.generateX(map[levelValue], level + 1, levelValue, row);
+        }
+        return row;
     }
 
     generateCompTypes = () => {
-        if (this.props.conditions[this.props.id].comparison_x === null) return (<option/>);
-        let types = [];
-        let x = data.comparison_x[this.props.conditions[this.props.id].condition_type];
-        //Get the Type of the comparison_x
-        for (let i in x) {
-            if (x[i].value === this.props.conditions[this.props.id].comparison_x) {
-                var type = x[i].type;
-            }
-        }
-        if (x[0].label === "cf") type = "string";
-        let options = data.comparison_types[type];
-        for (let t in options) {
-            types.push(<option key={t} value={options[t].value}>{options[t].label}</option>);
-        }
+        let types = [""].concat(Object.keys(condit_data.condit_data.comparison_types));
+        types = types.map(t => {
+            return <option key={t} label={t} value={condit_data.condit_data.comparison_types[t]}/>
+        });
         return types;
     }
 
@@ -118,12 +185,16 @@ class CONDIT_Item extends Component {
                 {this.props.id}
             </td>
             <td>
-                <Form.Control id={"condition_type-"+this.props.id} as="select" onChange={this.handleChange}>
-                    {this.generateConditTypes()}
+                <Form.Control id={"portlet-"+this.props.id} as="select" onChange={this.handleChange}>
+                    {this.genPortlet()}
                 </Form.Control>
             </td>
             <td>
-                {this.handleX()}
+                {this.props.conditions[this.props.id].portlet ?
+                    <React.Fragment>
+                        {this.generateX(variable_map.variable_map[this.props.conditions[this.props.id].portlet], 1, this.props.conditions[this.props.id].portlet, null)}
+                    </React.Fragment>
+                : <Form.Control as="select"/>}
             </td>
             <td>
                 <Form.Control id={"comparison_type-"+this.props.id} as="select" onChange={this.handleChange}>
@@ -162,7 +233,8 @@ class CONDIT_Item extends Component {
 }
 
 const mapStateToProps = state => ({
-    conditions: state.conditions
+    conditions: state.conditions,
+    event_type: state.event_type
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -34,32 +34,59 @@ class CORE_GenerateOutput extends Component {
         switch(this.props.state.mode) {
             case "event_script": {
                 if (this.props.state.event_type !== null && (this.props.state.structure.module !== "NA" && this.props.state.structure.module !== "")) {
-                    this.generateEventScript();
+                    this.generateEventScriptStart();
+                    this.parseParameters();
+                    this.parseConditions(1, "");
+                    this.generateEventScriptEnd();
                     break;
                 } else {
                     //Must provide event and module before anything can generate.
-                    return "Please provide an Event and a Module";
+                    return "Please provide an Event and a Module.";
                 }
             }
             case "function": {
-                this.generateFunctionScript();
-                break;
+                if (this.props.state.mode_extras.function_name) {
+                    this.generateFunctionScriptStart();
+                    this.parseParameters(1);
+                    this.parseConditions(1, "", 1);
+                    this.generateFunctionScriptEnd();
+                    break;
+                } else {
+                    //Must provide function name
+                    return "Please provide a Name for the function.";
+                }
             }
             default:
                 return "ERROR: A Script can not be generated for this mode"
         }
-
-        this.parseParameters();
-        this.parseConditions(1, "");
-
         return script_text;
     }
 
-    generateFunctionScript = () => {
+    generateFunctionScriptStart = () => {
+        script_text += "function "+this.props.state.mode_extras.function_name.replace(/\W/g, '_')+"() {\n";
 
+        script_text += "\t//This Function REQUIRES \"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"\n\n"
+
+        script_text += "\t/*\n";
+            let today = new Date();
+            script_text += "\tCreated: " + (today.getMonth()+1) +"/"
+                                                + today.getDate() + "/"
+                                                + today.getFullYear() + "\n";
+            script_text += "\t" + this.props.state.mode_extras.function_desc.replace(/(\.+)\s/g,".\n").replace(/\n/g,"\n\t") + "\n";
+        script_text += "\t*/\n\n";
+
+        if (this.props.state.show_debug === true) {
+            script_text += "\tshowDebug = true;\n";
+        } else {
+            script_text += "\tshowDebug = false;\n";
+        }
     }
 
-    generateEventScript = () => {
+    generateFunctionScriptEnd = () => {
+        this.appendScript("", "}");
+    }
+
+    generateEventScriptStart = () => {
         let today = new Date();
 
         script_text += "//"+this.props.state.event_type+":"
@@ -72,7 +99,7 @@ class CORE_GenerateOutput extends Component {
                                             + today.getFullYear() + "\n";
         script_text += "\n";
 
-        script_text += "eval(\"INCLUDES_CUSTOMGENERATE_SCRIPTS\");\n"
+        script_text += "eval(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\");\n"
 
         if (this.props.state.show_debug === true) {
             script_text += "showDebug = true;\n\n";
@@ -81,18 +108,19 @@ class CORE_GenerateOutput extends Component {
         }
     }
 
-    parseParameters() {
+    parseParameters(initialTab=0) {
+        let set_tab = "\t".repeat(initialTab);
         if (this.props.state.functionality.notifications) {
             let sets = this.props.state.parameter_sets;
             for (let s in sets) {
-                this.appendScript("", "//Generating the Hashtable for Set: "+sets[s].key+", Named: "+sets[s].name+", Style: "+sets[s].style);
+                this.appendScript(set_tab, "//Generating the Hashtable for Set: "+sets[s].key+", Named: "+sets[s].name+", Style: "+sets[s].style);
                 let clean_name = null;
                 if (sets[s].name) clean_name = sets[s].name.replace(/\W/g, '_');
                 let hash_name = "set_"+sets[s].key+"_"+clean_name;
                 if (sets[s].style === "email") {
-                    this.appendScript("", "var "+hash_name+" = aa.util.newHashtable();\n");
+                    this.appendScript(set_tab, "var "+hash_name+" = aa.util.newHashtable();\n");
                 } else if (sets[s].style === "report") {
-                    this.appendScript("", "var "+hash_name+" = aa.util.newHashMap();\n");
+                    this.appendScript(set_tab, "var "+hash_name+" = aa.util.newHashMap();\n");
                 }
                 //First assign all variables
                 for (let p in sets[s].parameters) {
@@ -100,9 +128,9 @@ class CORE_GenerateOutput extends Component {
                     let param_ref = null;
                     if (param.ref) param_ref = param.ref.replace(/\W/g, '_');
                     let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param_ref;
-                    this.appendScript("","var "+param_name+" = "+param.script+";")
+                    this.appendScript(set_tab,"var "+param_name+" = "+param.script+";")
                 }
-                this.appendScript("",""); //Blank Line
+                this.appendScript(set_tab,""); //Blank Line
                 //Add to hash
                 for (let p in sets[s].parameters) {
                     let param = sets[s].parameters[p];
@@ -110,17 +138,22 @@ class CORE_GenerateOutput extends Component {
                     if (param.ref) param_ref = param.ref.replace(/\W/g, '_');
                     let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param_ref;
                     if (sets[s].style === "email") {
-                        this.appendScript("","addParameter("+hash_name+", \"$$"+param.ref+"$$\", "+param_name+");");
+                        this.appendScript(set_tab,"addParameter("+hash_name+", \"$$"+param.ref+"$$\", "+param_name+");");
                     } else if (sets[s].style === "report") {
-                        this.appendScript("",hash_name+".put(\""+param.ref+"\", "+param_name+");");
+                        this.appendScript(set_tab,hash_name+".put(\""+param.ref+"\", "+param_name+");");
                     }
                 }
-                this.appendScript("",""); //Blank Line
+                this.appendScript(set_tab,""); //Blank Line
             }
         }
     }
 
-    parseConditions = (level, parent) => {
+    generateEventScriptEnd = () => {
+        this.appendScript("", "");
+        this.appendScript("", "//End Script Builder");
+    }
+
+    parseConditions = (level, parent, initialTab=0) => {
         //Create a list of condition only at my level.
         let conditions = Object.keys(this.props.state.conditions).map(c => {
             if (this.props.state.conditions[c].level === level) {
@@ -136,11 +169,11 @@ class CORE_GenerateOutput extends Component {
         //Escape
         if (conditions.length === 0) return null;
 
-        var set_tab = "\t".repeat(level-1);
+        var set_tab = "\t".repeat(initialTab+level-1);
         var set_tab_in = set_tab + "\t";
         if (!this.props.state.functionality.conditions) {
-            set_tab = "";
-            set_tab_in = "";
+            set_tab = "\t".repeat(initialTab);
+            set_tab_in = "\t".repeat(initialTab);
         }
 
         //BEGIN CONDTION PARSEING
@@ -149,12 +182,7 @@ class CORE_GenerateOutput extends Component {
 
                 //Build the if statement
                 let condition_start = "if (";
-                if (conditions[c].condition_type === "cf") {
-                    //Creating some kind of variable mapper would look nice
-                    condition_start += "getAppSpecific(\"" + conditions[c].comparison_x + "\") ";
-                } else {
-                    condition_start += conditions[c].comparison_x + " ";
-                }
+                condition_start += conditions[c].comparison_x + " ";
                 condition_start += conditions[c].comparison_type + " ";
                 condition_start += "\"" + conditions[c].comparison_y + "\")";
 
@@ -165,7 +193,7 @@ class CORE_GenerateOutput extends Component {
                     this.parseAction(set_tab_in, conditions[c].actions[a]);
                 }
 
-                this.parseConditions(level+1, conditions[c].key);
+                this.parseConditions(level+1, conditions[c].key, initialTab);
 
                 this.appendScript(set_tab, "}");
             }
@@ -173,17 +201,17 @@ class CORE_GenerateOutput extends Component {
             //Parse everything individually
             //StatusItem
             for (let s in this.props.state.status) {
-                this.appendScript("", this.genStatusText(s));
+                this.appendScript(set_tab, this.genStatusText(s));
             }
 
             //Fees
             for (let f in this.props.state.fees) {
-                this.appendScript("", this.genFeeText(f));
+                this.appendScript(set_tab, this.genFeeText(f));
             }
 
             //Notifications
             for (let n in this.props.state.notifications) {
-                this.appendScript("", this.genNoteText(n));
+                this.appendScript(set_tab, this.genNoteText(n));
             }
         }
     }
@@ -200,7 +228,7 @@ class CORE_GenerateOutput extends Component {
                 break;
             }
             case "Fee": {
-                action_text = this.genFeeText(action[1]);
+                action_text = this.genFeeText(action[1], tab);
                 break;
             }
             case "Notification": {
@@ -233,16 +261,25 @@ class CORE_GenerateOutput extends Component {
         return status_text;
     }
 
-    genFeeText = fee_num => {
+    genFeeText = (fee_num, tab="") => {
         let fees_text = "";
         if (this.props.state.functionality.fees === true) {
             let fee = this.props.state.fees[fee_num];
-            //Fix up the parameters
-            fees_text += "updateFee(\"" + fee.code + "\", "
-                                    + "\"" + fee.schedule + "\", "
-                                    + "\"" + fee.period + "\", "
-                                    + fee.quantity + ", "
-                                    + "\"" + fee.invoice + "\");"
+            if (!isNaN(parseFloat(fee.quantity))) {
+                fees_text += "updateFee(\"" + fee.code + "\", "
+                            + "\"" + fee.schedule + "\", "
+                            + "\"" + fee.period + "\", "
+                            + fee.quantity + ", "
+                            + "\"" + fee.invoice + "\");"
+            } else {
+                fees_text += "var fee_"+fee_num+" = getAppSpecific(\""+fee.quantity+"\");\n";
+                fees_text += tab;
+                fees_text += "updateFee(\"" + fee.code + "\", "
+                            + "\"" + fee.schedule + "\", "
+                            + "\"" + fee.period + "\", "
+                            + "fee_"+fee_num+", "
+                            + "\"" + fee.invoice + "\");"
+            }
         }
         return fees_text;
     }

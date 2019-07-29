@@ -21,7 +21,6 @@ class CONDIT_Action extends Component {
     };
 
     handleDelete = event => {
-        console.log("Beginning Delete");
         this.props.delete({
             id: this.props.id,
             parent: this.props.parent

@@ -16,6 +16,8 @@ class CORE extends Component {
                 <ModeStructure/>
             </React.Fragment> : null}
             {this.props.mode === "function" ? <React.Fragment>
+                <ModeEvent/>
+                <hr/>
                 <ModeFunction/>
             </React.Fragment> : null}
             {this.props.mode === "batch_script" ? <React.Fragment>

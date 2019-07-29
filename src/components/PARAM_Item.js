@@ -47,30 +47,36 @@ class PARAM_Item extends Component {
         });
     }
 
+    //Changes made to this function should be checked in CONDIT_Item
     generateMap(map, level, parent, row) {
-
+        if (row === null) row = [];
 
         //FILTER BASED ON PARENT
         if (parent === "Event Specific") {
             if (["ASA", "ASB"].includes(this.props.event_type)) {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control placeholder="None" readOnly/></td>)
+                return row;
             } else if (["CTRCA"].includes(this.props.event_type)) {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="None" readOnly/></td>)
+                return row;
             } else if (["IRSA", "IRSB"].includes(this.props.event_type)) {
                 map = map.Inspection;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="Inspection" readOnly/></td>)
             } else if (["PRA"].includes(this.props.event_type)) {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="None" readOnly/></td>)
+                return row;
             } else if (["WTUA","WTUB"].includes(this.props.event_type)) {
                 map = map.Workflow;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="Workflow" readOnly/></td>)
             } else {
-                return null;
+                row.push(<td key="Event Specific"><Form.Control key="Event Specific" placeholder="Select Event Type" readOnly/></td>)
+                return row;
             }
         }
 
         let keys = [""].concat(Object.keys(map));
 
         keys.sort();
-        if (row === null) row = [];
         if (keys.length <= 1) return null;
 
         let newId = "level"+level
@@ -81,16 +87,15 @@ class PARAM_Item extends Component {
             levelValue = this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId];
         }
 
+        //Handle Special Cases
         if (keys[1] === "script") {
             if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].type) {
-                console.log("TYPE!")
                 let newText = map.script;
                 newText = newText.replace("^$*$^", this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].type);
                 if (newText !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script) {
                     this.addScript(newText);
                 }
             } else {
-                console.log("NO TYPE!")
                 if (map.script !== this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script) {
                     this.addScript(map.script);
                 }
@@ -109,11 +114,8 @@ class PARAM_Item extends Component {
         }
 
         if (keys[1] !== "free" && keys[1] !== "type") {
-            //REMOVE ERROR CHECK ON RELEASE
-            let errorCheck = {color: "black", background: "white"};
-            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script === "***ADD ME!") errorCheck = {color: "white", background: "red"};
             let c = 0;
-            row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange} style={errorCheck}>
+            row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange}>
                 {keys.map((k) => {
                     c++;
                     return <option key={c} label={k} value={k}/>;
@@ -127,7 +129,6 @@ class PARAM_Item extends Component {
 
         //Check if you should go to the next level
         if (levelValue) {
-            console.log(levelValue);
             this.generateMap(map[levelValue], level + 1, levelValue, row);
         }
         return row;

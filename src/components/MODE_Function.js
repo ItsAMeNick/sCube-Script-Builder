@@ -11,8 +11,10 @@ class MODE_Function extends Component {
     }
 
     handleChange(event) {
+        let newExtras = this.props.mode_extras;
+        newExtras[event.target.id] = event.target.value;
         this.props.update({
-            event_type: event.target.value
+            mode_extras: newExtras
         });
         event.preventDefault();
     };
@@ -23,24 +25,24 @@ class MODE_Function extends Component {
             <Form.Label>
                 Name of your function:
             </Form.Label>
-            <Form.Control type="text" placeholder="Ex. MyNewFunctionForAccela" onChange={this.handleChange}/>
+            <Form.Control id="function_name" type="text" placeholder="Ex. MyNewFunctionForAccela" onChange={this.handleChange}/>
             <hr/>
             <Form.Label>
                 Description of your function:
             </Form.Label>
-            <Form.Control as="textarea" rows="7" placeholder="Ex. Sends an email to all LPs on a record." onChange={this.handleChange}/>
+            <Form.Control id="function_desc" as="textarea" rows="4" placeholder="Ex. Sends an email to all LPs on a record." onChange={this.handleChange}/>
         </Form>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    event_type: state.event_type
+    mode_extras: state.mode_extras
 });
 
 const mapDispatchToProps = dispatch => ({
     update: item => dispatch({
-        type: "update_event_type",
+        type: "update_mode_extras",
         payload: item
     })
 });
