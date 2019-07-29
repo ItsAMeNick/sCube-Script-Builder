@@ -17,12 +17,26 @@ class CORE_Event extends Component {
         event.preventDefault();
     };
 
+    genLabel() {
+        switch(this.props.mode) {
+            case "event_script": {
+                return "When will this script run?";
+            }
+            case "function": {
+                return "Where will this function be used?";
+            }
+            default: {
+                return "ERROR"
+            }
+        }
+    }
+
     render() {
         return (
         <div>
             <Form>
             <Form.Label>
-                When will this script run?
+                {this.genLabel()}
             </Form.Label>
             <Form.Control as="select" onChange={this.handleChange}>
                 <option></option>
@@ -42,7 +56,8 @@ class CORE_Event extends Component {
 }
 
 const mapStateToProps = state => ({
-    event_type: state.event_type
+    event_type: state.event_type,
+    mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({

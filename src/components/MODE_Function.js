@@ -28,7 +28,7 @@ class MODE_Function extends Component {
             <Form.Label>
                 Description of your function:
             </Form.Label>
-            <Form.Control as="textarea" rows="7" placeholder="Ex. Sends an email to all LPs on a record." onChange={this.handleChange}/>
+            <Form.Control as="textarea" rows="4" placeholder="Ex. Sends an email to all LPs on a record." onChange={this.handleChange}/>
         </Form>
         );
     }
