@@ -47,9 +47,8 @@ class PARAM_Item extends Component {
         });
     }
 
+    //Changes made to this function should be checked in CONDIT_Item
     generateMap(map, level, parent, row) {
-
-
         //FILTER BASED ON PARENT
         if (parent === "Event Specific") {
             if (["ASA", "ASB"].includes(this.props.event_type)) {
@@ -81,6 +80,7 @@ class PARAM_Item extends Component {
             levelValue = this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][newId];
         }
 
+        //Handle Special Cases
         if (keys[1] === "script") {
             if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].type) {
                 let newText = map.script;
@@ -107,11 +107,8 @@ class PARAM_Item extends Component {
         }
 
         if (keys[1] !== "free" && keys[1] !== "type") {
-            //REMOVE ERROR CHECK ON RELEASE
-            let errorCheck = {color: "black", background: "white"};
-            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].script === "***ADD ME!") errorCheck = {color: "white", background: "red"};
             let c = 0;
-            row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange} style={errorCheck}>
+            row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange}>
                 {keys.map((k) => {
                     c++;
                     return <option key={c} label={k} value={k}/>;
@@ -125,7 +122,6 @@ class PARAM_Item extends Component {
 
         //Check if you should go to the next level
         if (levelValue) {
-            console.log(levelValue);
             this.generateMap(map[levelValue], level + 1, levelValue, row);
         }
         return row;

@@ -77,8 +77,7 @@ const initialState = {
             report_module: null,
             email_params: null
         }
-    }
-
+    },
 };
 
 const sCubeReducer = (state = initialState, action) => {
