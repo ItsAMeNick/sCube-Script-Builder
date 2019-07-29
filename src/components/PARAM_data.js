@@ -89,33 +89,123 @@ var variable_map = {
         script: "***ADD ME!"
     },
     "Owner": {
-        "Street": {
-            "Number": {
+        "Personal Information": {
+            "First Name": {
                 script: "***ADD ME!"
             },
-            "Direction": {
+            "Last Name": {
                 script: "***ADD ME!"
             },
-            "Type": {
+            "Middle Name": {
                 script: "***ADD ME!"
             },
-            "Name": {
+            "Email": {
+                script: "***ADD ME!"
+            },
+            "Phone 1": {
+                script: "***ADD ME!"
+            },
+            "Phone 2": {
+                script: "***ADD ME!"
+            },
+            "Phone 3": {
+                script: "***ADD ME!"
+            },
+            "Fax?": {
                 script: "***ADD ME!"
             }
         },
         "Address": {
-            "Line": {
-                "1": {
+            "Line 1": {
+                script: "***ADD ME!"
+            },
+            "Line 2": {
+                script: "***ADD ME!"
+            },
+            "Line 3": {
+                script: "***ADD ME!"
+            },
+            "City": {
+                script: "***ADD ME!"
+            },
+            "State": {
+                script: "***ADD ME!"
+            },
+            "Zip": {
+                script: "***ADD ME!"
+            }
+        },
+        "External Address": {
+            "Mailing": {
+                "Line 1": {
                     script: "***ADD ME!"
                 },
-                "2": {
+                "Line 2": {
                     script: "***ADD ME!"
                 },
-                "3": {
+                "Line 3": {
+                    script: "***ADD ME!"
+                },
+                "City": {
+                    script: "***ADD ME!"
+                },
+                "State": {
+                    script: "***ADD ME!"
+                },
+                "Zip": {
                     script: "***ADD ME!"
                 }
             },
-            "CSZ": {
+            "Billing": {
+                "Line 1": {
+                    script: "***ADD ME!"
+                },
+                "Line 2": {
+                    script: "***ADD ME!"
+                },
+                "Line 3": {
+                    script: "***ADD ME!"
+                },
+                "City": {
+                    script: "***ADD ME!"
+                },
+                "State": {
+                    script: "***ADD ME!"
+                },
+                "Zip": {
+                    script: "***ADD ME!"
+                }
+            },
+            "Type 3": {
+                "Line 1": {
+                    script: "***ADD ME!"
+                },
+                "Line 2": {
+                    script: "***ADD ME!"
+                },
+                "Line 3": {
+                    script: "***ADD ME!"
+                },
+                "City": {
+                    script: "***ADD ME!"
+                },
+                "State": {
+                    script: "***ADD ME!"
+                },
+                "Zip": {
+                    script: "***ADD ME!"
+                }
+            },
+            "Type 4": {
+                "Line 1": {
+                    script: "***ADD ME!"
+                },
+                "Line 2": {
+                    script: "***ADD ME!"
+                },
+                "Line 3": {
+                    script: "***ADD ME!"
+                },
                 "City": {
                     script: "***ADD ME!"
                 },
@@ -126,7 +216,7 @@ var variable_map = {
                     script: "***ADD ME!"
                 }
             }
-        }
+        },
     },
     "Contact": {
         type: {
@@ -177,23 +267,85 @@ var variable_map = {
                 }
             },
             "External Address": {
-                "Line 1": {
-                    script: "***ADD ME!"
+                "Mailing": {
+                    "Line 1": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 2": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 3": {
+                        script: "***ADD ME!"
+                    },
+                    "City": {
+                        script: "***ADD ME!"
+                    },
+                    "State": {
+                        script: "***ADD ME!"
+                    },
+                    "Zip": {
+                        script: "***ADD ME!"
+                    }
                 },
-                "Line 2": {
-                    script: "***ADD ME!"
+                "Billing": {
+                    "Line 1": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 2": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 3": {
+                        script: "***ADD ME!"
+                    },
+                    "City": {
+                        script: "***ADD ME!"
+                    },
+                    "State": {
+                        script: "***ADD ME!"
+                    },
+                    "Zip": {
+                        script: "***ADD ME!"
+                    }
                 },
-                "Line 3": {
-                    script: "***ADD ME!"
+                "Type 3": {
+                    "Line 1": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 2": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 3": {
+                        script: "***ADD ME!"
+                    },
+                    "City": {
+                        script: "***ADD ME!"
+                    },
+                    "State": {
+                        script: "***ADD ME!"
+                    },
+                    "Zip": {
+                        script: "***ADD ME!"
+                    }
                 },
-                "City": {
-                    script: "***ADD ME!"
-                },
-                "State": {
-                    script: "***ADD ME!"
-                },
-                "Zip": {
-                    script: "***ADD ME!"
+                "Type 4": {
+                    "Line 1": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 2": {
+                        script: "***ADD ME!"
+                    },
+                    "Line 3": {
+                        script: "***ADD ME!"
+                    },
+                    "City": {
+                        script: "***ADD ME!"
+                    },
+                    "State": {
+                        script: "***ADD ME!"
+                    },
+                    "Zip": {
+                        script: "***ADD ME!"
+                    }
                 }
             },
         }

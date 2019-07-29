@@ -228,7 +228,7 @@ class CORE_GenerateOutput extends Component {
                 break;
             }
             case "Fee": {
-                action_text = this.genFeeText(action[1]);
+                action_text = this.genFeeText(action[1], tab);
                 break;
             }
             case "Notification": {
@@ -261,16 +261,25 @@ class CORE_GenerateOutput extends Component {
         return status_text;
     }
 
-    genFeeText = fee_num => {
+    genFeeText = (fee_num, tab="") => {
         let fees_text = "";
         if (this.props.state.functionality.fees === true) {
             let fee = this.props.state.fees[fee_num];
-            //Fix up the parameters
-            fees_text += "updateFee(\"" + fee.code + "\", "
-                                    + "\"" + fee.schedule + "\", "
-                                    + "\"" + fee.period + "\", "
-                                    + fee.quantity + ", "
-                                    + "\"" + fee.invoice + "\");"
+            if (!isNaN(parseFloat(fee.quantity))) {
+                fees_text += "updateFee(\"" + fee.code + "\", "
+                            + "\"" + fee.schedule + "\", "
+                            + "\"" + fee.period + "\", "
+                            + fee.quantity + ", "
+                            + "\"" + fee.invoice + "\");"
+            } else {
+                fees_text += "var fee_"+fee_num+" = getAppSpecific(\""+fee.quantity+"\");\n";
+                fees_text += tab;
+                fees_text += "updateFee(\"" + fee.code + "\", "
+                            + "\"" + fee.schedule + "\", "
+                            + "\"" + fee.period + "\", "
+                            + "fee_"+fee_num+", "
+                            + "\"" + fee.invoice + "\");"
+            }
         }
         return fees_text;
     }

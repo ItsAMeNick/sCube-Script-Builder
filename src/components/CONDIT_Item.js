@@ -133,14 +133,14 @@ class CONDIT_Item extends Component {
 
         if (keys[1] !== "free" && keys[1] !== "type") {
             let c = 0;
-            row.push(<Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange} key={newId}>
+            row.push(<Form.Control key={newId} id={newId} as="select" value={levelValue} onChange={this.handleChange}>
                 {keys.map((k) => {
                     c++;
                     return <option key={c} label={k} value={k}/>;
                 })}
             </Form.Control>);
         } else if (keys[1] === "free") {
-            row.push(<Form.Control id={"free"} onChange={this.handleChange}/>);
+            row.push(<Form.Control id={"free"} onChange={this.handleChange} key={newId}/>);
         } else if (keys[1] === "type") {
             row.push(<Form.Control id={"type"} placeholder="Type" onChange={this.handleChange} key={newId}/>);
         }
