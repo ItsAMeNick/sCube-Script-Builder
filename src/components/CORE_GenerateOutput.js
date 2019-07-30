@@ -36,7 +36,7 @@ class CORE_GenerateOutput extends Component {
                 if (this.props.state.event_type !== null && (this.props.state.structure.module !== "NA" && this.props.state.structure.module !== "")) {
                     this.generateEventScriptStart();
                     this.parseParameters();
-                    this.parseConditions(1, "");
+                    this.parseConditions(1, "", 1);
                     this.generateEventScriptEnd();
                     break;
                 } else {
@@ -89,23 +89,31 @@ class CORE_GenerateOutput extends Component {
     generateEventScriptStart = () => {
         let today = new Date();
 
+        let app_string = this.props.state.structure.module+"/"
+                        +this.props.state.structure.type+"/"
+                        +this.props.state.structure.subtype+"/"
+                        +this.props.state.structure.category
+
         script_text += "//"+this.props.state.event_type+":"
-                            +this.props.state.structure.module+"/"
-                            +this.props.state.structure.type+"/"
-                            +this.props.state.structure.subtype+"/"
-                            +this.props.state.structure.category+"\n";
+                            +app_string+"\n";
         script_text += "//Created: " + (today.getMonth()+1) +"/"
                                             + today.getDate() + "/"
                                             + today.getFullYear() + "\n";
-        script_text += "\n";
 
-        script_text += "eval(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\");\n"
+        script_text += "if (appMatch(\"" + app_string + "\"))\n{\n"
+
+        script_text += "\teval(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\");\n"
 
         if (this.props.state.show_debug === true) {
-            script_text += "showDebug = true;\n\n";
+            script_text += "\tshowDebug = true;\n\n";
         } else {
-            script_text += "showDebug = false;\n\n";
+            script_text += "\tshowDebug = false;\n\n";
         }
+    }
+
+    generateEventScriptEnd = () => {
+        this.appendScript("", "}");
+        this.appendScript("", "//End Script Builder");
     }
 
     parseParameters(initialTab=0) {
@@ -146,11 +154,6 @@ class CORE_GenerateOutput extends Component {
                 this.appendScript(set_tab,""); //Blank Line
             }
         }
-    }
-
-    generateEventScriptEnd = () => {
-        this.appendScript("", "");
-        this.appendScript("", "//End Script Builder");
     }
 
     parseConditions = (level, parent, initialTab=0) => {
