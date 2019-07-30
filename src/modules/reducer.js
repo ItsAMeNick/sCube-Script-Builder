@@ -79,6 +79,15 @@ const initialState = {
             email_params: null
         }
     },
+    workflows: {
+        "1": {
+            key: 1,
+            action: null,
+            task: null,
+            status: null,
+            comment: null
+        }
+    }
 };
 
 const sCubeReducer = (state = initialState, action) => {
@@ -147,7 +156,7 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "delete_status": {
         let newState = _.cloneDeep(state);
-        //Safeguard, should be prevented by the Fee_Item
+        //Safeguard, should be prevented by the STATUS_Item
         if (action.payload === "1") {
             return newState;
         }
@@ -220,7 +229,7 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "delete_note": {
         let newState = _.cloneDeep(state);
-        //Safeguard, should be prevented by the Fee_Item
+        //Safeguard, should be prevented by the NOTE_Item
         if (action.payload === "1") {
             return newState;
         }
@@ -279,6 +288,39 @@ const sCubeReducer = (state = initialState, action) => {
                 portlet: null,
             }
         newState.parameter_sets[action.payload].parameters = myParams;
+        return newState;
+    }
+
+    case "update_workflow": {
+        let newState = _.cloneDeep(state);
+        newState.workflows = action.payload.workflows;
+        return newState;
+    }
+    case "add_workflow": {
+        let newState = _.cloneDeep(state);
+        let workflow_codes = Object.keys(state.workflows);
+        let m = 0;
+        for (let w in workflow_codes) {
+            m = Math.max(m,state.workflows[workflow_codes[w]].key);
+        }
+        m+=1;
+        newState.workflows[m] =
+            {
+                key: m,
+                action: null,
+                task: null,
+                status: null,
+                comment: null
+            }
+        return newState;
+    }
+    case "delete_workflow": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the WORK_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.workflows[action.payload]
         return newState;
     }
 
