@@ -24,7 +24,7 @@ class INSP_Container extends Component {
         {this.props.isOn ?
         <div>
             <hr/>
-            <h3>Insoection Manager</h3>
+            <h3>Inspection Manager</h3>
             <Table striped bordered>
                 <thead>
                     <tr>
