@@ -31,7 +31,9 @@ const initialState = {
         notifications: false,
         status_update: false,
         workflow: false,
-        inspections: false
+        inspections: false,
+        cancel: false,
+        pageflow_documents: false
     },
     status: {
         "1": {
@@ -93,6 +95,12 @@ const initialState = {
             key: 1,
             type: null,
             days_out: null
+        }
+    },
+    cancels: {
+        "1": {
+            key: 1,
+            message: null
         }
     }
 };
@@ -365,6 +373,37 @@ const sCubeReducer = (state = initialState, action) => {
             return newState;
         }
         delete newState.inspections[action.payload]
+        return newState;
+    }
+
+    //Cancels
+    case "update_cancels": {
+        let newState = _.cloneDeep(state);
+        newState.cancels = action.payload.cancels;
+        return newState;
+    }
+    case "add_cancel": {
+        let newState = _.cloneDeep(state);
+        let cancel_codes = Object.keys(state.cancels);
+        let m = 0;
+        for (let c in cancel_codes) {
+            m = Math.max(m,state.cancels[cancel_codes[c]].key);
+        }
+        m+=1;
+        newState.cancels[m] =
+            {
+                key: m,
+                message: null
+            }
+        return newState;
+    }
+    case "delete_cancel": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the STATUS_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.cancels[action.payload]
         return newState;
     }
 

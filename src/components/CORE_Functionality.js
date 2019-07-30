@@ -35,6 +35,12 @@ class CORE_Function extends Component {
                     <Form.Check id="notifications" type="checkbox" label="Send a Notification" onChange={this.handleChange}/>
                     <Form.Check id="workflow" type="checkbox" label="Change the Workflow" onChange={this.handleChange}/>
                     <Form.Check id="inspections" type="checkbox" label="Schedule an Inspection" onChange={this.handleChange}/>
+                    {(this.props.event_type && ["ASB", "IRSB", "WTUB"].includes(this.props.event_type)) || this.props.mode === "pageflow" ?
+                        <Form.Check id="cancel" type="checkbox" label="Prevent Submission/Action" onChange={this.handleChange}/>
+                    : null}
+                    {this.props.mode === "pageflow" ?
+                        <Form.Check id="pageflow_documents" type="checkbox" label="Something about pageflow docs, not sure" onChange={this.handleChange}/>
+                    : null}
                 <br/>
                 <Form.Label>
                     Should this script use conditions?
@@ -48,7 +54,8 @@ class CORE_Function extends Component {
 
 const mapStateToProps = state => ({
     functionality: state.functionality,
-    event_type: state.event_type
+    event_type: state.event_type,
+    mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({

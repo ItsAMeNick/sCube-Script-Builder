@@ -7,7 +7,7 @@ import "./App.css";
 
 import CoreMode from "./components/CORE_Mode.js";
 import Core from "./components/CORE.js";
-import CoreFunction from "./components/CORE_Function.js";
+import CoreFunctionality from "./components/CORE_Functionality.js";
 
 import TestShowDebug from "./components/TEST_ShowDebug.js";
 
@@ -15,6 +15,7 @@ import Fees from "./components/FEE_Container.js";
 import Status from "./components/STATUS_Container.js";
 import Workflow from "./components/WORK_Container.js";
 import Inspection from "./components/INSP_Container.js";
+import Cancel from "./components/CANCEL_Container.js";
 
 import Notes from "./components/NOTE_Container.js";
 import Params from "./components/PARAM_Container.js";
@@ -46,7 +47,7 @@ class App extends Component {
                 <Col>
                     <Core/>
                 </Col> <Col>
-                    <CoreFunction/>
+                    <CoreFunctionality/>
                     <hr/>
                     <TestShowDebug/>
                 </Col>
@@ -62,6 +63,8 @@ class App extends Component {
                <Workflow/>
            </Col> <Col>
                <Inspection/>
+           </Col> <Col>
+               <Cancel/>
            </Col> <Col>
                 <ConditContainer/>
             </Col> <hr/> <Col>
