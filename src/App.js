@@ -13,6 +13,7 @@ import TestShowDebug from "./components/TEST_ShowDebug.js";
 
 import Fees from "./components/FEE_Container.js";
 import Status from "./components/STATUS_Container.js";
+import Asi from "./components/ASI_Container.js";
 import Workflow from "./components/WORK_Container.js";
 import Inspection from "./components/INSP_Container.js";
 import Cancel from "./components/CANCEL_Container.js";
@@ -53,6 +54,8 @@ class App extends Component {
                 </Col>
             </Row> <Col>
                 <Status/>
+            </Col> <Col>
+                <Asi/>
             </Col> <Col>
                 <Fees/>
             </Col> <Col>
