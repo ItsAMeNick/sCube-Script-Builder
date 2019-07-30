@@ -41,7 +41,7 @@ class WORK_Container extends Component {
             </Table>
             <button onClick={() => {
                 this.props.add();
-            }}> Add Workflow Task </button>
+            }}> Add Workflow Change </button>
         </div> : null}
         </div>
         );

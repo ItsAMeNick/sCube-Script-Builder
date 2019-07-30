@@ -52,6 +52,13 @@ class CONDIT_Action extends Component {
             }
         }
 
+        //Gather Workflows
+        if (this.props.functionality.workflow) {
+            for (let w in this.props.workflows)  {
+                actions.push("Workflow-"+this.props.workflows[w].key);
+            }
+        }
+
         return actions.map(a => {
             return <option key={a} value={a}>{a}</option>;
         });
@@ -91,7 +98,8 @@ const mapStateToProps = state => ({
     conditions: state.conditions,
     status: state.status,
     fees: state.fees,
-    notifications: state.notifications
+    notifications: state.notifications,
+    workflows: state.workflows
 });
 
 const mapDispatchToProps = dispatch => ({
