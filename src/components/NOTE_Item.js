@@ -25,10 +25,8 @@ class NOTE_Item extends Component {
                 })
                 newValue = JSON.stringify(people);
             }
-        } else if (event.target.id === "email_params" || event.target.id === "report_parameters") {
-            newValue = event.target.value;
         } else {
-            newValue = "\""+event.target.value+"\"";
+            newValue = event.target.value;
         }
         newNotifications[this.props.note_number][event.target.id] = newValue;
         this.props.update({
