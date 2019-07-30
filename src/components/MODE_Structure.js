@@ -15,7 +15,11 @@ class CORE_Structure extends Component {
 
     handleChange(event) {
         let newStructure = this.props.structure;
-        newStructure[event.target.id] = event.target.value;
+        let newValue = "NA";
+        if (event.target.value.replace(/\s+/g, '') !== '') {
+            newValue = event.target.value;
+        }
+        newStructure[event.target.id] = newValue;
         this.props.update({
             structure: newStructure
         });

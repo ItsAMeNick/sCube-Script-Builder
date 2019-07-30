@@ -30,6 +30,7 @@ const initialState = {
         fees_advanced: false,
         notifications: false,
         status_update: false,
+        asi: false,
         workflow: false,
         inspections: false,
         cancel: false,
@@ -42,6 +43,13 @@ const initialState = {
             comment: null,
             optional_cap: false,
             cap: null
+        }
+    },
+    asis: {
+        "1": {
+            key: 1,
+            name: null,
+            value: null
         }
     },
     fees: {
@@ -177,6 +185,38 @@ const sCubeReducer = (state = initialState, action) => {
             return newState;
         }
         delete newState.status[action.payload]
+        return newState;
+    }
+
+    //ASI
+    case "update_asis": {
+        let newState = _.cloneDeep(state);
+        newState.asis = action.payload.asis;
+        return newState;
+    }
+    case "add_asi": {
+        let newState = _.cloneDeep(state);
+        let asi_codes = Object.keys(state.asis);
+        let m = 0;
+        for (let a in asi_codes) {
+            m = Math.max(m,state.asis[asi_codes[a]].key);
+        }
+        m+=1;
+        newState.asis[m] =
+            {
+                key: m,
+                name: null,
+                value: null
+            }
+        return newState;
+    }
+    case "delete_asi": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the ASI_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.asis[action.payload]
         return newState;
     }
 

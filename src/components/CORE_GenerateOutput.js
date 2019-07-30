@@ -36,7 +36,7 @@ class CORE_GenerateOutput extends Component {
                 if (this.props.state.event_type !== null && (this.props.state.structure.module !== "NA" && this.props.state.structure.module !== "")) {
                     this.generateEventScriptStart();
                     this.parseParameters();
-                    this.parseConditions(1, "");
+                    this.parseConditions(1, "", 1);
                     this.generateEventScriptEnd();
                     break;
                 } else {
@@ -89,23 +89,31 @@ class CORE_GenerateOutput extends Component {
     generateEventScriptStart = () => {
         let today = new Date();
 
+        let app_string = this.props.state.structure.module+"/"
+                        +this.props.state.structure.type+"/"
+                        +this.props.state.structure.subtype+"/"
+                        +this.props.state.structure.category
+
         script_text += "//"+this.props.state.event_type+":"
-                            +this.props.state.structure.module+"/"
-                            +this.props.state.structure.type+"/"
-                            +this.props.state.structure.subtype+"/"
-                            +this.props.state.structure.category+"\n";
+                            +app_string+"\n";
         script_text += "//Created: " + (today.getMonth()+1) +"/"
                                             + today.getDate() + "/"
                                             + today.getFullYear() + "\n";
-        script_text += "\n";
 
-        script_text += "eval(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\");\n"
+        script_text += "if (appMatch(\"" + app_string + "\"))\n{\n"
+
+        script_text += "\teval(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\");\n"
 
         if (this.props.state.show_debug === true) {
-            script_text += "showDebug = true;\n\n";
+            script_text += "\tshowDebug = true;\n\n";
         } else {
-            script_text += "showDebug = false;\n\n";
+            script_text += "\tshowDebug = false;\n\n";
         }
+    }
+
+    generateEventScriptEnd = () => {
+        this.appendScript("", "}");
+        this.appendScript("", "//End of "+this.genName());
     }
 
     parseParameters(initialTab=0) {
@@ -146,11 +154,6 @@ class CORE_GenerateOutput extends Component {
                 this.appendScript(set_tab,""); //Blank Line
             }
         }
-    }
-
-    generateEventScriptEnd = () => {
-        this.appendScript("", "");
-        this.appendScript("", "//End Script Builder");
     }
 
     parseConditions = (level, parent, initialTab=0) => {
@@ -234,7 +237,7 @@ class CORE_GenerateOutput extends Component {
                 }
             }
 
-            //Inspections
+            //Cancels
             if (this.props.state.functionality.cancel === true
                 && ((this.props.state.event_type
                 && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
@@ -242,6 +245,13 @@ class CORE_GenerateOutput extends Component {
             {
                 for (let c in this.props.state.cancels) {
                     this.appendScript(set_tab, this.genCancelText(c));
+                }
+            }
+
+            //ASIs
+            if (this.props.state.functionality.asi === true) {
+                for (let a in this.props.state.asis) {
+                    this.appendScript(set_tab, this.genASIText(a));
                 }
             }
         }
@@ -276,6 +286,10 @@ class CORE_GenerateOutput extends Component {
             }
             case "Cancelation": {
                 action_text = this.genCancelText(action[1], tab);
+                break;
+            }
+            case "ASI": {
+                action_text = this.genASIText(action[1], tab);
                 break;
             }
             default: return null;
@@ -407,6 +421,17 @@ class CORE_GenerateOutput extends Component {
             cancel_text += tab + "comment = \"" + cancel.message + "\";";
         }
         return cancel_text;
+    }
+
+    genASIText = (asi_num) => {
+        let asi_text = "";
+        if (this.props.state.functionality.asi === true) {
+            let asi = this.props.state.asis[asi_num];
+            asi_text += "editAppSpecific(\""
+                        + asi.name + "\", \""
+                        + asi.value + "\");";
+        }
+        return asi_text;
     }
 
     render() {
