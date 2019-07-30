@@ -14,6 +14,7 @@ import TestShowDebug from "./components/TEST_ShowDebug.js";
 import Fees from "./components/FEE_Container.js";
 import Status from "./components/STATUS_Container.js";
 import Workflow from "./components/WORK_Container.js";
+import Inspection from "./components/INSP_Container.js";
 
 import Notes from "./components/NOTE_Container.js";
 import Params from "./components/PARAM_Container.js";
@@ -59,6 +60,8 @@ class App extends Component {
                 <Notes/>
             </Col> <Col>
                <Workflow/>
+           </Col> <Col>
+               <Inspection/>
            </Col> <Col>
                 <ConditContainer/>
             </Col> <hr/> <Col>

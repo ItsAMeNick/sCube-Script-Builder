@@ -87,6 +87,13 @@ const initialState = {
             status: null,
             comment: null
         }
+    },
+    inspections: {
+        "1": {
+            key: 1,
+            type: null,
+            days_out: null
+        }
     }
 };
 
@@ -131,6 +138,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Status
     case "update_status": {
         let newState = _.cloneDeep(state);
         newState.status = action.payload.status;
@@ -164,6 +172,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Fees
     case "update_fees": {
         let newState = _.cloneDeep(state);
         newState.fees = action.payload.fees;
@@ -199,6 +208,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Notes
     case "update_notes": {
         let newState = _.cloneDeep(state);
         newState.notifications = action.payload.notifications;
@@ -237,6 +247,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Params
     case "update_parameter_set": {
         let newState = _.cloneDeep(state);
         newState.parameter_sets = action.payload.parameter_sets;
@@ -291,6 +302,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Workflow
     case "update_workflow": {
         let newState = _.cloneDeep(state);
         newState.workflows = action.payload.workflows;
@@ -324,6 +336,39 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Inspections
+    case "update_inspections": {
+        let newState = _.cloneDeep(state);
+        newState.inspections = action.payload.inspections;
+        return newState;
+    }
+    case "add_inspection": {
+        let newState = _.cloneDeep(state);
+        let inspection_codes = Object.keys(state.inspections);
+        let m = 0;
+        for (let i in inspection_codes) {
+            m = Math.max(m,state.inspections[inspection_codes[i]].key);
+        }
+        m+=1;
+        newState.inspections[m] =
+            {
+                key: m,
+                type: null,
+                days_out: null
+            }
+        return newState;
+    }
+    case "delete_inspection": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the STATUS_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.inspections[action.payload]
+        return newState;
+    }
+
+    //Conditions
     case "update_conditions": {
         let newState = _.cloneDeep(state);
         newState.conditions = action.payload.conditions;

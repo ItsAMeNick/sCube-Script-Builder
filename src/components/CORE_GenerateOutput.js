@@ -226,6 +226,13 @@ class CORE_GenerateOutput extends Component {
                     this.appendScript(set_tab, this.genWorkText(w));
                 }
             }
+
+            //Inspections
+            if (this.props.state.functionality.inspections === true) {
+                for (let i in this.props.state.inspections) {
+                    this.appendScript(set_tab, this.genInspectionText(i));
+                }
+            }
         }
     }
 
@@ -250,6 +257,10 @@ class CORE_GenerateOutput extends Component {
             }
             case "Workflow": {
                 action_text = this.genWorkText(action[1]);
+                break;
+            }
+            case "Inspection": {
+                action_text = this.genInspectionText(action[1]);
                 break;
             }
             default: return null;
@@ -346,7 +357,6 @@ class CORE_GenerateOutput extends Component {
         if (this.props.state.functionality.workflow === true) {
             work_text = "";
             let work = this.props.state.workflows[work_num];
-            console.log(work);
             if (work.action === "Open") {
                 work_text += "activateTask(\""+work.task+"\");";
             } else if (work.action === "Close") {
@@ -359,6 +369,18 @@ class CORE_GenerateOutput extends Component {
             }
         }
         return work_text;
+    }
+
+    genInspectionText = insp_num => {
+        let insp_text;
+        if (this.props.state.functionality.inspections === true) {
+            insp_text = "";
+            let insp = this.props.state.inspections[insp_num];
+            insp_text += "scheduleInspect(capId, \""
+                        + insp.type + "\", "
+                        + insp.days_out + ");";
+        }
+        return insp_text;
     }
 
     render() {

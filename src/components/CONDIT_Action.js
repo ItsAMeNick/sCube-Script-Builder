@@ -59,6 +59,13 @@ class CONDIT_Action extends Component {
             }
         }
 
+        //Gather Inspections
+        if (this.props.functionality.inspections) {
+            for (let i in this.props.inspections)  {
+                actions.push("Inspection-"+this.props.inspections[i].key);
+            }
+        }
+
         return actions.map(a => {
             return <option key={a} value={a}>{a}</option>;
         });
@@ -99,7 +106,8 @@ const mapStateToProps = state => ({
     status: state.status,
     fees: state.fees,
     notifications: state.notifications,
-    workflows: state.workflows
+    workflows: state.workflows,
+    inspections: state.inspections
 });
 
 const mapDispatchToProps = dispatch => ({
