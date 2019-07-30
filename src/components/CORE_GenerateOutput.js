@@ -113,7 +113,7 @@ class CORE_GenerateOutput extends Component {
 
     generateEventScriptEnd = () => {
         this.appendScript("", "}");
-        this.appendScript("", "//End Script Builder");
+        this.appendScript("", "//End of "+this.genName());
     }
 
     parseParameters(initialTab=0) {
@@ -237,7 +237,7 @@ class CORE_GenerateOutput extends Component {
                 }
             }
 
-            //Inspections
+            //Cancels
             if (this.props.state.functionality.cancel === true
                 && ((this.props.state.event_type
                 && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
@@ -245,6 +245,13 @@ class CORE_GenerateOutput extends Component {
             {
                 for (let c in this.props.state.cancels) {
                     this.appendScript(set_tab, this.genCancelText(c));
+                }
+            }
+
+            //ASIs
+            if (this.props.state.functionality.asi === true) {
+                for (let a in this.props.state.asis) {
+                    this.appendScript(set_tab, this.genASIText(a));
                 }
             }
         }
@@ -279,6 +286,10 @@ class CORE_GenerateOutput extends Component {
             }
             case "Cancelation": {
                 action_text = this.genCancelText(action[1], tab);
+                break;
+            }
+            case "ASI": {
+                action_text = this.genASIText(action[1], tab);
                 break;
             }
             default: return null;
@@ -410,6 +421,17 @@ class CORE_GenerateOutput extends Component {
             cancel_text += tab + "comment = \"" + cancel.message + "\";";
         }
         return cancel_text;
+    }
+
+    genASIText = (asi_num) => {
+        let asi_text = "";
+        if (this.props.state.functionality.asi === true) {
+            let asi = this.props.state.asis[asi_num];
+            asi_text += "editAppSpecific(\""
+                        + asi.name + "\", \""
+                        + asi.value + "\");";
+        }
+        return asi_text;
     }
 
     render() {

@@ -73,6 +73,13 @@ class CONDIT_Action extends Component {
             }
         }
 
+        //Gather ASIs
+        if (this.props.functionality.asi) {
+            for (let a in this.props.asis)  {
+                actions.push("ASI-"+this.props.asis[a].key);
+            }
+        }
+
         return actions.map(a => {
             return <option key={a} value={a}>{a}</option>;
         });
@@ -115,7 +122,8 @@ const mapStateToProps = state => ({
     notifications: state.notifications,
     workflows: state.workflows,
     inspections: state.inspections,
-    cancels: state.cancels
+    cancels: state.cancels,
+    asis: state.asis
 });
 
 const mapDispatchToProps = dispatch => ({
