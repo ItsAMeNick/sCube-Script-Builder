@@ -27,7 +27,7 @@ class CANCEL_Container extends Component {
                 || this.props.mode === "pageflow")) ?
         <div>
             <hr/>
-            <h3>Cancel Manager</h3>
+            <h3>Cancelation Manager</h3>
             <Table striped bordered>
                 <thead>
                     <tr>

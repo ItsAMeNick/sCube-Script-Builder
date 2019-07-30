@@ -66,6 +66,13 @@ class CONDIT_Action extends Component {
             }
         }
 
+        //Gather Cancels
+        if (this.props.functionality.cancel) {
+            for (let c in this.props.cancels)  {
+                actions.push("Cancelation-"+this.props.cancels[c].key);
+            }
+        }
+
         return actions.map(a => {
             return <option key={a} value={a}>{a}</option>;
         });
@@ -107,7 +114,8 @@ const mapStateToProps = state => ({
     fees: state.fees,
     notifications: state.notifications,
     workflows: state.workflows,
-    inspections: state.inspections
+    inspections: state.inspections,
+    cancels: state.cancels
 });
 
 const mapDispatchToProps = dispatch => ({

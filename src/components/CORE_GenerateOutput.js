@@ -233,6 +233,17 @@ class CORE_GenerateOutput extends Component {
                     this.appendScript(set_tab, this.genInspectionText(i));
                 }
             }
+
+            //Inspections
+            if (this.props.state.functionality.cancel === true
+                && ((this.props.state.event_type
+                && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
+                || this.props.state.mode === "pageflow"))
+            {
+                for (let c in this.props.state.cancels) {
+                    this.appendScript(set_tab, this.genCancelText(c));
+                }
+            }
         }
     }
 
@@ -263,15 +274,18 @@ class CORE_GenerateOutput extends Component {
                 action_text = this.genInspectionText(action[1]);
                 break;
             }
+            case "Cancelation": {
+                action_text = this.genCancelText(action[1], tab);
+                break;
+            }
             default: return null;
         }
         this.appendScript(tab, action_text);
     }
 
     genStatusText = status_num => {
-        let status_text;
+        let status_text = "";
         if (this.props.state.functionality.status_update === true) {
-            status_text = "";
             let stat = this.props.state.status[status_num];
             let comment_text = "";
             let optional_text = "";
@@ -291,9 +305,8 @@ class CORE_GenerateOutput extends Component {
     }
 
     genFeeText = (fee_num, tab="") => {
-        let fees_text;
+        let fees_text = "";
         if (this.props.state.functionality.fees === true) {
-            fees_text = "";
             let fee = this.props.state.fees[fee_num];
             if (!isNaN(parseFloat(fee.quantity))) {
                 fees_text += "updateFee(\"" + fee.code + "\", "
@@ -315,9 +328,8 @@ class CORE_GenerateOutput extends Component {
     }
 
     genNoteText = note_num => {
-        let note_text;
+        let note_text = "";
         if (this.props.state.functionality.notifications === true) {
-            note_text = "";
             let note = this.props.state.notifications[note_num];
             let contacts = note.contacts;
             let professionals = note.professionals;
@@ -353,9 +365,8 @@ class CORE_GenerateOutput extends Component {
     }
 
     genWorkText = work_num => {
-        let work_text;
+        let work_text = "";
         if (this.props.state.functionality.workflow === true) {
-            work_text = "";
             let work = this.props.state.workflows[work_num];
             if (work.action === "Open") {
                 work_text += "activateTask(\""+work.task+"\");";
@@ -372,15 +383,30 @@ class CORE_GenerateOutput extends Component {
     }
 
     genInspectionText = insp_num => {
-        let insp_text;
+        let insp_text = "";
         if (this.props.state.functionality.inspections === true) {
-            insp_text = "";
             let insp = this.props.state.inspections[insp_num];
             insp_text += "scheduleInspect(capId, \""
                         + insp.type + "\", "
                         + insp.days_out + ");";
         }
         return insp_text;
+    }
+
+    genCancelText = (cancel_num, tab="") => {
+        let cancel_text = "";
+        if (this.props.state.functionality.cancel === true
+            && ((this.props.state.event_type
+            && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
+            || this.props.state.mode === "pageflow"))
+        {
+            cancel_text = "";
+            let cancel = this.props.state.cancels[cancel_num];
+            cancel_text += "cancel = true;\n";
+            cancel_text += tab + "showMessage = true;\n";
+            cancel_text += tab + "comment = \"" + cancel.message + "\";";
+        }
+        return cancel_text;
     }
 
     render() {
