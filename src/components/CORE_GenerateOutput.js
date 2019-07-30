@@ -200,18 +200,49 @@ class CORE_GenerateOutput extends Component {
         } else {
             //Parse everything individually
             //StatusItem
-            for (let s in this.props.state.status) {
-                this.appendScript(set_tab, this.genStatusText(s));
+            if (this.props.state.functionality.status === true) {
+                for (let s in this.props.state.status) {
+                    this.appendScript(set_tab, this.genStatusText(s));
+                }
             }
 
             //Fees
-            for (let f in this.props.state.fees) {
-                this.appendScript(set_tab, this.genFeeText(f));
+            if (this.props.state.functionality.fees === true) {
+                for (let f in this.props.state.fees) {
+                    this.appendScript(set_tab, this.genFeeText(f));
+                }
             }
 
             //Notifications
-            for (let n in this.props.state.notifications) {
-                this.appendScript(set_tab, this.genNoteText(n));
+            if (this.props.state.functionality.notifications === true) {
+                for (let n in this.props.state.notifications) {
+                    this.appendScript(set_tab, this.genNoteText(n));
+                }
+            }
+
+            //Workflows
+            if (this.props.state.functionality.workflow === true) {
+                for (let w in this.props.state.workflows) {
+                    this.appendScript(set_tab, this.genWorkText(w));
+                }
+            }
+
+            //Inspections
+            if (this.props.state.functionality.inspections === true) {
+                for (let i in this.props.state.inspections) {
+                    this.appendScript(set_tab, this.genInspectionText(i));
+                }
+            }
+
+            //Inspections
+            if (this.props.state.functionality.cancel === true
+                && ((this.props.state.event_type
+                && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
+                || this.props.state.mode === "pageflow"))
+            {
+                for (let c in this.props.state.cancels) {
+                    this.appendScript(set_tab, this.genCancelText(c));
+                }
             }
         }
     }
@@ -233,6 +264,18 @@ class CORE_GenerateOutput extends Component {
             }
             case "Notification": {
                 action_text = this.genNoteText(action[1]);
+                break;
+            }
+            case "Workflow": {
+                action_text = this.genWorkText(action[1]);
+                break;
+            }
+            case "Inspection": {
+                action_text = this.genInspectionText(action[1]);
+                break;
+            }
+            case "Cancelation": {
+                action_text = this.genCancelText(action[1], tab);
                 break;
             }
             default: return null;
@@ -286,7 +329,7 @@ class CORE_GenerateOutput extends Component {
 
     genNoteText = note_num => {
         let note_text = "";
-        if (this.props.state.functionality.notifications) {
+        if (this.props.state.functionality.notifications === true) {
             let note = this.props.state.notifications[note_num];
             let contacts = note.contacts;
             let professionals = note.professionals;
@@ -318,8 +361,52 @@ class CORE_GenerateOutput extends Component {
                                                 + "capId, "
                                                 + emailParams + ");";
         }
-        //sendNotificationSCUBE(notificationTemplateName, fromEmail, contacts, professionals, reportName, reportParameter, reportModule, capId, emailParams)
         return note_text;
+    }
+
+    genWorkText = work_num => {
+        let work_text = "";
+        if (this.props.state.functionality.workflow === true) {
+            let work = this.props.state.workflows[work_num];
+            if (work.action === "Open") {
+                work_text += "activateTask(\""+work.task+"\");";
+            } else if (work.action === "Close") {
+                work_text += "closeTask(\""+work.task+"\", "
+                            + "\"" + work.status + "\", "
+                            + "\"" + work.comment + "\", "
+                            + "null);"
+            } else {
+                work_text += ""
+            }
+        }
+        return work_text;
+    }
+
+    genInspectionText = insp_num => {
+        let insp_text = "";
+        if (this.props.state.functionality.inspections === true) {
+            let insp = this.props.state.inspections[insp_num];
+            insp_text += "scheduleInspect(capId, \""
+                        + insp.type + "\", "
+                        + insp.days_out + ");";
+        }
+        return insp_text;
+    }
+
+    genCancelText = (cancel_num, tab="") => {
+        let cancel_text = "";
+        if (this.props.state.functionality.cancel === true
+            && ((this.props.state.event_type
+            && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
+            || this.props.state.mode === "pageflow"))
+        {
+            cancel_text = "";
+            let cancel = this.props.state.cancels[cancel_num];
+            cancel_text += "cancel = true;\n";
+            cancel_text += tab + "showMessage = true;\n";
+            cancel_text += tab + "comment = \"" + cancel.message + "\";";
+        }
+        return cancel_text;
     }
 
     render() {

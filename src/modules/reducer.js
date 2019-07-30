@@ -31,7 +31,9 @@ const initialState = {
         notifications: false,
         status_update: false,
         workflow: false,
-        inspections: false
+        inspections: false,
+        cancel: false,
+        pageflow_documents: false
     },
     status: {
         "1": {
@@ -79,6 +81,28 @@ const initialState = {
             email_params: null
         }
     },
+    workflows: {
+        "1": {
+            key: 1,
+            action: null,
+            task: null,
+            status: null,
+            comment: null
+        }
+    },
+    inspections: {
+        "1": {
+            key: 1,
+            type: null,
+            days_out: null
+        }
+    },
+    cancels: {
+        "1": {
+            key: 1,
+            message: null
+        }
+    }
 };
 
 const sCubeReducer = (state = initialState, action) => {
@@ -122,6 +146,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Status
     case "update_status": {
         let newState = _.cloneDeep(state);
         newState.status = action.payload.status;
@@ -147,7 +172,7 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "delete_status": {
         let newState = _.cloneDeep(state);
-        //Safeguard, should be prevented by the Fee_Item
+        //Safeguard, should be prevented by the STATUS_Item
         if (action.payload === "1") {
             return newState;
         }
@@ -155,6 +180,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Fees
     case "update_fees": {
         let newState = _.cloneDeep(state);
         newState.fees = action.payload.fees;
@@ -190,6 +216,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Notes
     case "update_notes": {
         let newState = _.cloneDeep(state);
         newState.notifications = action.payload.notifications;
@@ -220,7 +247,7 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "delete_note": {
         let newState = _.cloneDeep(state);
-        //Safeguard, should be prevented by the Fee_Item
+        //Safeguard, should be prevented by the NOTE_Item
         if (action.payload === "1") {
             return newState;
         }
@@ -228,6 +255,7 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Params
     case "update_parameter_set": {
         let newState = _.cloneDeep(state);
         newState.parameter_sets = action.payload.parameter_sets;
@@ -282,6 +310,104 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    //Workflow
+    case "update_workflow": {
+        let newState = _.cloneDeep(state);
+        newState.workflows = action.payload.workflows;
+        return newState;
+    }
+    case "add_workflow": {
+        let newState = _.cloneDeep(state);
+        let workflow_codes = Object.keys(state.workflows);
+        let m = 0;
+        for (let w in workflow_codes) {
+            m = Math.max(m,state.workflows[workflow_codes[w]].key);
+        }
+        m+=1;
+        newState.workflows[m] =
+            {
+                key: m,
+                action: null,
+                task: null,
+                status: null,
+                comment: null
+            }
+        return newState;
+    }
+    case "delete_workflow": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the WORK_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.workflows[action.payload]
+        return newState;
+    }
+
+    //Inspections
+    case "update_inspections": {
+        let newState = _.cloneDeep(state);
+        newState.inspections = action.payload.inspections;
+        return newState;
+    }
+    case "add_inspection": {
+        let newState = _.cloneDeep(state);
+        let inspection_codes = Object.keys(state.inspections);
+        let m = 0;
+        for (let i in inspection_codes) {
+            m = Math.max(m,state.inspections[inspection_codes[i]].key);
+        }
+        m+=1;
+        newState.inspections[m] =
+            {
+                key: m,
+                type: null,
+                days_out: null
+            }
+        return newState;
+    }
+    case "delete_inspection": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the STATUS_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.inspections[action.payload]
+        return newState;
+    }
+
+    //Cancels
+    case "update_cancels": {
+        let newState = _.cloneDeep(state);
+        newState.cancels = action.payload.cancels;
+        return newState;
+    }
+    case "add_cancel": {
+        let newState = _.cloneDeep(state);
+        let cancel_codes = Object.keys(state.cancels);
+        let m = 0;
+        for (let c in cancel_codes) {
+            m = Math.max(m,state.cancels[cancel_codes[c]].key);
+        }
+        m+=1;
+        newState.cancels[m] =
+            {
+                key: m,
+                message: null
+            }
+        return newState;
+    }
+    case "delete_cancel": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the STATUS_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.cancels[action.payload]
+        return newState;
+    }
+
+    //Conditions
     case "update_conditions": {
         let newState = _.cloneDeep(state);
         newState.conditions = action.payload.conditions;
