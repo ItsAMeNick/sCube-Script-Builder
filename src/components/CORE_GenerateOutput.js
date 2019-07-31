@@ -62,10 +62,11 @@ class CORE_GenerateOutput extends Component {
                     this.parseParameters(0);
                     this.parseConditions(1, "", 0);
                     this.generatePageflowScriptEnd();
+                    script_text = script_text.replace(/getAppSpecific\(([^)]+)\)/g, "AInfo[$1]")
                     break;
                 } else {
                     //Must provide function name
-                    return "Please provide a Name for the function.";
+                    return "Cannot generate pageflow correctly.";
                 }
             }
             default:
