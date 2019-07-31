@@ -16,14 +16,15 @@ class PARAM_Container extends Component {
         if (this.props.parameter_sets[this.props.set_number].style === "email") {
             document.getElementById("email."+this.props.set_number).checked = true;
         }
+        document.getElementById("name."+this.props.set_number).value = this.props.parameter_sets[this.props.set_number].name;
     }
 
     handleChange(event) {
         let newSets = this.props.parameter_sets;
-        if (event.target.id === "name") {
-            newSets[this.props.set_number][event.target.id] = event.target.value;
+        let id = event.target.id.split(".");
+        if (id[0] === "name") {
+            newSets[this.props.set_number].name = event.target.value;
         } else {
-            let id = event.target.id.split(".");
             if (id[0] === "email") {
                 newSets[this.props.set_number].style = "email";
             } else {
@@ -66,7 +67,7 @@ class PARAM_Container extends Component {
                         <th>{this.props.set_number}</th>
                         <td>Set Name: </td>
                         <td>
-                            <Form.Control id="name" type="text" onChange={this.handleChange}/>
+                            <Form.Control id={"name."+this.props.set_number} type="text" onChange={this.handleChange}/>
                         </td>
                         <td>
                             <Form.Check id={"email."+this.props.set_number} label="Email Parameters" type="radio" name = {"style."+this.props.set_number} onChange={this.handleChange}/>

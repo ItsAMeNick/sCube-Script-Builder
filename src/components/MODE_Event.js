@@ -10,11 +10,14 @@ class CORE_Event extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentDidMount() {
+        document.getElementById("event_type_master").value = this.props.event_type;
+    }
+
     handleChange(event) {
         this.props.update({
             event_type: event.target.value
         });
-        event.preventDefault();
     };
 
     genLabel() {
@@ -38,7 +41,7 @@ class CORE_Event extends Component {
             <Form.Label>
                 {this.genLabel()}
             </Form.Label>
-            <Form.Control as="select" onChange={this.handleChange}>
+            <Form.Control as="select" id="event_type_master" onChange={this.handleChange}>
                 <option></option>
                 <option value="ASA">ASA - After an application is submitted.</option>
                 <option value="ASB">ASB - Before an application can be submitted.</option>

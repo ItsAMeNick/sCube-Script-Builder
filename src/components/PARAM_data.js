@@ -85,6 +85,10 @@ var variable_map = {
             {
                 script: "getAddressComponent(capId, 'addressLine2')"
             },
+            "3":
+            {
+                script: "getAddressComponent(capId, 'addressLine3')"
+            },
         },
         "Unit":
         {

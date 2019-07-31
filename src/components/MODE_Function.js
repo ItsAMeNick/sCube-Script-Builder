@@ -10,6 +10,11 @@ class MODE_Function extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentDidMount() {
+        document.getElementById("function_name").value = this.props.mode_extras.function_name;
+        document.getElementById("function_desc").value = this.props.mode_extras.function_desc;
+    }
+
     handleChange(event) {
         let newExtras = this.props.mode_extras;
         newExtras[event.target.id] = event.target.value;

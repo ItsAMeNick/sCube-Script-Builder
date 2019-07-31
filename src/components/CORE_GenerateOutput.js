@@ -35,7 +35,7 @@ class CORE_GenerateOutput extends Component {
             case "event_script": {
                 if (this.props.state.event_type !== null && (this.props.state.structure.module !== "NA" && this.props.state.structure.module !== "")) {
                     this.generateEventScriptStart();
-                    this.parseParameters();
+                    this.parseParameters(1);
                     this.parseConditions(1, "", 1);
                     this.generateEventScriptEnd();
                     break;
