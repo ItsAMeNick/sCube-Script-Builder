@@ -22,9 +22,16 @@ class CONDIT_Item extends Component {
         //Clear some things
         newConditions[this.props.id].comparison_x = null;
 
-
         let type = event.target.id.split("-")[0];
         newConditions[this.props.id][type] = event.target.value;
+
+        if (this.props.conditions[this.props.id].portlet === "ACA Document Name") {
+            document.getElementById("comparison_y-"+this.props.id).readOnly = true;
+            document.getElementById("comparison_y-"+this.props.id).placeholder = "NA";
+        } else {
+            document.getElementById("comparison_y-"+this.props.id).readOnly = false;
+        }
+
         //Need to be very carseful with the condition Builder
         //Adding in checks to make sure that all fields to the "right" are cleared
         //Actually I'm not doing that anymore lol
@@ -179,6 +186,18 @@ class CONDIT_Item extends Component {
 
     generateCompTypes = () => {
         let types = [""].concat(Object.keys(condit_data.condit_data.comparison_types));
+
+        if (this.props.conditions[this.props.id].portlet === "ACA Document Name") {
+            types = _.remove(types, t => {
+                return (["","Attached","Not Attached"].includes(t));
+            });
+        } else {
+            types = _.remove(types, t => {
+                return (!["Attached","Not Attached"].includes(t));
+            });
+        }
+        types.sort();
+
         types = types.map(t => {
             return <option key={t} label={t} value={condit_data.condit_data.comparison_types[t]}/>
         });

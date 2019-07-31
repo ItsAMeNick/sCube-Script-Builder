@@ -398,9 +398,17 @@ class CORE_GenerateOutput extends Component {
 
                 //Build the if statement
                 let condition_start = "if (";
-                condition_start += conditions[c].comparison_x + " ";
-                condition_start += conditions[c].comparison_type + " ";
-                condition_start += "\"" + conditions[c].comparison_y + "\")";
+                if (conditions[c].comparison_type === "Attached") {
+                    condition_start += conditions[c].comparison_x + " ";
+                    condition_start += "== true)";
+                } else if (conditions[c].comparison_type === "Not Attached") {
+                    condition_start += conditions[c].comparison_x + " ";
+                    condition_start += "== false)";
+                } else {
+                    condition_start += conditions[c].comparison_x + " ";
+                    condition_start += conditions[c].comparison_type + " ";
+                    condition_start += "\"" + conditions[c].comparison_y + "\")";
+                }
 
                 this.appendScript(set_tab, condition_start);
                 this.appendScript(set_tab, "{");
