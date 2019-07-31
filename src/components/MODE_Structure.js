@@ -14,10 +14,26 @@ class CORE_Structure extends Component {
     }
 
     componentDidMount() {
-        document.getElementById("structure.module").value = this.props.structure.module;
-        document.getElementById("structure.type").value = this.props.structure.module;
-        document.getElementById("structure.subtype").value = this.props.structure.module;
-        document.getElementById("structure.category").value = this.props.structure.module;
+        if (this.props.structure.module === "NA") {
+            document.getElementById("structure.module").value = "";
+        } else {
+            document.getElementById("structure.module").value = this.props.structure.module;
+        }
+        if (this.props.structure.type === "NA") {
+            document.getElementById("structure.type").value = "";
+        } else {
+            document.getElementById("structure.type").value = this.props.structure.type;
+        }
+        if (this.props.structure.subtype === "NA") {
+            document.getElementById("structure.subtype").value = "";
+        } else {
+            document.getElementById("structure.subtype").value = this.props.structure.subtype;
+        }
+        if (this.props.structure.category === "NA") {
+            document.getElementById("structure.category").value = "";
+        } else {
+            document.getElementById("structure.category").value = this.props.structure.category;
+        }
     }
 
     handleChange(event) {

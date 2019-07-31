@@ -58,7 +58,15 @@ class CONDIT_Item extends Component {
 
     genPortlet = () => {
         let types = [""].concat(Object.keys(variable_map.variable_map));
+
+        //Remove invalid types then sort
+        if (this.props.mode !== "pageflow") {
+            types = _.remove(types, k => {
+                return k !== "ACA Document Name"
+            });
+        }
         types.sort();
+
         types = types.map(t => {
             return <option key={t} value={t} label={t}/>
         });
@@ -94,7 +102,14 @@ class CONDIT_Item extends Component {
 
         let keys = [""].concat(Object.keys(map));
 
+        //Remove invalid keys then sort
+        if (this.props.mode !== "pageflow") {
+            keys = _.remove(keys, k => {
+                return k !== "ACA Document Name"
+            });
+        }
         keys.sort();
+
         if (keys.length <= 1) return null;
 
         let newId = "x."+level
@@ -234,7 +249,8 @@ class CONDIT_Item extends Component {
 
 const mapStateToProps = state => ({
     conditions: state.conditions,
-    event_type: state.event_type
+    event_type: state.event_type,
+    mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({
