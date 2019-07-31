@@ -13,13 +13,36 @@ class CORE_Structure extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    componentDidMount() {
+        if (this.props.structure.module === "NA") {
+            document.getElementById("structure.module").value = "";
+        } else {
+            document.getElementById("structure.module").value = this.props.structure.module;
+        }
+        if (this.props.structure.type === "NA") {
+            document.getElementById("structure.type").value = "";
+        } else {
+            document.getElementById("structure.type").value = this.props.structure.type;
+        }
+        if (this.props.structure.subtype === "NA") {
+            document.getElementById("structure.subtype").value = "";
+        } else {
+            document.getElementById("structure.subtype").value = this.props.structure.subtype;
+        }
+        if (this.props.structure.category === "NA") {
+            document.getElementById("structure.category").value = "";
+        } else {
+            document.getElementById("structure.category").value = this.props.structure.category;
+        }
+    }
+
     handleChange(event) {
         let newStructure = this.props.structure;
         let newValue = "NA";
         if (event.target.value.replace(/\s+/g, '') !== '') {
             newValue = event.target.value;
         }
-        newStructure[event.target.id] = newValue;
+        newStructure[event.target.id.split(".")[1]] = newValue;
         this.props.update({
             structure: newStructure
         });
@@ -36,25 +59,25 @@ class CORE_Structure extends Component {
                 <Col>
                     <Form.Label>Module:</Form.Label>
                 </Col> <Col>
-                    <Form.Control id="module" type="text" onChange={this.handleChange}/>
+                    <Form.Control id="structure.module" type="text" onChange={this.handleChange}/>
                 </Col>
             </Row> <br/> <Row>
                 <Col>
                     <Form.Label>Type: </Form.Label>
                 </Col> <Col>
-                    <Form.Control id="type" type="text" onChange={this.handleChange}/>
+                    <Form.Control id="structure.type" type="text" onChange={this.handleChange}/>
                 </Col>
             </Row> <br/> <Row>
                 <Col>
                     <Form.Label>SubType:</Form.Label>
                 </Col> <Col>
-                    <Form.Control id="subtype" type="text" onChange={this.handleChange}/>
+                    <Form.Control id="structure.subtype" type="text" onChange={this.handleChange}/>
                 </Col>
             </Row> <br/> <Row>
                 <Col>
                     <Form.Label>Category:</Form.Label>
                 </Col> <Col>
-                    <Form.Control id="category" type="text" onChange={this.handleChange}/>
+                    <Form.Control id="structure.category" type="text" onChange={this.handleChange}/>
                 </Col>
             </Row>
         </Container>

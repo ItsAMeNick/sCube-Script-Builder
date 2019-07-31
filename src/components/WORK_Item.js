@@ -16,6 +16,7 @@ class WORK_Item extends Component {
         this.props.update({
             workflows: newWorkflows
         });
+        this.forceUpdate();
     };
 
     render() {

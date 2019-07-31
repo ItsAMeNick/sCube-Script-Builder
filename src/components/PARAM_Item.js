@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash"
+
 import Form from "react-bootstrap/Form";
 
 import variable_map from "./PARAM_data.js";
@@ -76,7 +78,19 @@ class PARAM_Item extends Component {
 
         let keys = [""].concat(Object.keys(map));
 
+        //Remove invalid keys then sort
+        if (this.props.mode !== "pageflow") {
+            keys = _.remove(keys, k => {
+                return k !== "ACA Document Name"
+            });
+        }
+        if (this.props.event_type === "NA") {
+            keys = _.remove(keys, k => {
+                return k !== "Accela Globals"
+            });
+        }
         keys.sort();
+
         if (keys.length <= 1) return null;
 
         let newId = "level"+level
@@ -149,7 +163,8 @@ class PARAM_Item extends Component {
 
 const mapStateToProps = state => ({
     parameter_sets: state.parameter_sets,
-    event_type: state.event_type
+    event_type: state.event_type,
+    mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({

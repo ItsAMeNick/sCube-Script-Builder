@@ -5,7 +5,9 @@ var condit_data = {
         "Greater": ">",
         "Greater/Equal": ">=",
         "Less": "<",
-        "Less/Equal": "<="
+        "Less/Equal": "<=",
+        "Attached": "Attached",
+        "Not Attached": "Not Attached",
     }
 };
 

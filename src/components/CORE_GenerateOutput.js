@@ -35,7 +35,7 @@ class CORE_GenerateOutput extends Component {
             case "event_script": {
                 if (this.props.state.event_type !== null && (this.props.state.structure.module !== "NA" && this.props.state.structure.module !== "")) {
                     this.generateEventScriptStart();
-                    this.parseParameters();
+                    this.parseParameters(1);
                     this.parseConditions(1, "", 1);
                     this.generateEventScriptEnd();
                     break;
@@ -54,6 +54,19 @@ class CORE_GenerateOutput extends Component {
                 } else {
                     //Must provide function name
                     return "Please provide a Name for the function.";
+                }
+            }
+            case "pageflow": {
+                if (true) { //Some pageflow thing
+                    this.generatePageflowScriptStart();
+                    this.parseParameters(0);
+                    this.parseConditions(1, "", 0);
+                    this.generatePageflowScriptEnd();
+                    script_text = script_text.replace(/getAppSpecific\(([^)]+)\)/g, "AInfo[$1]")
+                    break;
+                } else {
+                    //Must provide function name
+                    return "Cannot generate pageflow correctly.";
                 }
             }
             default:
@@ -114,6 +127,206 @@ class CORE_GenerateOutput extends Component {
     generateEventScriptEnd = () => {
         this.appendScript("", "}");
         this.appendScript("", "//End of "+this.genName());
+    }
+
+    //I used a little python script to generate this, cause I sure as hell was not about to type all this.
+    generatePageflowScriptStart = () => {
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
+        script_text += "| START User Configurable Parameters\n"
+        script_text += "|\n"
+        script_text += "|     Only variables in the following section may be changed.  If any other section is modified, this\n"
+        script_text += "|     will no longer be considered a \"Master\" script and will not be supported in future releases.  If\n"
+        script_text += "|     changes are made, please add notes above.\n"
+        script_text += "/------------------------------------------------------------------------------------------------------*/\n"
+        script_text += "var showMessage = false;				// Set to true to see results in popup window\n"
+        script_text += "var showDebug = true;					// Set to true to see debug messages in popup window\n"
+        script_text += "var preExecute = \"PreExecuteForBeforeEvents\"\n"
+        script_text += "var controlString = \"\";		// Standard choice for control\n"
+        script_text += "var documentOnly = false;						// Document Only -- displays hierarchy of std choice steps\n"
+        script_text += "var disableTokens = false;						// turn off tokenizing of std choices (enables use of \"{} and []\")\n"
+        script_text += "var useAppSpecificGroupName = false;			// Use Group name when populating App Specific Info Values\n"
+        script_text += "var useTaskSpecificGroupName = false;			// Use Group name when populating Task Specific Info Values\n"
+        script_text += "var enableVariableBranching = false;			// Allows use of variable names in branching.  Branches are not followed in Doc Only\n"
+        script_text += "var maxEntries = 99;							// Maximum number of std choice entries.  Entries must be Left Zero Padded\n"
+        script_text += "var SCRIPT_VERSION = 2.0\n"
+        script_text += "\n"
+        script_text += "eval(getScriptText(\"INCLUDES_ACCELA_FUNCTIONS\"));\n"
+        script_text += "eval(getScriptText(\"INCLUDES_ACCELA_GLOBALS\"));\n"
+        script_text += "eval(getScriptText(\"INCLUDES_CUSTOM\"));\n"
+        script_text += "eval(getScriptText(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"));\n"
+        script_text += "\n"
+        script_text += "if (documentOnly) {\n"
+        script_text += "	doStandardChoiceActions(controlString,false,0);\n"
+        script_text += "	aa.env.setValue(\"ScriptReturnCode\", \"0\");\n"
+        script_text += "	aa.env.setValue(\"ScriptReturnMessage\", \"Documentation Successful.  No actions executed.\");\n"
+        script_text += "	aa.abortScript();\n"
+        script_text += "	}\n"
+        script_text += "\n"
+        script_text += "	\n"
+        script_text += "function getScriptText(vScriptName){\n"
+        script_text += "	vScriptName = vScriptName.toUpperCase();\n"
+        script_text += "	var emseBiz = aa.proxyInvoker.newInstance(\"com.accela.aa.emse.emse.EMSEBusiness\").getOutput();\n"
+        script_text += "	var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(),vScriptName);\n"
+        script_text += "	return emseScript.getScriptText() + \"\";	\n"
+        script_text += "}\n"
+        script_text += "\n"
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
+        script_text += "| END User Configurable Parameters\n"
+        script_text += "/------------------------------------------------------------------------------------------------------*/\n"
+        script_text += "var cancel = false;\n"
+        script_text += "var startDate = new Date();\n"
+        script_text += "var startTime = startDate.getTime();\n"
+        script_text += "var message =	\"\";							// Message String\n"
+        script_text += "var debug = \"\";								// Debug String\n"
+        script_text += "var br = \"<BR>\";							// Break Tag\n"
+        script_text += "var feeSeqList = new Array();						// invoicing fee list\n"
+        script_text += "var paymentPeriodList = new Array();					// invoicing pay periods\n"
+        script_text += "\n"
+        script_text += "if (documentOnly) {\n"
+        script_text += "	doStandardChoiceActions(controlString,false,0);\n"
+        script_text += "	aa.env.setValue(\"ScriptReturnCode\", \"0\");\n"
+        script_text += "	aa.env.setValue(\"ScriptReturnMessage\", \"Documentation Successful.  No actions executed.\");\n"
+        script_text += "	aa.abortScript();\n"
+        script_text += "	}\n"
+        script_text += "\n"
+        script_text += "var cap = aa.env.getValue(\"CapModel\");\n"
+        script_text += "var capId = cap.getCapID();\n"
+        script_text += "var servProvCode = capId.getServiceProviderCode()       		// Service Provider Code\n"
+        script_text += "var publicUser = false ;\n"
+        script_text += "var currentUserID = aa.env.getValue(\"CurrentUserID\");\n"
+        script_text += "if (currentUserID.indexOf(\"PUBLICUSER\") == 0) { currentUserID = \"ADMIN\" ; publicUser = true }  // ignore public users\n"
+        script_text += "var capIDString = capId.getCustomID();					// alternate cap id string\n"
+        script_text += "var systemUserObj = aa.person.getUser(currentUserID).getOutput();  	// Current User Object\n"
+        script_text += "var appTypeResult = cap.getCapType();\n"
+        script_text += "var appTypeString = appTypeResult.toString();				// Convert application type to string (\"Building/A/B/C\")\n"
+        script_text += "var appTypeArray = appTypeString.split(\"/\");				// Array of application type string\n"
+        script_text += "var currentUserGroup;\n"
+        script_text += "var currentUserGroupObj = aa.userright.getUserRight(appTypeArray[0],currentUserID).getOutput()\n"
+        script_text += "if (currentUserGroupObj) currentUserGroup = currentUserGroupObj.getGroupName();\n"
+        script_text += "var capName = cap.getSpecialText();\n"
+        script_text += "var capStatus = cap.getCapStatus();\n"
+        script_text += "var sysDate = aa.date.getCurrentDate();\n"
+        script_text += "var sysDateMMDDYYYY = dateFormatted(sysDate.getMonth(),sysDate.getDayOfMonth(),sysDate.getYear(),\"\");\n"
+        script_text += "var parcelArea = 0;\n"
+        script_text += "\n"
+        script_text += "var estValue = 0; var calcValue = 0; var feeFactor			// Init Valuations\n"
+        script_text += "var valobj = aa.finance.getContractorSuppliedValuation(capId,null).getOutput();	// Calculated valuation\n"
+        script_text += "if (valobj.length) {\n"
+        script_text += "	estValue = valobj[0].getEstimatedValue();\n"
+        script_text += "	calcValue = valobj[0].getCalculatedValue();\n"
+        script_text += "	feeFactor = valobj[0].getbValuatn().getFeeFactorFlag();\n"
+        script_text += "	}\n"
+        script_text += "\n"
+        script_text += "var balanceDue = 0 ; var houseCount = 0; feesInvoicedTotal = 0;		// Init detail Data\n"
+        script_text += "var capDetail = \"\";\n"
+        script_text += "var capDetailObjResult = aa.cap.getCapDetail(capId);			// Detail\n"
+        script_text += "if (capDetailObjResult.getSuccess())\n"
+        script_text += "	{\n"
+        script_text += "	capDetail = capDetailObjResult.getOutput();\n"
+        script_text += "	var houseCount = capDetail.getHouseCount();\n"
+        script_text += "	var feesInvoicedTotal = capDetail.getTotalFee();\n"
+        script_text += "	var balanceDue = capDetail.getBalance();\n"
+        script_text += "	}\n"
+        script_text += "var addrState = '';\n"
+        script_text += "var AInfo = new Array();						// Create array for tokenized variables\n"
+        script_text += "loadAppSpecific4ACA(AInfo); 						// Add AppSpecific Info\n"
+        script_text += "//loadTaskSpecific(AInfo);						// Add task specific info\n"
+        script_text += "//loadParcelAttributes(AInfo);						// Add parcel attributes\n"
+        script_text += "//loadASITables4ACA();\n"
+        script_text += "\n"
+        script_text += "logDebug(\"<B>EMSE Script Results for \" + capIDString + \"</B>\");\n"
+        script_text += "logDebug(\"capId = \" + capId.getClass());\n"
+        script_text += "logDebug(\"cap = \" + cap.getClass());\n"
+        script_text += "logDebug(\"currentUserID = \" + currentUserID);\n"
+        script_text += "logDebug(\"currentUserGroup = \" + currentUserGroup);\n"
+        script_text += "logDebug(\"systemUserObj = \" + systemUserObj.getClass());\n"
+        script_text += "logDebug(\"appTypeString = \" + appTypeString);\n"
+        script_text += "logDebug(\"capName = \" + capName);\n"
+        script_text += "logDebug(\"capStatus = \" + capStatus);\n"
+        script_text += "logDebug(\"sysDate = \" + sysDate.getClass());\n"
+        script_text += "logDebug(\"sysDateMMDDYYYY = \" + sysDateMMDDYYYY);\n"
+        script_text += "logDebug(\"parcelArea = \" + parcelArea);\n"
+        script_text += "logDebug(\"estValue = \" + estValue);\n"
+        script_text += "logDebug(\"calcValue = \" + calcValue);\n"
+        script_text += "logDebug(\"feeFactor = \" + feeFactor);\n"
+        script_text += "\n"
+        script_text += "logDebug(\"houseCount = \" + houseCount);\n"
+        script_text += "logDebug(\"feesInvoicedTotal = \" + feesInvoicedTotal);\n"
+        script_text += "logDebug(\"balanceDue = \" + balanceDue);\n"
+        script_text += "\n"
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
+        script_text += "| <===========Main=Loop================>\n"
+        script_text += "/-----------------------------------------------------------------------------------------------------*/\n"
+
+        let today = new Date();
+        script_text += "//Created: " + (today.getMonth()+1) +"/"
+                                            + today.getDate() + "/"
+                                            + today.getFullYear() + "\n";
+    }
+
+    //I used a little python script to generate this, cause I sure as hell was not about to type all this.
+    generatePageflowScriptEnd = () => {
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
+        script_text += "| <===========END=Main=Loop================>\n"
+        script_text += "/-----------------------------------------------------------------------------------------------------*/\n"
+        script_text += "\n"
+        script_text += "if (debug.indexOf(\"**ERROR\") > 0) {\n"
+        script_text += "    aa.env.setValue(\"ErrorCode\", \"1\");\n"
+        script_text += "    aa.env.setValue(\"ErrorMessage\", debug);\n"
+        script_text += "}\n"
+        script_text += "else {\n"
+        script_text += "    if (cancel) {\n"
+        script_text += "        aa.env.setValue(\"ErrorCode\", \"-2\");\n"
+        script_text += "        if (showMessage) aa.env.setValue(\"ErrorMessage\", message);\n"
+        script_text += "        if (showDebug) aa.env.setValue(\"ErrorMessage\", debug);\n"
+        script_text += "    }\n"
+        script_text += "    else {\n"
+        script_text += "        aa.env.setValue(\"ErrorCode\", \"0\");\n"
+        script_text += "        if (showMessage) aa.env.setValue(\"ErrorMessage\", message);\n"
+        script_text += "        if (showDebug) aa.env.setValue(\"ErrorMessage\", debug);\n"
+        script_text += "    }\n"
+        script_text += "}\n"
+        script_text += "\n"
+        script_text += "function determineACADocumentAttached(docType) \n"
+        script_text += "{\n"
+        script_text += "    var docList = aa.document.getDocumentListByEntity(capId, \"TMP_CAP\");\n"
+        script_text += "    if (docList.getSuccess()) \n"
+        script_text += "	{\n"
+        script_text += "        docsOut = docList.getOutput();\n"
+        script_text += "		logDebug(\"Docs Out \" + docsOut.isEmpty());\n"
+        script_text += "        if (docsOut.isEmpty()) \n"
+        script_text += "		{\n"
+        script_text += "            return false;\n"
+        script_text += "        }\n"
+        script_text += "        else \n"
+        script_text += "		{\n"
+        script_text += "            attach = false;\n"
+        script_text += "            docsOuti = docsOut.iterator();\n"
+        script_text += "            while (docsOuti.hasNext()) \n"
+        script_text += "			{\n"
+        script_text += "                doc = docsOuti.next();\n"
+        script_text += "				debugObject(doc);\n"
+        script_text += "                docCat = doc.getDocCategory();\n"
+        script_text += "                if (docCat.equals(docType)) \n"
+        script_text += "				{\n"
+        script_text += "                    attach = true;\n"
+        script_text += "                }\n"
+        script_text += "            }\n"
+        script_text += "            if (attach) \n"
+        script_text += "			{\n"
+        script_text += "                return true;\n"
+        script_text += "            }\n"
+        script_text += "            else \n"
+        script_text += "			{\n"
+        script_text += "                return false;\n"
+        script_text += "            }\n"
+        script_text += "        }\n"
+        script_text += "    }\n"
+        script_text += "    else \n"
+        script_text += "	{\n"
+        script_text += "        return false;\n"
+        script_text += "    }\n"
+        script_text += "}\n"
     }
 
     parseParameters(initialTab=0) {
@@ -185,9 +398,17 @@ class CORE_GenerateOutput extends Component {
 
                 //Build the if statement
                 let condition_start = "if (";
-                condition_start += conditions[c].comparison_x + " ";
-                condition_start += conditions[c].comparison_type + " ";
-                condition_start += "\"" + conditions[c].comparison_y + "\")";
+                if (conditions[c].comparison_type === "Attached") {
+                    condition_start += conditions[c].comparison_x + " ";
+                    condition_start += "== true)";
+                } else if (conditions[c].comparison_type === "Not Attached") {
+                    condition_start += conditions[c].comparison_x + " ";
+                    condition_start += "== false)";
+                } else {
+                    condition_start += conditions[c].comparison_x + " ";
+                    condition_start += conditions[c].comparison_type + " ";
+                    condition_start += "\"" + conditions[c].comparison_y + "\")";
+                }
 
                 this.appendScript(set_tab, condition_start);
                 this.appendScript(set_tab, "{");
@@ -400,7 +621,7 @@ class CORE_GenerateOutput extends Component {
         let insp_text = "";
         if (this.props.state.functionality.inspections === true) {
             let insp = this.props.state.inspections[insp_num];
-            insp_text += "scheduleInspect(capId, \""
+            insp_text += "scheduleInspection(\""
                         + insp.type + "\", "
                         + insp.days_out + ");";
         }
