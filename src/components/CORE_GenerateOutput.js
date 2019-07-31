@@ -613,7 +613,7 @@ class CORE_GenerateOutput extends Component {
         let insp_text = "";
         if (this.props.state.functionality.inspections === true) {
             let insp = this.props.state.inspections[insp_num];
-            insp_text += "scheduleInspect(capId, \""
+            insp_text += "scheduleInspection(\""
                         + insp.type + "\", "
                         + insp.days_out + ");";
         }
