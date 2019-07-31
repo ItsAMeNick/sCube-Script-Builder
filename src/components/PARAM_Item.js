@@ -84,6 +84,11 @@ class PARAM_Item extends Component {
                 return k !== "ACA Document Name"
             });
         }
+        if (this.props.event_type === "NA") {
+            keys = _.remove(keys, k => {
+                return k !== "Accela Globals"
+            });
+        }
         keys.sort();
 
         if (keys.length <= 1) return null;

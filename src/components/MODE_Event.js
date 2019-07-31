@@ -42,7 +42,7 @@ class CORE_Event extends Component {
                 {this.genLabel()}
             </Form.Label>
             <Form.Control as="select" id="event_type_master" onChange={this.handleChange}>
-                <option></option>
+                <option/>
                 <option value="ASA">ASA - After an application is submitted.</option>
                 <option value="ASB">ASB - Before an application can be submitted.</option>
                 <option value="CTRCA">CTRCA - After a record is assigned its CAP.</option>
@@ -51,6 +51,9 @@ class CORE_Event extends Component {
                 <option value="PRA">PRA - After a payment is made.</option>
                 <option value="WTUA">WTUA - After the workflow has advanced.</option>
                 <option value="WTUB">WTUB - Before the workflow is able to advance.</option>
+                {this.props.mode === "function" ?
+                    <option value="NA">NA</option>
+                : null}
             </Form.Control>
             </Form>
         </div>
