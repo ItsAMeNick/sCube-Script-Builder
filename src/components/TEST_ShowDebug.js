@@ -19,19 +19,23 @@ class TEST_ShowDebug extends Component {
     render() {
         return (
         <div>
-            <Form>
+        {this.props.mode !== "batch_script" ?
+        <Form>
+            <hr/>
             <Form.Label>
                 Should this script display the debug window?:
             </Form.Label>
             <Form.Check type="checkbox" label="Show Debug " onChange={this.handleChange}/>
-            </Form>
+        </Form>
+        : null}
         </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    show_debug: state.show_debug
+    show_debug: state.show_debug,
+    mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({

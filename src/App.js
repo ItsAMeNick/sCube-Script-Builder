@@ -49,7 +49,6 @@ class App extends Component {
                     <Core/>
                 </Col> <Col>
                     <CoreFunctionality/>
-                    <hr/>
                     <TestShowDebug/>
                 </Col>
             </Row> <Col>

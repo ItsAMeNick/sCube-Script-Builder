@@ -43,7 +43,7 @@ class CORE_Function extends Component {
                 {this.props.mode === "pageflow" ?
                     <Form.Check id="pageflow_documents" type="checkbox" label="PLACEHOLDER FOR PAGEFLOW DOCUMENTS" onChange={this.handleChange}/>
                 : null}
-                <br/>
+                <hr/>
                 <Form.Label>
                     Should this script use conditions?
                 </Form.Label>
