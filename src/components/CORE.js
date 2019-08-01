@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import ModeEvent from "./MODE_Event.js";
 import ModeStructure from "./MODE_Structure.js";
 import ModeFunction from "./MODE_Function.js";
+import ModeBatch from "./MODE_Batch.js"
 
 class CORE extends Component {
 
@@ -21,7 +22,7 @@ class CORE extends Component {
                 <ModeFunction/>
             </React.Fragment> : null}
             {this.props.mode === "batch_script" ? <React.Fragment>
-
+                <ModeBatch/>
             </React.Fragment> : null}
             {this.props.mode === "pageflow" ? <React.Fragment>
 

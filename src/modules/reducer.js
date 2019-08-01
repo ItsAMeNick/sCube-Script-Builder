@@ -14,6 +14,22 @@ const initialState = {
         function_name: "",
         function_desc: "",
     },
+    batch: {
+        name: null,
+        use_lic: true,
+        structures: {
+            module: "NA",
+            type: "NA",
+            subtype: "NA",
+            category: "NA"
+        },
+        lic_only: {
+            start: null,
+            range: 0,
+            current_status: null,
+            new_status: null
+        }
+    },
     conditions: {
         "1": {
         key: "1",
@@ -133,6 +149,11 @@ const sCubeReducer = (state = initialState, action) => {
     case "update_structure": {
         let newState = _.cloneDeep(state);
         newState.structure = action.payload.structure;
+        return newState;
+    }
+    case "update_batch": {
+        let newState = _.cloneDeep(state);
+        newState.batch = action.payload.batch;
         return newState;
     }
 
