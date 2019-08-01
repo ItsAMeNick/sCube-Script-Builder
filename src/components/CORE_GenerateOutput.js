@@ -96,6 +96,9 @@ class CORE_GenerateOutput extends Component {
     }
 
     generateFunctionScriptEnd = () => {
+        if (this.cancelIsUsed()) {
+            this.appendScript("\t", this.genCancelExtra(""));
+        }
         this.appendScript("", "}");
     }
 
@@ -125,6 +128,9 @@ class CORE_GenerateOutput extends Component {
     }
 
     generateEventScriptEnd = () => {
+        if (this.cancelIsUsed()) {
+            this.appendScript("\t", this.genCancelExtra(""));
+        }
         this.appendScript("", "}");
         this.appendScript("", "//End of "+this.genName());
     }
@@ -266,6 +272,11 @@ class CORE_GenerateOutput extends Component {
 
     //I used a little python script to generate this, cause I sure as hell was not about to type all this.
     generatePageflowScriptEnd = () => {
+
+        if (this.cancelIsUsed()) {
+            this.appendScript("", this.genCancelExtra(""));
+        }
+
         script_text += "/*------------------------------------------------------------------------------------------------------/\n"
         script_text += "| <===========END=Main=Loop================>\n"
         script_text += "/-----------------------------------------------------------------------------------------------------*/\n"
@@ -466,7 +477,14 @@ class CORE_GenerateOutput extends Component {
                 }
             }
 
-            //Cancels
+            //ASIs
+            if (this.props.state.functionality.asi === true) {
+                for (let a in this.props.state.asis) {
+                    this.appendScript(set_tab, this.genASIText(a));
+                }
+            }
+
+            //Cancels: THIS SHOULD ALWASY BE THE LAST ONE
             if (this.props.state.functionality.cancel === true
                 && ((this.props.state.event_type
                 && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
@@ -477,13 +495,8 @@ class CORE_GenerateOutput extends Component {
                 }
             }
 
-            //ASIs
-            if (this.props.state.functionality.asi === true) {
-                for (let a in this.props.state.asis) {
-                    this.appendScript(set_tab, this.genASIText(a));
-                }
-            }
         }
+        //Conditions or Not
     }
 
     parseAction = (tab, action, optional=false) => {
@@ -648,17 +661,15 @@ class CORE_GenerateOutput extends Component {
             if (!setup) {
                 cancel_text += "cancel = true;\n";
                 cancel_text += tab + "showMessage = true;\n";
-                cancel_text += tab + "comment = \"" + cancel.message + "\\n\";";
+                cancel_text += tab + "var sCube_comment = \"" + cancel.message + "\\n\";";
             } else {
-                cancel_text += "comment += \"" + cancel.message + "\\n\";";
+                cancel_text += "sCube_comment += \"" + cancel.message + "\\n\";";
             }
         }
         return cancel_text;
     }
 
     cancelIsSetup(check, myId) {
-        console.log(check);
-        console.log(myId);
         if (myId) {
             //Check if this is the first action of this level
             if (!(check.actions[Object.keys(check.actions)[0]] === myId)) {
@@ -668,7 +679,6 @@ class CORE_GenerateOutput extends Component {
 
         //Do I have a parent?
         let myParent = _.initial(check.key.split(".")).join(".");
-        console.log(myParent);
         if (!myParent) {
             return false;
         } else {
@@ -680,6 +690,23 @@ class CORE_GenerateOutput extends Component {
             //How about their parent?
             return this.cancelIsSetup(this.props.state.conditions[myParent], null)
         }
+    }
+
+    genCancelExtra(tab="") {
+        let extra_text = "if (cancel) comment(sCube_comment);";
+        //extra_text += tab + "\t"
+        return extra_text;
+    }
+
+    cancelIsUsed() {
+        if (this.props.state.functionality.conditions === false) return true;
+        let tree = _.cloneDeep(this.props.state.conditions);
+        for (let c in tree) {
+            for (let a in tree[c].actions) {
+                if (tree[c].actions[a].split("-")[0] === "Cancelation") return true;
+            }
+        }
+        return false;
     }
 
     genASIText = (asi_num) => {
