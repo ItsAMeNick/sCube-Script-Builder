@@ -9,6 +9,9 @@ import CoreMode from "./components/CORE_Mode.js";
 import Core from "./components/CORE.js";
 import CoreFunctionality from "./components/CORE_Functionality.js";
 
+import BatchStructure from "./components/BATCH_Structure_Container.js";
+import BatchStatus from "./components/BATCH_Status.js";
+
 import TestShowDebug from "./components/TEST_ShowDebug.js";
 
 import Fees from "./components/FEE_Container.js";
@@ -51,7 +54,12 @@ class App extends Component {
                     <CoreFunctionality/>
                     <TestShowDebug/>
                 </Col>
-            </Row> <Col>
+            </Row>
+            <Col>
+                <BatchStructure/>
+                <BatchStatus/>
+            </Col>
+            <Col>
                 <Status/>
             </Col> <Col>
                 <Asi/>
