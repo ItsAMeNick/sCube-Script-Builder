@@ -13,6 +13,11 @@ class CORE_Event extends Component {
     }
 
     handleChange(event) {
+        if (["batch_script","pageflow"].includes(event.target.id)) {
+            this.props.update_event_type({
+                event_type: "NA"
+            })
+        }
         this.props.update({
             mode: event.target.id
         });
@@ -47,6 +52,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     update: item => dispatch({
         type: "update_mode",
+        payload: item
+    }),
+    update_event_type: item => dispatch({
+        type: "update_event_type",
         payload: item
     })
 });
