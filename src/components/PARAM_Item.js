@@ -86,7 +86,7 @@ class PARAM_Item extends Component {
         }
         if (this.props.event_type === "NA") {
             keys = _.remove(keys, k => {
-                return k !== "Accela Globals"
+                return k !== "Event Specific"
             });
         }
         keys.sort();

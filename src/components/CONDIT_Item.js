@@ -74,7 +74,7 @@ class CONDIT_Item extends Component {
         }
         if (this.props.event_type === "NA") {
             types = _.remove(types, k => {
-                return k !== "Accela Globals"
+                return k !== "Event Specific"
             });
         }
         types.sort();
@@ -122,7 +122,7 @@ class CONDIT_Item extends Component {
         }
         if (this.props.event_type === "NA") {
             keys = _.remove(keys, k => {
-                return k !== "Accela Globals"
+                return k !== "Event Specific"
             });
         }
         keys.sort();
