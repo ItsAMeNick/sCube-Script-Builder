@@ -414,7 +414,15 @@ class CORE_GenerateOutput extends Component {
                 this.appendScript(set_tab, "{");
 
                 for (let a in conditions[c].actions) {
-                    this.parseAction(set_tab_in, conditions[c].actions[a]);
+                    if (conditions[c].actions[a].split("-")[0] === "Cancelation") {
+                        if (!this.cancelIsSetup(conditions[c], conditions[c].actions[a])) {
+                            this.parseAction(set_tab_in, conditions[c].actions[a], false)
+                        } else {
+                            this.parseAction(set_tab_in, conditions[c].actions[a], true)
+                        }
+                    } else {
+                        this.parseAction(set_tab_in, conditions[c].actions[a]);
+                    }
                 }
 
                 this.parseConditions(level+1, conditions[c].key, initialTab);
@@ -465,7 +473,7 @@ class CORE_GenerateOutput extends Component {
                 || this.props.state.mode === "pageflow"))
             {
                 for (let c in this.props.state.cancels) {
-                    this.appendScript(set_tab, this.genCancelText(c));
+                    this.appendScript(set_tab, this.genCancelText(c, set_tab, c!=="1"));
                 }
             }
 
@@ -478,7 +486,7 @@ class CORE_GenerateOutput extends Component {
         }
     }
 
-    parseAction = (tab, action) => {
+    parseAction = (tab, action, optional=false) => {
         if (action === null) {
             return null;
         }
@@ -506,7 +514,7 @@ class CORE_GenerateOutput extends Component {
                 break;
             }
             case "Cancelation": {
-                action_text = this.genCancelText(action[1], tab);
+                action_text = this.genCancelText(action[1], tab, optional);
                 break;
             }
             case "ASI": {
@@ -628,7 +636,7 @@ class CORE_GenerateOutput extends Component {
         return insp_text;
     }
 
-    genCancelText = (cancel_num, tab="") => {
+    genCancelText = (cancel_num, tab="", setup=false) => {
         let cancel_text = "";
         if (this.props.state.functionality.cancel === true
             && ((this.props.state.event_type
@@ -637,11 +645,41 @@ class CORE_GenerateOutput extends Component {
         {
             cancel_text = "";
             let cancel = this.props.state.cancels[cancel_num];
-            cancel_text += "cancel = true;\n";
-            cancel_text += tab + "showMessage = true;\n";
-            cancel_text += tab + "comment = \"" + cancel.message + "\";";
+            if (!setup) {
+                cancel_text += "cancel = true;\n";
+                cancel_text += tab + "showMessage = true;\n";
+                cancel_text += tab + "comment = \"" + cancel.message + "\\n\";";
+            } else {
+                cancel_text += "comment += \"" + cancel.message + "\\n\";";
+            }
         }
         return cancel_text;
+    }
+
+    cancelIsSetup(check, myId) {
+        console.log(check);
+        console.log(myId);
+        if (myId) {
+            //Check if this is the first action of this level
+            if (!(check.actions[Object.keys(check.actions)[0]] === myId)) {
+                return true;
+            }
+        }
+
+        //Do I have a parent?
+        let myParent = _.initial(check.key.split(".")).join(".");
+        console.log(myParent);
+        if (!myParent) {
+            return false;
+        } else {
+            //Does my parent set it up?
+            for (let a in this.props.state.conditions[myParent].actions) {
+                console.log(a);
+                if (this.props.state.conditions[myParent].actions[a].split("-")[0] === "Cancelation") return true;
+            }
+            //How about their parent?
+            return this.cancelIsSetup(this.props.state.conditions[myParent], null)
+        }
     }
 
     genASIText = (asi_num) => {

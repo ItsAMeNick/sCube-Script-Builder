@@ -558,9 +558,17 @@ var variable_map = {
     },
     "Custom Field":
     {
-        free:
-        {
-            script: "getAppSpecific(\"***\")"
+        "From This Record": {
+            free:
+            {
+                script: "getAppSpecific(\"***\")"
+            }
+        },
+        "From Parent": {
+            free:
+            {
+                script: "getAppSpecific(\"***\", getParent())"
+            }
         }
     },
     "Event Specific":
