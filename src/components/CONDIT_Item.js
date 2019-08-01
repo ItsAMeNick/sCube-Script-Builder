@@ -172,9 +172,9 @@ class CONDIT_Item extends Component {
                 })}
             </Form.Control>);
         } else if (keys[1] === "free") {
-            row.push(<Form.Control id={"free"} onChange={this.handleChange} key={newId}/>);
+            row.push(<Form.Control id={"free"} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
         } else if (keys[1] === "type") {
-            row.push(<Form.Control id={"type"} placeholder="Type" onChange={this.handleChange} key={newId}/>);
+            row.push(<Form.Control id={"type"} placeholder="--Type--" onChange={this.handleChange} key={newId}/>);
         }
 
         //Check if you should go to the next level

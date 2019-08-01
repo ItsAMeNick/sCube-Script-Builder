@@ -523,7 +523,7 @@ class CORE_GenerateOutput extends Component {
                 break;
             }
             case "Inspection": {
-                action_text = this.genInspectionText(action[1]);
+                action_text = this.genInspectionText(action[1], tab);
                 break;
             }
             case "Cancelation": {
@@ -638,13 +638,16 @@ class CORE_GenerateOutput extends Component {
         return work_text;
     }
 
-    genInspectionText = insp_num => {
+    genInspectionText = (insp_num, tab="") => {
         let insp_text = "";
         if (this.props.state.functionality.inspections === true) {
             let insp = this.props.state.inspections[insp_num];
-            insp_text += "scheduleInspection(\""
-                        + insp.type + "\", "
-                        + insp.days_out + ");";
+            //scheduleInspectDate("Dumpster Inspection",  nextWorkDay(dateAdd(r,30)), "JCLARK4", null, "Scheduled by Script");
+            insp_text += "var n = aa.date.getCurrentDate();\n"
+	        insp_text += tab + "var r = dateFormatted(n.getMonth(), n.getDayOfMonth(), n.getYear(), \"MM/DD/YYYY\");\n"
+            insp_text += tab + "scheduleInspectDate(\""
+                        + insp.type + "\", nextWorkDay(dateAdd(r, "
+                        + insp.days_out + "));";
         }
         return insp_text;
     }
