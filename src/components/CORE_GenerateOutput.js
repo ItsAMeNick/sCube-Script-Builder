@@ -741,7 +741,7 @@ class CORE_GenerateOutput extends Component {
             </div> : null }
             {this.props.state.mode === "pageflow" ? <div>
             </div> : null }
-            <textarea rows="20" cols="100" value={this.generateHelper()} readOnly={true} />
+            <textarea rows="20" style={{width: "100%"}} value={this.generateHelper()} readOnly={true} />
         </div>
         );
     }
