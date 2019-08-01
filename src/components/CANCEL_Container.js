@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Table from "react-bootstrap/Table";
 
+import Table from "react-bootstrap/Table";
 import CancelItem from "./CANCEL_Item.js";
 
 class CANCEL_Container extends Component {
@@ -56,10 +56,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    update: c => dispatch({
-        type: "update_cancels",
-        payload: c
-    }),
     add: () => dispatch({
         type: "add_cancel",
         payload: null

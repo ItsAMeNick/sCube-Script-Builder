@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form'
-
 import { connect } from "react-redux";
+import _ from "lodash";
+
+import Form from 'react-bootstrap/Form';
 
 class CORE_Function extends Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class CORE_Function extends Component {
     }
 
     handleChange(event) {
-        let newFunctionality = this.props.functionality;
+        let newFunctionality = _.cloneDeep(this.props.functionality);
         newFunctionality[event.target.id] = event.target.checked;
         this.props.update({
             functionality: newFunctionality

@@ -14,7 +14,7 @@ class PARAM_Item extends Component {
     }
 
     handleChange(event) {
-        let newParameters = this.props.parameter_sets[this.props.set_number].parameters;
+        let newParameters = _.cloneDeep(this.props.parameter_sets[this.props.set_number].parameters);
 
         //Reset the special values upon change
         newParameters[this.props.param_number].script = null;

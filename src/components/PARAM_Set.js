@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Table from "react-bootstrap/Table"
 import Form from "react-bootstrap/Form";
-
 import ParamItem from "./PARAM_Item.js";
 
 class PARAM_Container extends Component {
@@ -20,7 +21,7 @@ class PARAM_Container extends Component {
     }
 
     handleChange(event) {
-        let newSets = this.props.parameter_sets;
+        let newSets = _.cloneDeep(this.props.parameter_sets);
         let id = event.target.id.split(".");
         if (id[0] === "name") {
             newSets[this.props.set_number].name = event.target.value;

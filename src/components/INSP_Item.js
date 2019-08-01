@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from "react-bootstrap/Form";
 
 class INSP_Item extends Component {
@@ -10,7 +12,7 @@ class INSP_Item extends Component {
     }
 
     handleChange(event) {
-        let newInspections = this.props.inspections;
+        let newInspections = _.cloneDeep(this.props.inspections);
         let newValue = event.target.value;
         newInspections[this.props.insp_number][event.target.id] = newValue;
         this.props.update({

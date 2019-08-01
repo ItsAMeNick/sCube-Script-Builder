@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from "react-bootstrap/Form";
 
 class CANCEL_Item extends Component {
@@ -10,7 +12,7 @@ class CANCEL_Item extends Component {
     }
 
     handleChange(event) {
-        let newCancels = this.props.cancels;
+        let newCancels = _.cloneDeep(this.props.cancels);
         let newValue = event.target.value;
         newCancels[this.props.cancel_number][event.target.id] = newValue.replace(/\n/g, " ");
         this.props.update({

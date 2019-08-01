@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Table from "react-bootstrap/Table";
 
+import Table from "react-bootstrap/Table";
 import ConditItem from "./CONDIT_Item.js";
 import ConditAction from "./CONDIT_Action.js";
 

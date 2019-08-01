@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import _ from "lodash"
+import _ from "lodash";
 
-import Form from 'react-bootstrap/Form'
+import Form from 'react-bootstrap/Form';
 
 class MODE_Batch extends Component {
     constructor(props) {

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from "react-bootstrap/Form";
 
 class CONDIT_Action extends Component {
@@ -13,7 +15,7 @@ class CONDIT_Action extends Component {
     }
 
     handleChange(event) {
-        let newConditions = this.props.conditions;
+        let newConditions = _.cloneDeep(this.props.conditions);
         newConditions[this.props.parent].actions[this.props.id] = event.target.value;
         this.props.update({
             conditions: newConditions

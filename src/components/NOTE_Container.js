@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Table from "react-bootstrap/Table";
 
+import Table from "react-bootstrap/Table";
 import NoteItem from "./NOTE_Item.js";
 
 class NOTE_Container extends Component {

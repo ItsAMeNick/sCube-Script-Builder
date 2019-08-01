@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Table from "react-bootstrap/Table";
 
+import Table from "react-bootstrap/Table";
 import InspectionItem from "./INSP_Item.js";
 
 class INSP_Container extends Component {

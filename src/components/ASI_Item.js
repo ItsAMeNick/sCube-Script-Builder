@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from "react-bootstrap/Form";
 
 class ASI_Item extends Component {
@@ -10,7 +12,7 @@ class ASI_Item extends Component {
     }
 
     handleChange(event) {
-        let newASIs = this.props.asis;
+        let newASIs = _.cloneDeep(this.props.asis);
         let newValue = event.target.value;
         newASIs[this.props.asi_number][event.target.id] = newValue;
         this.props.update({

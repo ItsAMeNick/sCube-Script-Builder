@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Table from "react-bootstrap/Table";
 
+import Table from "react-bootstrap/Table";
 import StatusItem from "./STATUS_Item.js";
 
 class STATUS_Container extends Component {

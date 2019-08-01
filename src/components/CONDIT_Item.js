@@ -5,7 +5,7 @@ import _ from "lodash";
 import Form from "react-bootstrap/Form";
 
 import condit_data from "./CONDIT_data.js";
-import variable_map from "./PARAM_data.js"
+import variable_map from "./PARAM_data.js";
 
 class CONDIT_Item extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class CONDIT_Item extends Component {
     }
 
     handleChange(event) {
-        let newConditions = this.props.conditions;
+        let newConditions = _.cloneDeep(this.props.conditions);
 
         //Clear some things
         newConditions[this.props.id].comparison_x = null;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
 
 import Form from "react-bootstrap/Form";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -13,7 +14,7 @@ class FEE_FeeItem extends Component {
     }
 
     handleChange(event) {
-        let newFees = this.props.fees;
+        let newFees = _.cloneDeep(this.props.fees);
         let type = event.target.id.split("-");
         newFees[this.props.fee_number][type[0]] = event.target.value;
         this.props.update({
