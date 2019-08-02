@@ -69,6 +69,18 @@ class CORE_GenerateOutput extends Component {
                     return "Cannot generate pageflow correctly.";
                 }
             }
+            case "batch_script": {
+                if (this.props.state.batch.name !== null && (this.props.state.batch.structures["1"].module !== "NA" && this.props.state.batch.structures["1"].module !== "")) {
+                    this.generateBatchScriptStart();
+                    this.parseParameters(2);
+                    this.parseConditions(1, "", 2);
+                    this.generateBatchScriptEnd();
+                    break;
+                } else {
+                    //Must provide event and module before anything can generate.
+                    return "Please provide a Name and at least one Structure";
+                }
+            }
             default:
                 return "ERROR: A Script can not be generated for this mode"
         }
@@ -338,6 +350,17 @@ class CORE_GenerateOutput extends Component {
         script_text += "        return false;\n"
         script_text += "    }\n"
         script_text += "}\n"
+    }
+
+    generateBatchScriptStart = () => {
+        this.appendScript("", "//Start of Batch")
+        this.appendScript("", "//For X records")
+        this.appendScript("\t", "//If structure matches")
+        this.appendScript("\t", "//Do:")
+    }
+
+    generateBatchScriptEnd = () => {
+        this.appendScript("", "//End of Batch");
     }
 
     parseParameters(initialTab=0) {
