@@ -10,6 +10,14 @@ class BATCH_Container extends Component {
         this.state = {};
     }
 
+    genBatchStructureItems() {
+        let batch_structs = [];
+        for (let bsi in this.props.batch.structures) {
+            batch_structs.push(<BatchItem key={this.props.batch.structures[bsi].key} bsi_number={this.props.batch.structures[bsi].key}/>)
+        }
+        return batch_structs;
+    }
+
     render() {
         return (
         <React.Fragment>
@@ -28,10 +36,10 @@ class BATCH_Container extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    <BatchItem bsi_number="1"/>
+                    {this.genBatchStructureItems()}
                 </tbody>
             </Table>
-            <button> Add Structure </button>
+            <button onClick={this.props.add}> Add Structure </button>
         </div> : null}
         </React.Fragment>
         );
@@ -39,10 +47,15 @@ class BATCH_Container extends Component {
 }
 
 const mapStateToProps = state => ({
+    batch: state.batch,
     mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({
+    add: () => dispatch({
+        type: "add_batch_structure",
+        payload: null
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BATCH_Container);

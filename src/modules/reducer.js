@@ -18,10 +18,13 @@ const initialState = {
         name: null,
         use_lic: true,
         structures: {
-            module: "NA",
-            type: "NA",
-            subtype: "NA",
-            category: "NA"
+            "1": {
+                key: 1,
+                module: "NA",
+                type: "NA",
+                subtype: "NA",
+                category: "NA"
+            }
         },
         lic_only: {
             start: null,
@@ -151,7 +154,31 @@ const sCubeReducer = (state = initialState, action) => {
         newState.structure = action.payload.structure;
         return newState;
     }
+
     case "update_batch": {
+        let newState = _.cloneDeep(state);
+        newState.batch = action.payload.batch;
+        return newState;
+    }
+    case "add_batch_structure": {
+        let newState = _.cloneDeep(state);
+        let batch_codes = Object.keys(state.batch.structures);
+        let m = 0;
+        for (let b in batch_codes) {
+            m = Math.max(m,state.batch.structures[batch_codes[b]].key);
+        }
+        m+=1;
+        newState.batch.structures[m] =
+            {
+                key: m,
+                module: null,
+                type: null,
+                subtype: null,
+                category: null
+            }
+        return newState;
+    }
+    case "delete_batch_structure": {
         let newState = _.cloneDeep(state);
         newState.batch = action.payload.batch;
         return newState;
