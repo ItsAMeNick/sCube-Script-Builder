@@ -11,6 +11,7 @@ import CoreFunctionality from "./components/CORE_Functionality.js";
 
 import BatchStructure from "./components/BATCH_Structure_Container.js";
 import BatchStatus from "./components/BATCH_Status.js";
+import BatchRange from "./components/BATCH_Range.js";
 
 import TestShowDebug from "./components/TEST_ShowDebug.js";
 
@@ -58,6 +59,7 @@ class App extends Component {
             <Col>
                 <BatchStructure/>
                 <BatchStatus/>
+                <BatchRange/>
             </Col>
             <Col>
                 <Status/>

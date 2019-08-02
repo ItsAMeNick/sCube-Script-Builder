@@ -5,7 +5,7 @@ import _ from "lodash";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 
-class BATCH_Status extends Component {
+class BATCH_Range extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -24,19 +24,15 @@ class BATCH_Status extends Component {
     render() {
         return (
         <React.Fragment>
-        {this.props.mode === "batch_script" && this.props.batch.use_lic ?
+        {this.props.mode === "batch_script" ?
         <div>
             <hr/>
-            <h3>Batch Script: Status Manager</h3>
+            <h3>Batch Script: Range Manager</h3>
             <Table striped bordered>
             <tbody>
                 <tr>
-                    <th>Current Status: </th>
-                    <td><Form.Control id="current_status" type="text" onChange={this.handleChange}/></td>
-                </tr>
-                <tr>
-                    <th>New Status: </th>
-                    <td><Form.Control id="new_status" type="text" onChange={this.handleChange}/></td>
+                    <th>How many days ahead should this script look?</th>
+                    <td><Form.Control id="range" type="text" onChange={this.handleChange}/></td>
                 </tr>
             </tbody>
             </Table>
@@ -58,4 +54,4 @@ const mapDispatchToProps = dispatch => ({
     })
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BATCH_Status);
+export default connect(mapStateToProps, mapDispatchToProps)(BATCH_Range);

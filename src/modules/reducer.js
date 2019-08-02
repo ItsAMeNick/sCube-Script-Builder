@@ -27,7 +27,6 @@ const initialState = {
             }
         },
         lic_only: {
-            start: null,
             range: 0,
             current_status: null,
             new_status: null
