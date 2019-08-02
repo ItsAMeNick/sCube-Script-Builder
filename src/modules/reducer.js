@@ -170,10 +170,10 @@ const sCubeReducer = (state = initialState, action) => {
         newState.batch.structures[m] =
             {
                 key: m,
-                module: null,
-                type: null,
-                subtype: null,
-                category: null
+                module: "NA",
+                type: "NA",
+                subtype: "NA",
+                category: "NA"
             }
         return newState;
     }
