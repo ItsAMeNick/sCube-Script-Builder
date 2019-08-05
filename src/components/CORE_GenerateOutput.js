@@ -729,7 +729,7 @@ class CORE_GenerateOutput extends Component {
             //New Records
             if (this.props.state.functionality.new_record === true) {
                 for (let r in this.props.state.new_records) {
-                    this.appendScript(set_tab, this.genRecordText(r));
+                    this.appendScript(set_tab, this.genRecordText(r, set_tab));
                 }
             }
 
@@ -743,7 +743,7 @@ class CORE_GenerateOutput extends Component {
             //Fees
             if (this.props.state.functionality.fees === true) {
                 for (let f in this.props.state.fees) {
-                    this.appendScript(set_tab, this.genFeeText(f));
+                    this.appendScript(set_tab, this.genFeeText(f, set_tab));
                 }
             }
 
@@ -764,7 +764,7 @@ class CORE_GenerateOutput extends Component {
             //Inspections
             if (this.props.state.functionality.inspections === true) {
                 for (let i in this.props.state.inspections) {
-                    this.appendScript(set_tab, this.genInspectionText(i));
+                    this.appendScript(set_tab, this.genInspectionText(i, set_tab));
                 }
             }
 
@@ -1061,18 +1061,6 @@ class CORE_GenerateOutput extends Component {
             if (rec.copy_data.Professionals) {
                 rec_text += "\n" + tab + "copyLicenseProfessionalForLic(capId, new_record_" + rec.key + ");";
             }
-
-
-        /*
-        var newRecordCapID = createCap(cap"Licenses/Plumbing/Contractor/Renewal","");
-                copyAppSpecificInfoForLic(srcCapId, targetCapId);
-                copyAddressForLic(srcCapId, targetCapId);
-                copyAppSpecificTableForLic(srcCapId, targetCapId);
-                copyParcelForLic(srcCapId, targetCapId);
-                copyPeopleForLic(srcCapId, targetCapId);
-                copyLicenseProfessionalForLic(srcCapId, targetCapId);
-                copyOwnerForLic(srcCapId, targetCapId);
-        */
         }
         return rec_text;
     }
