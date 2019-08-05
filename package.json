@@ -1,5 +1,5 @@
 {
-  "name": "scube-demo",
+  "name": "scube-script-builder",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
