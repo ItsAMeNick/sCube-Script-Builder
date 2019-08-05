@@ -103,7 +103,14 @@ const initialState = {
                 subtype: "NA",
                 category: "NA"
             },
-            
+            relationship: null,
+            copy_data: {
+                asi: false,
+                asit: false,
+                contacts: false,
+                owners: false,
+                professionals: false
+            }
         }
     },
     notifications: {
