@@ -222,10 +222,6 @@ class CONDIT_Item extends Component {
         });
         for (let c in tree) {
             if (me === c) continue;
-            // console.log(tree[me]);
-            // console.log(tree[c]);
-            // console.log(_.initial(tree[c]));
-            // console.log("-----------------");
             if (_.isEqual(tree[me], _.initial(tree[c]))) return false;
         }
         return true;
