@@ -32,7 +32,7 @@ class BATCH_Range extends Component {
             <tbody>
                 <tr>
                     <th>How many days ahead should this script look?</th>
-                    <td><Form.Control id="range" type="text" onChange={this.handleChange}/></td>
+                    <td><Form.Control id="range" type="number" onChange={this.handleChange}/></td>
                 </tr>
             </tbody>
             </Table>

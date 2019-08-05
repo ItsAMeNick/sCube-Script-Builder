@@ -365,6 +365,125 @@ class CORE_GenerateOutput extends Component {
                             + today.getDate() + "/"
                             + today.getFullYear() + "\n";
             script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| START: USER CONFIGURABLE PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "var emailText = \"\";\n";
+            script_text += "var showDebug = true;// Set to true to see debug messages in email confirmation\n";
+            script_text += "var maxSeconds = 60 * 5;// number of seconds allowed for batch processing, usually < 5*60\n";
+            script_text += "var showMessage = false;\n";
+            script_text += "var useAppSpecificGroupName = true;\n";
+            script_text += "var br = \"<BR>\";\n";
+            script_text += "var currentUserID = \"ADMIN\";\n";
+            script_text += "sysDate = aa.date.getCurrentDate();\n";
+            script_text += "batchJobResult = aa.batchJob.getJobID();\n";
+            script_text += "batchJobName = \"\" + aa.env.getValue(\"BatchJobName\");\n";
+            script_text += "wfObjArray = null;\n";
+            script_text += "batchJobID = 0;\n";
+            script_text += "if (batchJobResult.getSuccess()) \n";
+            script_text += "{\n";
+            script_text += "	batchJobID = batchJobResult.getOutput();\n";
+            script_text += "	logDebug(\"Batch Job \" + batchJobName + \" Job ID is \" + batchJobID + br);\n";
+            script_text += "}\n";
+            script_text += "else\n";
+            script_text += "{\n";
+            script_text += "	logDebug(\"Batch job ID not found \" + batchJobResult.getErrorMessage());\n";
+            script_text += "}\n";
+            script_text += "\n";
+            script_text += "eval(getScriptText(\"INCLUDES_ACCELA_FUNCTIONS\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_ACCELA_GLOBALS\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_CUSTOM\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"));\n";
+            script_text += "	\n";
+            script_text += "function getScriptText(vScriptName){\n";
+            script_text += "	vScriptName = vScriptName.toUpperCase();\n";
+            script_text += "	var emseBiz = aa.proxyInvoker.newInstance(\"com.accela.aa.emse.emse.EMSEBusiness\").getOutput();\n";
+            script_text += "	var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(),vScriptName);\n";
+            script_text += "	return emseScript.getScriptText() + \"\";	\n";
+            script_text += "}\n";
+            script_text += "/*----------------------------------------------------------------------------------------------------/\n";
+            script_text += "| Start: BATCH PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "var startDate = new Date();\n";
+            script_text += "var timeDate = new Date();\n";
+            script_text += "var startTime = timeDate.getTime();// Start timer\n";
+            script_text += "var systemUserObj = aa.person.getUser(\"ADMIN\").getOutput();\n";
+            script_text += "var timeExpired = false;\n";
+            script_text += "var emailAddress = \"\";//email to send report\n";
+            script_text += "var fromDate; \n";
+            script_text += "var toDate;\n";
+            script_text += "var statusCheck;\n";
+            script_text += "var statusSet;\n";
+            script_text += "var workAppStatus = \"\";\n";
+            script_text += "var childCapId;\n";
+            script_text += "var capId;\n";
+            script_text += "var altId;\n";
+            script_text += "var cap;\n";
+            script_text += "var appTypeResult;\n";
+            script_text += "var appTypeString;\n";
+            script_text += "var appTypeArray;\n";
+            script_text += "/*----------------------------------------------------------------------------------------------------/\n";
+            script_text += "| End: BATCH PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| <===========Main=Loop=================>\n";
+            script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
+            script_text += "logDebug(\"Run Date: \" + startDate);\n";
+            script_text += "var ateDate = new Date(dateAdd((startDate.getMonth() + 1) + \"/\" + startDate.getDate() + \"/\" + startDate.getFullYear(), "
+            script_text += this.props.state.batch.lic_only.range;
+            script_text += "));\n";
+            script_text += "fromDate = (ateDate.getMonth() + 1) + \"/\" + ateDate.getDate() + \"/\" + ateDate.getFullYear(); \n";
+            script_text += "toDate = (ateDate.getMonth() + 1) + \"/\" + ateDate.getDate() + \"/\" + ateDate.getFullYear();\n";
+            script_text += "statusCheck = \""
+            script_text += this.props.state.batch.lic_only.current_status;
+            script_text += "\";\n";
+            script_text += "statusSet = \""
+            script_text += this.props.state.batch.lic_only.new_status;
+            script_text += "\";\n";
+            script_text += "workAppStatus = \""
+            script_text += this.props.state.batch.lic_only.new_status;
+            script_text += "\";\n";
+            script_text += "\n";
+            script_text += "logDebug(\"Set currently \" + statusCheck + \" licenses to \" + statusSet + \" for date range -- From Date: \" + fromDate + \", To Date: \" + toDate + \".\" + br);\n";
+            script_text += "var expResult = aa.expiration.getLicensesByDate(statusCheck, fromDate, toDate);\n";
+            script_text += "if (expResult.getSuccess()) \n";
+            script_text += "{\n";
+            script_text += "	myExp = expResult.getOutput();\n";
+            script_text += "	logDebug(\"Processing \" + myExp.length + \" expiration records.\" + br);\n";
+            script_text += "}\n";
+            script_text += "else \n";
+            script_text += "{ \n";
+            script_text += "	logDebug(\"ERROR: Getting Expirations, reason is: \" + expResult.getErrorType() + \":\" + expResult.getErrorMessage()); \n";
+            script_text += "	return false;\n";
+            script_text += "}	\n";
+            script_text += "for (thisExp in myExp) \n";
+            script_text += "{	\n";
+            script_text += "	if (elapsed() > maxSeconds) \n";
+            script_text += "	{\n";
+            script_text += "		logDebug(\"A script timeout has caused partial completion of this process.  Please re-run.  \" + elapsed() + \" seconds elapsed, \" + maxSeconds + \" allowed.\");\n";
+            script_text += "		timeExpired = true;\n";
+            script_text += "		break;\n";
+            script_text += "	}	\n";
+            script_text += "	b1Exp = myExp[thisExp];\n";
+            script_text += "	var expDate = b1Exp.getExpDate();\n";
+            script_text += "	if (expDate) \n";
+            script_text += "	{	\n";
+            script_text += "		var b1ExpDate = expDate.getMonth() + \"/\" + expDate.getDayOfMonth() + \"/\" + expDate.getYear();\n";
+            script_text += "		var b1Status = b1Exp.getExpStatus();\n";
+            script_text += "		capId = aa.cap.getCapID(b1Exp.getCapID().getID1(),b1Exp.getCapID().getID2(),b1Exp.getCapID().getID3()).getOutput();   \n";
+        } else {
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| Program: "
+            script_text += this.props.state.batch.name;
+            script_text += ".js  Trigger: Batch\n";
+            script_text += "| Version 1.0 Zachary McVicker\n";
+            script_text += "| Built with sCube Script Builder - ";
+            let today = new Date();
+            script_text += (today.getMonth()+1) +"/"
+                            + today.getDate() + "/"
+                            + today.getFullYear() + "\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
             script_text += "\n";
             script_text += "/*------------------------------------------------------------------------------------------------------/\n";
             script_text += "| START: USER CONFIGURABLE PARAMETERS\n";
@@ -459,12 +578,36 @@ class CORE_GenerateOutput extends Component {
             script_text += "		for (var j in recArray) \n";
             script_text += "		{\n";
             script_text += "			capId = aa.cap.getCapID(recArray[j].getID1(), recArray[j].getID2(), recArray[j].getID3()).getOutput();\n";
-            script_text += "			\n";
+            script_text += "\n";
         }
     }
 
     generateBatchScriptEnd = () => {
         if (this.props.state.batch.use_lic) {
+            script_text += "\n";
+            script_text += "		altId = capId.getCustomID();\n";
+            script_text += "		cap = aa.cap.getCap(capId).getOutput();	\n";
+            script_text += "		if (cap) \n";
+            script_text += "		{\n";
+            script_text += "			appTypeResult = cap.getCapType();\n";
+            script_text += "			appTypeString = appTypeResult.toString();\n";
+            script_text += "			appTypeArray = appTypeString.split(\"/\");\n";
+            script_text += "			if(appTypeArray[0] == \"Licenses\" && appTypeArray[1] == \"Contractor Registration\" && appTypeArray[2] == \"Registration\" && appTypeArray[3] == \"NA\") \n";
+            script_text += "			{\n";
+            script_text += "				logDebug(\"<b>\" + altId + \"</b>\");\n";
+            script_text += "				logDebug(\"Registration: \" + appTypeArray[1]);\n";
+            script_text += "				b1Exp.setExpStatus(statusSet);\n";
+            script_text += "				aa.expiration.editB1Expiration(b1Exp.getB1Expiration());\n";
+            script_text += "				updateAppStatus(workAppStatus, \"Set to \" + workAppStatus + \" by batch process.\");\n";
+            script_text += "				updateTask(\"Registration Status\", workAppStatus, \"Updated by renewal batch\", \"Updated by renewal batch\", \"LIC_CON\", capId);\n";
+            script_text += "			} \n";
+            script_text += "		}\n";
+            script_text += "	}\n";
+            script_text += "}\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| <===========END=Main=Loop================>\n";
+            script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
+        } else {
             script_text += "            \n";
             script_text += "		}\n";
             script_text += "	}\n";
