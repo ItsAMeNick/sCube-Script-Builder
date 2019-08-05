@@ -35,7 +35,6 @@ const initialState = {
     conditions: {
         "1": {
         key: "1",
-        condition_type: null,
         comparison_x: null,
         comparison_type: null,
         comparison_y: null,
@@ -575,7 +574,6 @@ const sCubeReducer = (state = initialState, action) => {
         newState.conditions[m.toString()] =
             {
                 key: m.toString(),
-                condition_type: null,
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,
@@ -600,7 +598,6 @@ const sCubeReducer = (state = initialState, action) => {
         newState.conditions[myId] =
             {
                 key: myId,
-                condition_type: null,
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,
