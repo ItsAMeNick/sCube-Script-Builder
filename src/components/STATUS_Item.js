@@ -50,7 +50,7 @@ class STATUS_Item extends Component {
                     Delete
                 </button>
             </td>
-            : <td></td>}
+            : null}
         </tr>
         );
     }

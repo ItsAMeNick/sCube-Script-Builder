@@ -38,7 +38,7 @@ class ASI_Item extends Component {
                     Delete
                 </button>
             </td>
-            : <td></td>}
+            : null}
         </tr>
         );
     }

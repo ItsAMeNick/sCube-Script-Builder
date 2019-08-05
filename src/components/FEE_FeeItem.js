@@ -63,7 +63,7 @@ class FEE_FeeItem extends Component {
                     Delete
                 </button>
             </td>
-            : <td></td>}
+            : null}
         </tr>
         );
     }

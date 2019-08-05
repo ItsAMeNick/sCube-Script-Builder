@@ -52,7 +52,8 @@ const initialState = {
         workflow: false,
         inspections: false,
         cancel: false,
-        pageflow_documents: false
+        pageflow_documents: false,
+        new_record: false
     },
     status: {
         "1": {
@@ -251,6 +252,50 @@ const sCubeReducer = (state = initialState, action) => {
             return newState;
         }
         delete newState.status[action.payload]
+        return newState;
+    }
+
+    //New Record
+    case "update_new_records": {
+        let newState = _.cloneDeep(state);
+        newState.new_records = action.payload.new_records;
+        return newState;
+    }
+    case "add_new_record": {
+        let newState = _.cloneDeep(state);
+        let rec_codes = Object.keys(state.new_records);
+        let m = 0;
+        for (let r in rec_codes) {
+            m = Math.max(m,state.new_records[rec_codes[r]].key);
+        }
+        m+=1;
+        newState.new_records[m] =
+            {
+                key: m,
+                structure: {
+                    module: "NA",
+                    type: "NA",
+                    subtype: "NA",
+                    category: "NA"
+                },
+                relationship: null,
+                copy_data: {
+                    asi: false,
+                    asit: false,
+                    contacts: false,
+                    owners: false,
+                    professionals: false
+                }
+            }
+        return newState;
+    }
+    case "delete_new_record": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the REC_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.new_records[action.payload]
         return newState;
     }
 
