@@ -73,31 +73,31 @@ class REC_Item extends Component {
             <tr>
                 <th>Copy: </th>
                 <td>
-                    <Form.Check id="copy-asi" label="ASI" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-asi-"+this.props.rec_number} label="ASI" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id="copy-asit" label="ASIT" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-asit-"+this.props.rec_number} label="ASIT" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id="copy-contacts" label="Contacts" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-contacts-"+this.props.rec_number} label="Contacts" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id="copy-owners" label="Owners" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-owners-"+this.props.rec_number} label="Owners" onChange={this.handleChange}/>
                 </td>
             </tr>
             <tr>
                 <th> </th>
                 <td>
-                    <Form.Check id="copy-professionals" label="Professionals" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-professionals-"+this.props.rec_number} label="Professionals" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id="copy-ph" label="Place Holder" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-ph-"+this.props.rec_number} label="Place Holder" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id="copy-ph" label="Place Holder" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-ph-"+this.props.rec_number} label="Place Holder" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id="copy-ph" label="Place Holder" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-ph-"+this.props.rec_number} label="Place Holder" onChange={this.handleChange}/>
                 </td>
             </tr>
         </React.Fragment>
