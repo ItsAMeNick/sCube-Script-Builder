@@ -17,7 +17,6 @@ class CONDIT_Item extends Component {
     }
 
     handleChange(event) {
-        console.log("--Starting Change--");
         let newConditions = _.cloneDeep(this.props.conditions);
 
         //Clear some things
@@ -51,10 +50,12 @@ class CONDIT_Item extends Component {
             level++;
         }
 
-        if (document.getElementById("free-"+this.props.id)) {
-            document.getElementById("free-"+this.props.id).value = newConditions[this.props.id].free;
-        } else {
-            delete newConditions[this.props.id].free;
+        if (!["comparison_y", "comparison_type"].includes(type)) {
+            if (document.getElementById("free-"+this.props.id)) {
+                document.getElementById("free-"+this.props.id).value = newConditions[this.props.id].free;
+            } else {
+                delete newConditions[this.props.id].free;
+            }
         }
 
         this.props.update({

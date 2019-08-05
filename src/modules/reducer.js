@@ -564,7 +564,6 @@ const sCubeReducer = (state = initialState, action) => {
     //Conditions
     case "update_conditions": {
         let newState = _.cloneDeep(state);
-        console.log(action.payload.conditions);
         newState.conditions = action.payload.conditions;
         return newState;
     }

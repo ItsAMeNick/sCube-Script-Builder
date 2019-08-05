@@ -982,7 +982,6 @@ class CORE_GenerateOutput extends Component {
         } else {
             //Does my parent set it up?
             for (let a in this.props.state.conditions[myParent].actions) {
-                console.log(a);
                 if (this.props.state.conditions[myParent].actions[a].split("-")[0] === "Cancelation") return true;
             }
             //How about their parent?
