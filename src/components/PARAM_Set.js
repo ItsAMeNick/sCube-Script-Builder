@@ -46,19 +46,6 @@ class PARAM_Container extends Component {
         return items;
     }
 
-    // genLevels() {
-    //     let levels = 0;
-    //     for (let p in this.props.parameter_sets[this.props.set_number].parameters) {
-    //         levels = Math.max(levels,Object.keys(this.props.parameter_sets[this.props.set_number].parameters[p]).length);
-    //     }
-    //     levels-=3;
-    //     let headers = [];
-    //     for (let i=1; i<=levels;i++) {
-    //         headers.push(<th key={i}>Level{"\n"}{i}</th>);
-    //     }
-    //     return headers;
-    // }
-
     render() {
         return (
         <div>

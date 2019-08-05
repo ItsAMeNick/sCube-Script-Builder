@@ -82,19 +82,19 @@ class REC_Item extends Component {
                     <Form.Check id={"copy-contacts-"+this.props.rec_number} label="Contacts" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id={"copy-owners-"+this.props.rec_number} label="Owners" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-professionals-"+this.props.rec_number} label="Professionals" onChange={this.handleChange}/>
                 </td>
             </tr>
             <tr>
                 <th> </th>
                 <td>
-                    <Form.Check id={"copy-professionals-"+this.props.rec_number} label="Professionals" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-address-"+this.props.rec_number} label="Address" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id={"copy-ph-"+this.props.rec_number} label="Place Holder" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-parcel-"+this.props.rec_number} label="Parcel" onChange={this.handleChange}/>
                 </td>
                 <td>
-                    <Form.Check id={"copy-ph-"+this.props.rec_number} label="Place Holder" onChange={this.handleChange}/>
+                    <Form.Check id={"copy-owners-"+this.props.rec_number} label="Owners" onChange={this.handleChange}/>
                 </td>
                 <td>
                     <Form.Check id={"copy-ph-"+this.props.rec_number} label="Place Holder" onChange={this.handleChange}/>

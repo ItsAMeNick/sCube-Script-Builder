@@ -40,6 +40,13 @@ class CONDIT_Action extends Component {
             }
         }
 
+        //Gather Status
+        if (this.props.functionality.new_record) {
+            for (let r in this.props.new_records)  {
+                actions.push("New Record-"+this.props.new_records[r].key);
+            }
+        }
+
         //Gather Fees
         if (this.props.functionality.fees) {
             for (let f in this.props.fees)  {
@@ -120,6 +127,7 @@ const mapStateToProps = state => ({
     functionality: state.functionality,
     conditions: state.conditions,
     status: state.status,
+    new_records: state.new_records,
     fees: state.fees,
     notifications: state.notifications,
     workflows: state.workflows,

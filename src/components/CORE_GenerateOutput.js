@@ -25,6 +25,7 @@ class CORE_GenerateOutput extends Component {
 
     appendScript = (tab, text) => {
         //This function will add one line to the script text with tabbing of tab
+        if (!text) return null;
         script_text += tab + text + "\n";
     }
 
@@ -725,12 +726,16 @@ class CORE_GenerateOutput extends Component {
             }
         } else {
             //Parse everything individually
+            //New Records
+            if (this.props.state.functionality.new_record === true) {
+                for (let r in this.props.state.new_records) {
+                    this.appendScript(set_tab, this.genRecordText(r));
+                }
+            }
+
             //StatusItem
-            console.log("No COndit")
             if (this.props.state.functionality.status_update === true) {
-                console.log("Stat")
                 for (let s in this.props.state.status) {
-                    console.log("SHE")
                     this.appendScript(set_tab, this.genStatusText(s));
                 }
             }
@@ -818,6 +823,10 @@ class CORE_GenerateOutput extends Component {
             }
             case "ASI": {
                 action_text = this.genASIText(action[1], tab);
+                break;
+            }
+            case "New Record": {
+                action_text = this.genRecordText(action[1], tab);
                 break;
             }
             default: return null;
@@ -982,8 +991,8 @@ class CORE_GenerateOutput extends Component {
     }
 
     genCancelExtra(tab="") {
+        if (!this.props.state.functionality.cancel) return null;
         let extra_text = "if (cancel) comment(sCube_comment);";
-        //extra_text += tab + "\t"
         return extra_text;
     }
 
@@ -1007,6 +1016,65 @@ class CORE_GenerateOutput extends Component {
                         + asi.value + "\");";
         }
         return asi_text;
+    }
+
+    genRecordText = (rec_num, tab="") => {
+        let rec_text = "";
+        if (this.props.state.functionality.new_record === true) {
+            let rec = this.props.state.new_records[rec_num];
+            rec_text += "var new_record_" + rec.key + " = createCap(\""
+                        + rec.structure.module + "/"
+                        + rec.structure.type + "/"
+                        + rec.structure.subtype + "/"
+                        + rec.structure.category + "\", \"\");";
+
+            switch (rec.relationship) {
+                case "parent": {
+                    rec_text += "\n" + tab + "aa.cap.createAppHierarchy(new_record_" + rec.key + " , capId)";
+                    break;
+                }
+                case "child": {
+                    rec_text += "\n" + tab + "aa.cap.createAppHierarchy(capId, new_record_" + rec.key + ")";
+                    break;
+                }
+                default: break;
+            }
+
+            if (rec.copy_data.asi) {
+                rec_text += "\n" + tab + "copyAppSpecificInfoForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.asit) {
+                rec_text += "\n" + tab + "copyAppSpecificTableForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.contacts) {
+                rec_text += "\n" + tab + "copyPeopleForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.address) {
+                rec_text += "\n" + tab + "copyAddressForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.parcel) {
+                rec_text += "\n" + tab + "copyParcelForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.owners) {
+                rec_text += "\n" + tab + "copyOwnerForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.Professionals) {
+                rec_text += "\n" + tab + "copyLicenseProfessionalForLic(capId, new_record_" + rec.key + ");";
+            }
+
+
+        /*
+        var newRecordCapID = createCap(cap"Licenses/Plumbing/Contractor/Renewal","");
+                copyAppSpecificInfoForLic(srcCapId, targetCapId);
+                copyAddressForLic(srcCapId, targetCapId);
+                copyAppSpecificTableForLic(srcCapId, targetCapId);
+                copyParcelForLic(srcCapId, targetCapId);
+                copyPeopleForLic(srcCapId, targetCapId);
+                copyLicenseProfessionalForLic(srcCapId, targetCapId);
+                copyOwnerForLic(srcCapId, targetCapId);
+        */
+        }
+        return rec_text;
     }
 
     render() {

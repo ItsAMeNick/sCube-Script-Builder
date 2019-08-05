@@ -109,7 +109,9 @@ const initialState = {
                 asit: false,
                 contacts: false,
                 owners: false,
-                professionals: false
+                professionals: false,
+                address: false,
+                parcel: false
             }
         }
     },
@@ -283,7 +285,9 @@ const sCubeReducer = (state = initialState, action) => {
                     asit: false,
                     contacts: false,
                     owners: false,
-                    professionals: false
+                    professionals: false,
+                    address: false,
+                    parcel: false
                 }
             }
         return newState;
