@@ -94,6 +94,18 @@ const initialState = {
             }
         }
     },
+    new_records: {
+        "1": {
+            key: 1,
+            structure: {
+                module: "NA",
+                type: "NA",
+                subtype: "NA",
+                category: "NA"
+            },
+            
+        }
+    },
     notifications: {
         "1": {
             key: 1,

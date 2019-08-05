@@ -359,7 +359,11 @@ class CORE_GenerateOutput extends Component {
             script_text += this.props.state.batch.name;
             script_text += ".js  Trigger: Batch\n";
             script_text += "| Version 1.0 Zachary McVicker\n";
-            script_text += "| Built with sCube Script Builder\n";
+            script_text += "| Built with sCube Script Builder - ";
+            let today = new Date();
+            script_text += (today.getMonth()+1) +"/"
+                            + today.getDate() + "/"
+                            + today.getFullYear() + "\n";
             script_text += "/------------------------------------------------------------------------------------------------------*/\n";
             script_text += "\n";
             script_text += "/*------------------------------------------------------------------------------------------------------/\n";
