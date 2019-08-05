@@ -646,7 +646,7 @@ class CORE_GenerateOutput extends Component {
                     let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param_ref;
                     this.appendScript(set_tab,"var "+param_name+" = "+param.script+";")
                 }
-                this.appendScript(set_tab,""); //Blank Line
+                this.appendScript(set_tab," "); //Blank Line
                 //Add to hash
                 for (let p in sets[s].parameters) {
                     let param = sets[s].parameters[p];
@@ -659,7 +659,7 @@ class CORE_GenerateOutput extends Component {
                         this.appendScript(set_tab,hash_name+".put(\""+param.ref+"\", "+param_name+");");
                     }
                 }
-                this.appendScript(set_tab,""); //Blank Line
+                this.appendScript(set_tab," "); //Blank Line
             }
         }
     }
