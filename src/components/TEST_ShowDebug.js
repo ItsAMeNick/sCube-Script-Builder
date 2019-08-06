@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form'
-
 import { connect } from "react-redux";
+
+import Form from 'react-bootstrap/Form';
 
 class TEST_ShowDebug extends Component {
     constructor(props) {
@@ -19,19 +19,23 @@ class TEST_ShowDebug extends Component {
     render() {
         return (
         <div>
-            <Form>
+        {this.props.mode !== "batch_script" ?
+        <Form>
+            <hr/>
             <Form.Label>
                 Should this script display the debug window?:
             </Form.Label>
             <Form.Check type="checkbox" label="Show Debug " onChange={this.handleChange}/>
-            </Form>
+        </Form>
+        : null}
         </div>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    show_debug: state.show_debug
+    show_debug: state.show_debug,
+    mode: state.mode
 });
 
 const mapDispatchToProps = dispatch => ({

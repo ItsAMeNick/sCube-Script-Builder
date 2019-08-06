@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from "react-bootstrap/Form";
 
 class CONDIT_Action extends Component {
@@ -13,7 +15,7 @@ class CONDIT_Action extends Component {
     }
 
     handleChange(event) {
-        let newConditions = this.props.conditions;
+        let newConditions = _.cloneDeep(this.props.conditions);
         newConditions[this.props.parent].actions[this.props.id] = event.target.value;
         this.props.update({
             conditions: newConditions
@@ -35,6 +37,13 @@ class CONDIT_Action extends Component {
         if (this.props.functionality.status_update) {
             for (let s in this.props.status)  {
                 actions.push("Status-"+this.props.status[s].key);
+            }
+        }
+
+        //Gather Status
+        if (this.props.functionality.new_record) {
+            for (let r in this.props.new_records)  {
+                actions.push("New Record-"+this.props.new_records[r].key);
             }
         }
 
@@ -118,6 +127,7 @@ const mapStateToProps = state => ({
     functionality: state.functionality,
     conditions: state.conditions,
     status: state.status,
+    new_records: state.new_records,
     fees: state.fees,
     notifications: state.notifications,
     workflows: state.workflows,

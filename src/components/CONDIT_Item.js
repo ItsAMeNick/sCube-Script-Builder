@@ -5,7 +5,7 @@ import _ from "lodash";
 import Form from "react-bootstrap/Form";
 
 import condit_data from "./CONDIT_data.js";
-import variable_map from "./PARAM_data.js"
+import variable_map from "./PARAM_data.js";
 
 class CONDIT_Item extends Component {
     constructor(props) {
@@ -17,10 +17,11 @@ class CONDIT_Item extends Component {
     }
 
     handleChange(event) {
-        let newConditions = this.props.conditions;
+        let newConditions = _.cloneDeep(this.props.conditions);
 
         //Clear some things
         newConditions[this.props.id].comparison_x = null;
+        newConditions[this.props.id].free = "";
 
         let type = event.target.id.split("-")[0];
         newConditions[this.props.id][type] = event.target.value;
@@ -49,14 +50,22 @@ class CONDIT_Item extends Component {
             level++;
         }
 
+        if (!["comparison_y", "comparison_type"].includes(type)) {
+            if (document.getElementById("free-"+this.props.id)) {
+                document.getElementById("free-"+this.props.id).value = newConditions[this.props.id].free;
+            } else {
+                delete newConditions[this.props.id].free;
+            }
+        }
+
         this.props.update({
             conditions: newConditions
         });
-        this.forceUpdate();
     };
 
     addX(text) {
-        let newConditions = this.props.conditions;
+        let newConditions = _.cloneDeep(this.props.conditions);
+        if (newConditions[this.props.id].comparison_x === text) return null;
         newConditions[this.props.id].comparison_x = text;
         this.props.update({
             conditions: newConditions
@@ -74,7 +83,7 @@ class CONDIT_Item extends Component {
         }
         if (this.props.event_type === "NA") {
             types = _.remove(types, k => {
-                return k !== "Accela Globals"
+                return k !== "Event Specific"
             });
         }
         types.sort();
@@ -122,7 +131,7 @@ class CONDIT_Item extends Component {
         }
         if (this.props.event_type === "NA") {
             keys = _.remove(keys, k => {
-                return k !== "Accela Globals"
+                return k !== "Event Specific"
             });
         }
         keys.sort();
@@ -172,9 +181,9 @@ class CONDIT_Item extends Component {
                 })}
             </Form.Control>);
         } else if (keys[1] === "free") {
-            row.push(<Form.Control id={"free"} onChange={this.handleChange} key={newId}/>);
+            row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
         } else if (keys[1] === "type") {
-            row.push(<Form.Control id={"type"} placeholder="Type" onChange={this.handleChange} key={newId}/>);
+            row.push(<Form.Control id={"type"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId}/>);
         }
 
         //Check if you should go to the next level
@@ -213,10 +222,6 @@ class CONDIT_Item extends Component {
         });
         for (let c in tree) {
             if (me === c) continue;
-            // console.log(tree[me]);
-            // console.log(tree[c]);
-            // console.log(_.initial(tree[c]));
-            // console.log("-----------------");
             if (_.isEqual(tree[me], _.initial(tree[c]))) return false;
         }
         return true;

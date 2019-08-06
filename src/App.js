@@ -9,6 +9,10 @@ import CoreMode from "./components/CORE_Mode.js";
 import Core from "./components/CORE.js";
 import CoreFunctionality from "./components/CORE_Functionality.js";
 
+import BatchStructure from "./components/BATCH_Structure_Container.js";
+import BatchStatus from "./components/BATCH_Status.js";
+import BatchRange from "./components/BATCH_Range.js";
+
 import TestShowDebug from "./components/TEST_ShowDebug.js";
 
 import Fees from "./components/FEE_Container.js";
@@ -17,6 +21,7 @@ import Asi from "./components/ASI_Container.js";
 import Workflow from "./components/WORK_Container.js";
 import Inspection from "./components/INSP_Container.js";
 import Cancel from "./components/CANCEL_Container.js";
+import Record from "./components/REC_Container.js";
 
 import Notes from "./components/NOTE_Container.js";
 import Params from "./components/PARAM_Container.js";
@@ -49,10 +54,17 @@ class App extends Component {
                     <Core/>
                 </Col> <Col>
                     <CoreFunctionality/>
-                    <hr/>
                     <TestShowDebug/>
                 </Col>
-            </Row> <Col>
+            </Row>
+            <Col>
+                <BatchStructure/>
+                <BatchStatus/>
+                <BatchRange/>
+            </Col>
+            <Col>
+                <Record/>
+            </Col> <Col>
                 <Status/>
             </Col> <Col>
                 <Asi/>

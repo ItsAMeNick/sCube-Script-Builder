@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
-import { connect } from "react-redux";
 
 class CORE_Structure extends Component {
     constructor(props) {
@@ -37,7 +38,7 @@ class CORE_Structure extends Component {
     }
 
     handleChange(event) {
-        let newStructure = this.props.structure;
+        let newStructure = _.cloneDeep(this.props.structure);
         let newValue = "NA";
         if (event.target.value.replace(/\s+/g, '') !== '') {
             newValue = event.target.value;

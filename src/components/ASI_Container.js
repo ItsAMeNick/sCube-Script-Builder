@@ -52,10 +52,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    update: a => dispatch({
-        type: "update_asis",
-        payload: a
-    }),
     add: () => dispatch({
         type: "add_asi",
         payload: null

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form'
-
 import { connect } from "react-redux";
+import _ from "lodash";
+
+import Form from 'react-bootstrap/Form'
 
 class MODE_Function extends Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class MODE_Function extends Component {
     }
 
     handleChange(event) {
-        let newExtras = this.props.mode_extras;
+        let newExtras = _.cloneDeep(this.props.mode_extras);
         newExtras[event.target.id] = event.target.value;
         this.props.update({
             mode_extras: newExtras

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form'
-
 import { connect } from "react-redux";
+
+import Form from 'react-bootstrap/Form'
 
 class CORE_Event extends Component {
     constructor(props) {

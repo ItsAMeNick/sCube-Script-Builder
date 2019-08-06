@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from "react-bootstrap/Form";
 
 class NOTE_Item extends Component {
@@ -10,7 +12,7 @@ class NOTE_Item extends Component {
     }
 
     handleChange(event) {
-        let newNotifications = this.props.notifications;
+        let newNotifications = _.cloneDeep(this.props.notifications);
         let newValue = "";
         if (event.target.id === "report_bool") {
             newValue = event.target.checked;

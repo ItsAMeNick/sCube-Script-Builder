@@ -14,10 +14,27 @@ const initialState = {
         function_name: "",
         function_desc: "",
     },
+    batch: {
+        name: null,
+        use_lic: true,
+        structures: {
+            "1": {
+                key: 1,
+                module: "NA",
+                type: "NA",
+                subtype: "NA",
+                category: "NA"
+            }
+        },
+        lic_only: {
+            range: 0,
+            current_status: null,
+            new_status: null
+        }
+    },
     conditions: {
         "1": {
         key: "1",
-        condition_type: null,
         comparison_x: null,
         comparison_type: null,
         comparison_y: null,
@@ -34,7 +51,8 @@ const initialState = {
         workflow: false,
         inspections: false,
         cancel: false,
-        pageflow_documents: false
+        pageflow_documents: false,
+        new_record: false
     },
     status: {
         "1": {
@@ -73,6 +91,27 @@ const initialState = {
                     script: null,
                     portlet: null,
                 }
+            }
+        }
+    },
+    new_records: {
+        "1": {
+            key: 1,
+            structure: {
+                module: "NA",
+                type: "NA",
+                subtype: "NA",
+                category: "NA"
+            },
+            relationship: null,
+            copy_data: {
+                asi: false,
+                asit: false,
+                contacts: false,
+                owners: false,
+                professionals: false,
+                address: false,
+                parcel: false
             }
         }
     },
@@ -136,6 +175,35 @@ const sCubeReducer = (state = initialState, action) => {
         return newState;
     }
 
+    case "update_batch": {
+        let newState = _.cloneDeep(state);
+        newState.batch = action.payload.batch;
+        return newState;
+    }
+    case "add_batch_structure": {
+        let newState = _.cloneDeep(state);
+        let batch_codes = Object.keys(state.batch.structures);
+        let m = 0;
+        for (let b in batch_codes) {
+            m = Math.max(m,state.batch.structures[batch_codes[b]].key);
+        }
+        m+=1;
+        newState.batch.structures[m] =
+            {
+                key: m,
+                module: "NA",
+                type: "NA",
+                subtype: "NA",
+                category: "NA"
+            }
+        return newState;
+    }
+    case "delete_batch_structure": {
+        let newState = _.cloneDeep(state);
+        newState.batch = action.payload.batch;
+        return newState;
+    }
+
     case "update_mode_extras": {
         let newState = _.cloneDeep(state);
         newState.mode_extras = action.payload.mode_extras;
@@ -185,6 +253,52 @@ const sCubeReducer = (state = initialState, action) => {
             return newState;
         }
         delete newState.status[action.payload]
+        return newState;
+    }
+
+    //New Record
+    case "update_new_records": {
+        let newState = _.cloneDeep(state);
+        newState.new_records = action.payload.new_records;
+        return newState;
+    }
+    case "add_new_record": {
+        let newState = _.cloneDeep(state);
+        let rec_codes = Object.keys(state.new_records);
+        let m = 0;
+        for (let r in rec_codes) {
+            m = Math.max(m,state.new_records[rec_codes[r]].key);
+        }
+        m+=1;
+        newState.new_records[m] =
+            {
+                key: m,
+                structure: {
+                    module: "NA",
+                    type: "NA",
+                    subtype: "NA",
+                    category: "NA"
+                },
+                relationship: null,
+                copy_data: {
+                    asi: false,
+                    asit: false,
+                    contacts: false,
+                    owners: false,
+                    professionals: false,
+                    address: false,
+                    parcel: false
+                }
+            }
+        return newState;
+    }
+    case "delete_new_record": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the REC_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.new_records[action.payload]
         return newState;
     }
 
@@ -464,7 +578,6 @@ const sCubeReducer = (state = initialState, action) => {
         newState.conditions[m.toString()] =
             {
                 key: m.toString(),
-                condition_type: null,
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,
@@ -489,7 +602,6 @@ const sCubeReducer = (state = initialState, action) => {
         newState.conditions[myId] =
             {
                 key: myId,
-                condition_type: null,
                 comparison_x: null,
                 comparison_type: null,
                 comparison_y: null,

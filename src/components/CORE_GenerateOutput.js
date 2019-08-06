@@ -25,6 +25,7 @@ class CORE_GenerateOutput extends Component {
 
     appendScript = (tab, text) => {
         //This function will add one line to the script text with tabbing of tab
+        if (!text) return null;
         script_text += tab + text + "\n";
     }
 
@@ -69,6 +70,18 @@ class CORE_GenerateOutput extends Component {
                     return "Cannot generate pageflow correctly.";
                 }
             }
+            case "batch_script": {
+                if (this.props.state.batch.name !== null && (this.props.state.batch.structures["1"].module !== "NA" && this.props.state.batch.structures["1"].module !== "")) {
+                    this.generateBatchScriptStart();
+                    this.parseParameters(3);
+                    this.parseConditions(1, "", 3);
+                    this.generateBatchScriptEnd();
+                    break;
+                } else {
+                    //Must provide event and module before anything can generate.
+                    return "Please provide a Name and at least one Structure";
+                }
+            }
             default:
                 return "ERROR: A Script can not be generated for this mode"
         }
@@ -96,6 +109,9 @@ class CORE_GenerateOutput extends Component {
     }
 
     generateFunctionScriptEnd = () => {
+        if (this.cancelIsUsed()) {
+            this.appendScript("\t", this.genCancelExtra(""));
+        }
         this.appendScript("", "}");
     }
 
@@ -125,138 +141,141 @@ class CORE_GenerateOutput extends Component {
     }
 
     generateEventScriptEnd = () => {
+        if (this.cancelIsUsed()) {
+            this.appendScript("\t", this.genCancelExtra(""));
+        }
         this.appendScript("", "}");
         this.appendScript("", "//End of "+this.genName());
     }
 
     //I used a little python script to generate this, cause I sure as hell was not about to type all this.
     generatePageflowScriptStart = () => {
-        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
-        script_text += "| START User Configurable Parameters\n"
-        script_text += "|\n"
-        script_text += "|     Only variables in the following section may be changed.  If any other section is modified, this\n"
-        script_text += "|     will no longer be considered a \"Master\" script and will not be supported in future releases.  If\n"
-        script_text += "|     changes are made, please add notes above.\n"
-        script_text += "/------------------------------------------------------------------------------------------------------*/\n"
-        script_text += "var showMessage = false;				// Set to true to see results in popup window\n"
-        script_text += "var showDebug = true;					// Set to true to see debug messages in popup window\n"
-        script_text += "var preExecute = \"PreExecuteForBeforeEvents\"\n"
-        script_text += "var controlString = \"\";		// Standard choice for control\n"
-        script_text += "var documentOnly = false;						// Document Only -- displays hierarchy of std choice steps\n"
-        script_text += "var disableTokens = false;						// turn off tokenizing of std choices (enables use of \"{} and []\")\n"
-        script_text += "var useAppSpecificGroupName = false;			// Use Group name when populating App Specific Info Values\n"
-        script_text += "var useTaskSpecificGroupName = false;			// Use Group name when populating Task Specific Info Values\n"
-        script_text += "var enableVariableBranching = false;			// Allows use of variable names in branching.  Branches are not followed in Doc Only\n"
-        script_text += "var maxEntries = 99;							// Maximum number of std choice entries.  Entries must be Left Zero Padded\n"
-        script_text += "var SCRIPT_VERSION = 2.0\n"
-        script_text += "\n"
-        script_text += "eval(getScriptText(\"INCLUDES_ACCELA_FUNCTIONS\"));\n"
-        script_text += "eval(getScriptText(\"INCLUDES_ACCELA_GLOBALS\"));\n"
-        script_text += "eval(getScriptText(\"INCLUDES_CUSTOM\"));\n"
-        script_text += "eval(getScriptText(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"));\n"
-        script_text += "\n"
-        script_text += "if (documentOnly) {\n"
-        script_text += "	doStandardChoiceActions(controlString,false,0);\n"
-        script_text += "	aa.env.setValue(\"ScriptReturnCode\", \"0\");\n"
-        script_text += "	aa.env.setValue(\"ScriptReturnMessage\", \"Documentation Successful.  No actions executed.\");\n"
-        script_text += "	aa.abortScript();\n"
-        script_text += "	}\n"
-        script_text += "\n"
-        script_text += "	\n"
-        script_text += "function getScriptText(vScriptName){\n"
-        script_text += "	vScriptName = vScriptName.toUpperCase();\n"
-        script_text += "	var emseBiz = aa.proxyInvoker.newInstance(\"com.accela.aa.emse.emse.EMSEBusiness\").getOutput();\n"
-        script_text += "	var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(),vScriptName);\n"
-        script_text += "	return emseScript.getScriptText() + \"\";	\n"
-        script_text += "}\n"
-        script_text += "\n"
-        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
-        script_text += "| END User Configurable Parameters\n"
-        script_text += "/------------------------------------------------------------------------------------------------------*/\n"
-        script_text += "var cancel = false;\n"
-        script_text += "var startDate = new Date();\n"
-        script_text += "var startTime = startDate.getTime();\n"
-        script_text += "var message =	\"\";							// Message String\n"
-        script_text += "var debug = \"\";								// Debug String\n"
-        script_text += "var br = \"<BR>\";							// Break Tag\n"
-        script_text += "var feeSeqList = new Array();						// invoicing fee list\n"
-        script_text += "var paymentPeriodList = new Array();					// invoicing pay periods\n"
-        script_text += "\n"
-        script_text += "if (documentOnly) {\n"
-        script_text += "	doStandardChoiceActions(controlString,false,0);\n"
-        script_text += "	aa.env.setValue(\"ScriptReturnCode\", \"0\");\n"
-        script_text += "	aa.env.setValue(\"ScriptReturnMessage\", \"Documentation Successful.  No actions executed.\");\n"
-        script_text += "	aa.abortScript();\n"
-        script_text += "	}\n"
-        script_text += "\n"
-        script_text += "var cap = aa.env.getValue(\"CapModel\");\n"
-        script_text += "var capId = cap.getCapID();\n"
-        script_text += "var servProvCode = capId.getServiceProviderCode()       		// Service Provider Code\n"
-        script_text += "var publicUser = false ;\n"
-        script_text += "var currentUserID = aa.env.getValue(\"CurrentUserID\");\n"
-        script_text += "if (currentUserID.indexOf(\"PUBLICUSER\") == 0) { currentUserID = \"ADMIN\" ; publicUser = true }  // ignore public users\n"
-        script_text += "var capIDString = capId.getCustomID();					// alternate cap id string\n"
-        script_text += "var systemUserObj = aa.person.getUser(currentUserID).getOutput();  	// Current User Object\n"
-        script_text += "var appTypeResult = cap.getCapType();\n"
-        script_text += "var appTypeString = appTypeResult.toString();				// Convert application type to string (\"Building/A/B/C\")\n"
-        script_text += "var appTypeArray = appTypeString.split(\"/\");				// Array of application type string\n"
-        script_text += "var currentUserGroup;\n"
-        script_text += "var currentUserGroupObj = aa.userright.getUserRight(appTypeArray[0],currentUserID).getOutput()\n"
-        script_text += "if (currentUserGroupObj) currentUserGroup = currentUserGroupObj.getGroupName();\n"
-        script_text += "var capName = cap.getSpecialText();\n"
-        script_text += "var capStatus = cap.getCapStatus();\n"
-        script_text += "var sysDate = aa.date.getCurrentDate();\n"
-        script_text += "var sysDateMMDDYYYY = dateFormatted(sysDate.getMonth(),sysDate.getDayOfMonth(),sysDate.getYear(),\"\");\n"
-        script_text += "var parcelArea = 0;\n"
-        script_text += "\n"
-        script_text += "var estValue = 0; var calcValue = 0; var feeFactor			// Init Valuations\n"
-        script_text += "var valobj = aa.finance.getContractorSuppliedValuation(capId,null).getOutput();	// Calculated valuation\n"
-        script_text += "if (valobj.length) {\n"
-        script_text += "	estValue = valobj[0].getEstimatedValue();\n"
-        script_text += "	calcValue = valobj[0].getCalculatedValue();\n"
-        script_text += "	feeFactor = valobj[0].getbValuatn().getFeeFactorFlag();\n"
-        script_text += "	}\n"
-        script_text += "\n"
-        script_text += "var balanceDue = 0 ; var houseCount = 0; feesInvoicedTotal = 0;		// Init detail Data\n"
-        script_text += "var capDetail = \"\";\n"
-        script_text += "var capDetailObjResult = aa.cap.getCapDetail(capId);			// Detail\n"
-        script_text += "if (capDetailObjResult.getSuccess())\n"
-        script_text += "	{\n"
-        script_text += "	capDetail = capDetailObjResult.getOutput();\n"
-        script_text += "	var houseCount = capDetail.getHouseCount();\n"
-        script_text += "	var feesInvoicedTotal = capDetail.getTotalFee();\n"
-        script_text += "	var balanceDue = capDetail.getBalance();\n"
-        script_text += "	}\n"
-        script_text += "var addrState = '';\n"
-        script_text += "var AInfo = new Array();						// Create array for tokenized variables\n"
-        script_text += "loadAppSpecific4ACA(AInfo); 						// Add AppSpecific Info\n"
-        script_text += "//loadTaskSpecific(AInfo);						// Add task specific info\n"
-        script_text += "//loadParcelAttributes(AInfo);						// Add parcel attributes\n"
-        script_text += "//loadASITables4ACA();\n"
-        script_text += "\n"
-        script_text += "logDebug(\"<B>EMSE Script Results for \" + capIDString + \"</B>\");\n"
-        script_text += "logDebug(\"capId = \" + capId.getClass());\n"
-        script_text += "logDebug(\"cap = \" + cap.getClass());\n"
-        script_text += "logDebug(\"currentUserID = \" + currentUserID);\n"
-        script_text += "logDebug(\"currentUserGroup = \" + currentUserGroup);\n"
-        script_text += "logDebug(\"systemUserObj = \" + systemUserObj.getClass());\n"
-        script_text += "logDebug(\"appTypeString = \" + appTypeString);\n"
-        script_text += "logDebug(\"capName = \" + capName);\n"
-        script_text += "logDebug(\"capStatus = \" + capStatus);\n"
-        script_text += "logDebug(\"sysDate = \" + sysDate.getClass());\n"
-        script_text += "logDebug(\"sysDateMMDDYYYY = \" + sysDateMMDDYYYY);\n"
-        script_text += "logDebug(\"parcelArea = \" + parcelArea);\n"
-        script_text += "logDebug(\"estValue = \" + estValue);\n"
-        script_text += "logDebug(\"calcValue = \" + calcValue);\n"
-        script_text += "logDebug(\"feeFactor = \" + feeFactor);\n"
-        script_text += "\n"
-        script_text += "logDebug(\"houseCount = \" + houseCount);\n"
-        script_text += "logDebug(\"feesInvoicedTotal = \" + feesInvoicedTotal);\n"
-        script_text += "logDebug(\"balanceDue = \" + balanceDue);\n"
-        script_text += "\n"
-        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
-        script_text += "| <===========Main=Loop================>\n"
-        script_text += "/-----------------------------------------------------------------------------------------------------*/\n"
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+        script_text += "| START User Configurable Parameters\n";
+        script_text += "|\n";
+        script_text += "|     Only variables in the following section may be changed.  If any other section is modified, this\n";
+        script_text += "|     will no longer be considered a \"Master\" script and will not be supported in future releases.  If\n";
+        script_text += "|     changes are made, please add notes above.\n";
+        script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+        script_text += "var showMessage = false;				// Set to true to see results in popup window\n";
+        script_text += "var showDebug = true;					// Set to true to see debug messages in popup window\n";
+        script_text += "var preExecute = \"PreExecuteForBeforeEvents\"\n";
+        script_text += "var controlString = \"\";		// Standard choice for control\n";
+        script_text += "var documentOnly = false;						// Document Only -- displays hierarchy of std choice steps\n";
+        script_text += "var disableTokens = false;						// turn off tokenizing of std choices (enables use of \"{} and []\")\n";
+        script_text += "var useAppSpecificGroupName = false;			// Use Group name when populating App Specific Info Values\n";
+        script_text += "var useTaskSpecificGroupName = false;			// Use Group name when populating Task Specific Info Values\n";
+        script_text += "var enableVariableBranching = false;			// Allows use of variable names in branching.  Branches are not followed in Doc Only\n";
+        script_text += "var maxEntries = 99;							// Maximum number of std choice entries.  Entries must be Left Zero Padded\n";
+        script_text += "var SCRIPT_VERSION = 2.0\n";
+        script_text += "\n";
+        script_text += "eval(getScriptText(\"INCLUDES_ACCELA_FUNCTIONS\"));\n";
+        script_text += "eval(getScriptText(\"INCLUDES_ACCELA_GLOBALS\"));\n";
+        script_text += "eval(getScriptText(\"INCLUDES_CUSTOM\"));\n";
+        script_text += "eval(getScriptText(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"));\n";
+        script_text += "\n";
+        script_text += "if (documentOnly) {\n";
+        script_text += "	doStandardChoiceActions(controlString,false,0);\n";
+        script_text += "	aa.env.setValue(\"ScriptReturnCode\", \"0\");\n";
+        script_text += "	aa.env.setValue(\"ScriptReturnMessage\", \"Documentation Successful.  No actions executed.\");\n";
+        script_text += "	aa.abortScript();\n";
+        script_text += "	}\n";
+        script_text += "\n";
+        script_text += "	\n";
+        script_text += "function getScriptText(vScriptName){\n";
+        script_text += "	vScriptName = vScriptName.toUpperCase();\n";
+        script_text += "	var emseBiz = aa.proxyInvoker.newInstance(\"com.accela.aa.emse.emse.EMSEBusiness\").getOutput();\n";
+        script_text += "	var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(),vScriptName);\n";
+        script_text += "	return emseScript.getScriptText() + \"\";	\n";
+        script_text += "}\n";
+        script_text += "\n";
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+        script_text += "| END User Configurable Parameters\n";
+        script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+        script_text += "var cancel = false;\n";
+        script_text += "var startDate = new Date();\n";
+        script_text += "var startTime = startDate.getTime();\n";
+        script_text += "var message =	\"\";							// Message String\n";
+        script_text += "var debug = \"\";								// Debug String\n";
+        script_text += "var br = \"<BR>\";							// Break Tag\n";
+        script_text += "var feeSeqList = new Array();						// invoicing fee list\n";
+        script_text += "var paymentPeriodList = new Array();					// invoicing pay periods\n";
+        script_text += "\n";
+        script_text += "if (documentOnly) {\n";
+        script_text += "	doStandardChoiceActions(controlString,false,0);\n";
+        script_text += "	aa.env.setValue(\"ScriptReturnCode\", \"0\");\n";
+        script_text += "	aa.env.setValue(\"ScriptReturnMessage\", \"Documentation Successful.  No actions executed.\");\n";
+        script_text += "	aa.abortScript();\n";
+        script_text += "	}\n";
+        script_text += "\n";
+        script_text += "var cap = aa.env.getValue(\"CapModel\");\n";
+        script_text += "var capId = cap.getCapID();\n";
+        script_text += "var servProvCode = capId.getServiceProviderCode()       		// Service Provider Code\n";
+        script_text += "var publicUser = false ;\n";
+        script_text += "var currentUserID = aa.env.getValue(\"CurrentUserID\");\n";
+        script_text += "if (currentUserID.indexOf(\"PUBLICUSER\") == 0) { currentUserID = \"ADMIN\" ; publicUser = true }  // ignore public users\n";
+        script_text += "var capIDString = capId.getCustomID();					// alternate cap id string\n";
+        script_text += "var systemUserObj = aa.person.getUser(currentUserID).getOutput();  	// Current User Object\n";
+        script_text += "var appTypeResult = cap.getCapType();\n";
+        script_text += "var appTypeString = appTypeResult.toString();				// Convert application type to string (\"Building/A/B/C\")\n";
+        script_text += "var appTypeArray = appTypeString.split(\"/\");				// Array of application type string\n";
+        script_text += "var currentUserGroup;\n";
+        script_text += "var currentUserGroupObj = aa.userright.getUserRight(appTypeArray[0],currentUserID).getOutput()\n";
+        script_text += "if (currentUserGroupObj) currentUserGroup = currentUserGroupObj.getGroupName();\n";
+        script_text += "var capName = cap.getSpecialText();\n";
+        script_text += "var capStatus = cap.getCapStatus();\n";
+        script_text += "var sysDate = aa.date.getCurrentDate();\n";
+        script_text += "var sysDateMMDDYYYY = dateFormatted(sysDate.getMonth(),sysDate.getDayOfMonth(),sysDate.getYear(),\"\");\n";
+        script_text += "var parcelArea = 0;\n";
+        script_text += "\n";
+        script_text += "var estValue = 0; var calcValue = 0; var feeFactor			// Init Valuations\n";
+        script_text += "var valobj = aa.finance.getContractorSuppliedValuation(capId,null).getOutput();	// Calculated valuation\n";
+        script_text += "if (valobj.length) {\n";
+        script_text += "	estValue = valobj[0].getEstimatedValue();\n";
+        script_text += "	calcValue = valobj[0].getCalculatedValue();\n";
+        script_text += "	feeFactor = valobj[0].getbValuatn().getFeeFactorFlag();\n";
+        script_text += "	}\n";
+        script_text += "\n";
+        script_text += "var balanceDue = 0 ; var houseCount = 0; feesInvoicedTotal = 0;		// Init detail Data\n";
+        script_text += "var capDetail = \"\";\n";
+        script_text += "var capDetailObjResult = aa.cap.getCapDetail(capId);			// Detail\n";
+        script_text += "if (capDetailObjResult.getSuccess())\n";
+        script_text += "	{\n";
+        script_text += "	capDetail = capDetailObjResult.getOutput();\n";
+        script_text += "	var houseCount = capDetail.getHouseCount();\n";
+        script_text += "	var feesInvoicedTotal = capDetail.getTotalFee();\n";
+        script_text += "	var balanceDue = capDetail.getBalance();\n";
+        script_text += "	}\n";
+        script_text += "var addrState = '';\n";
+        script_text += "var AInfo = new Array();						// Create array for tokenized variables\n";
+        script_text += "loadAppSpecific4ACA(AInfo); 						// Add AppSpecific Info\n";
+        script_text += "//loadTaskSpecific(AInfo);						// Add task specific info\n";
+        script_text += "//loadParcelAttributes(AInfo);						// Add parcel attributes\n";
+        script_text += "//loadASITables4ACA();\n";
+        script_text += "\n";
+        script_text += "logDebug(\"<B>EMSE Script Results for \" + capIDString + \"</B>\");\n";
+        script_text += "logDebug(\"capId = \" + capId.getClass());\n";
+        script_text += "logDebug(\"cap = \" + cap.getClass());\n";
+        script_text += "logDebug(\"currentUserID = \" + currentUserID);\n";
+        script_text += "logDebug(\"currentUserGroup = \" + currentUserGroup);\n";
+        script_text += "logDebug(\"systemUserObj = \" + systemUserObj.getClass());\n";
+        script_text += "logDebug(\"appTypeString = \" + appTypeString);\n";
+        script_text += "logDebug(\"capName = \" + capName);\n";
+        script_text += "logDebug(\"capStatus = \" + capStatus);\n";
+        script_text += "logDebug(\"sysDate = \" + sysDate.getClass());\n";
+        script_text += "logDebug(\"sysDateMMDDYYYY = \" + sysDateMMDDYYYY);\n";
+        script_text += "logDebug(\"parcelArea = \" + parcelArea);\n";
+        script_text += "logDebug(\"estValue = \" + estValue);\n";
+        script_text += "logDebug(\"calcValue = \" + calcValue);\n";
+        script_text += "logDebug(\"feeFactor = \" + feeFactor);\n";
+        script_text += "\n";
+        script_text += "logDebug(\"houseCount = \" + houseCount);\n";
+        script_text += "logDebug(\"feesInvoicedTotal = \" + feesInvoicedTotal);\n";
+        script_text += "logDebug(\"balanceDue = \" + balanceDue);\n";
+        script_text += "\n";
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+        script_text += "| <===========Main=Loop================>\n";
+        script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
 
         let today = new Date();
         script_text += "//Created: " + (today.getMonth()+1) +"/"
@@ -266,67 +285,343 @@ class CORE_GenerateOutput extends Component {
 
     //I used a little python script to generate this, cause I sure as hell was not about to type all this.
     generatePageflowScriptEnd = () => {
-        script_text += "/*------------------------------------------------------------------------------------------------------/\n"
-        script_text += "| <===========END=Main=Loop================>\n"
-        script_text += "/-----------------------------------------------------------------------------------------------------*/\n"
-        script_text += "\n"
-        script_text += "if (debug.indexOf(\"**ERROR\") > 0) {\n"
-        script_text += "    aa.env.setValue(\"ErrorCode\", \"1\");\n"
-        script_text += "    aa.env.setValue(\"ErrorMessage\", debug);\n"
-        script_text += "}\n"
-        script_text += "else {\n"
-        script_text += "    if (cancel) {\n"
-        script_text += "        aa.env.setValue(\"ErrorCode\", \"-2\");\n"
-        script_text += "        if (showMessage) aa.env.setValue(\"ErrorMessage\", message);\n"
-        script_text += "        if (showDebug) aa.env.setValue(\"ErrorMessage\", debug);\n"
-        script_text += "    }\n"
-        script_text += "    else {\n"
-        script_text += "        aa.env.setValue(\"ErrorCode\", \"0\");\n"
-        script_text += "        if (showMessage) aa.env.setValue(\"ErrorMessage\", message);\n"
-        script_text += "        if (showDebug) aa.env.setValue(\"ErrorMessage\", debug);\n"
-        script_text += "    }\n"
-        script_text += "}\n"
-        script_text += "\n"
-        script_text += "function determineACADocumentAttached(docType) \n"
-        script_text += "{\n"
-        script_text += "    var docList = aa.document.getDocumentListByEntity(capId, \"TMP_CAP\");\n"
-        script_text += "    if (docList.getSuccess()) \n"
-        script_text += "	{\n"
-        script_text += "        docsOut = docList.getOutput();\n"
-        script_text += "		logDebug(\"Docs Out \" + docsOut.isEmpty());\n"
-        script_text += "        if (docsOut.isEmpty()) \n"
-        script_text += "		{\n"
-        script_text += "            return false;\n"
-        script_text += "        }\n"
-        script_text += "        else \n"
-        script_text += "		{\n"
-        script_text += "            attach = false;\n"
-        script_text += "            docsOuti = docsOut.iterator();\n"
-        script_text += "            while (docsOuti.hasNext()) \n"
-        script_text += "			{\n"
-        script_text += "                doc = docsOuti.next();\n"
-        script_text += "				debugObject(doc);\n"
-        script_text += "                docCat = doc.getDocCategory();\n"
-        script_text += "                if (docCat.equals(docType)) \n"
-        script_text += "				{\n"
-        script_text += "                    attach = true;\n"
-        script_text += "                }\n"
-        script_text += "            }\n"
-        script_text += "            if (attach) \n"
-        script_text += "			{\n"
-        script_text += "                return true;\n"
-        script_text += "            }\n"
-        script_text += "            else \n"
-        script_text += "			{\n"
-        script_text += "                return false;\n"
-        script_text += "            }\n"
-        script_text += "        }\n"
-        script_text += "    }\n"
-        script_text += "    else \n"
-        script_text += "	{\n"
-        script_text += "        return false;\n"
-        script_text += "    }\n"
-        script_text += "}\n"
+
+        if (this.cancelIsUsed()) {
+            this.appendScript("", this.genCancelExtra(""));
+        }
+
+        script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+        script_text += "| <===========END=Main=Loop================>\n";
+        script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
+        script_text += "\n";
+        script_text += "if (debug.indexOf(\"**ERROR\") > 0) {\n";
+        script_text += "    aa.env.setValue(\"ErrorCode\", \"1\");\n";
+        script_text += "    aa.env.setValue(\"ErrorMessage\", debug);\n";
+        script_text += "}\n";
+        script_text += "else {\n";
+        script_text += "    if (cancel) {\n";
+        script_text += "        aa.env.setValue(\"ErrorCode\", \"-2\");\n";
+        script_text += "        if (showMessage) aa.env.setValue(\"ErrorMessage\", message);\n";
+        script_text += "        if (showDebug) aa.env.setValue(\"ErrorMessage\", debug);\n";
+        script_text += "    }\n";
+        script_text += "    else {\n";
+        script_text += "        aa.env.setValue(\"ErrorCode\", \"0\");\n";
+        script_text += "        if (showMessage) aa.env.setValue(\"ErrorMessage\", message);\n";
+        script_text += "        if (showDebug) aa.env.setValue(\"ErrorMessage\", debug);\n";
+        script_text += "    }\n";
+        script_text += "}\n";
+        script_text += "\n";
+        script_text += "function determineACADocumentAttached(docType) \n";
+        script_text += "{\n";
+        script_text += "    var docList = aa.document.getDocumentListByEntity(capId, \"TMP_CAP\");\n";
+        script_text += "    if (docList.getSuccess()) \n";
+        script_text += "	{\n";
+        script_text += "        docsOut = docList.getOutput();\n";
+        script_text += "		logDebug(\"Docs Out \" + docsOut.isEmpty());\n";
+        script_text += "        if (docsOut.isEmpty()) \n";
+        script_text += "		{\n";
+        script_text += "            return false;\n";
+        script_text += "        }\n";
+        script_text += "        else \n";
+        script_text += "		{\n";
+        script_text += "            attach = false;\n";
+        script_text += "            docsOuti = docsOut.iterator();\n";
+        script_text += "            while (docsOuti.hasNext()) \n";
+        script_text += "			{\n";
+        script_text += "                doc = docsOuti.next();\n";
+        script_text += "				debugObject(doc);\n";
+        script_text += "                docCat = doc.getDocCategory();\n";
+        script_text += "                if (docCat.equals(docType)) \n";
+        script_text += "				{\n";
+        script_text += "                    attach = true;\n";
+        script_text += "                }\n";
+        script_text += "            }\n";
+        script_text += "            if (attach) \n";
+        script_text += "			{\n";
+        script_text += "                return true;\n";
+        script_text += "            }\n";
+        script_text += "            else \n";
+        script_text += "			{\n";
+        script_text += "                return false;\n";
+        script_text += "            }\n";
+        script_text += "        }\n";
+        script_text += "    }\n";
+        script_text += "    else \n";
+        script_text += "	{\n";
+        script_text += "        return false;\n";
+        script_text += "    }\n";
+        script_text += "}\n";
+    }
+
+    generateBatchScriptStart = () => {
+        if (this.props.state.batch.use_lic) {
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| Program: "
+            script_text += this.props.state.batch.name;
+            script_text += ".js  Trigger: Batch\n";
+            script_text += "| Version 1.0 Zachary McVicker\n";
+            script_text += "| Built with sCube Script Builder - ";
+            let today = new Date();
+            script_text += (today.getMonth()+1) +"/"
+                            + today.getDate() + "/"
+                            + today.getFullYear() + "\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| START: USER CONFIGURABLE PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "var emailText = \"\";\n";
+            script_text += "var showDebug = true;// Set to true to see debug messages in email confirmation\n";
+            script_text += "var maxSeconds = 60 * 5;// number of seconds allowed for batch processing, usually < 5*60\n";
+            script_text += "var showMessage = false;\n";
+            script_text += "var useAppSpecificGroupName = true;\n";
+            script_text += "var br = \"<BR>\";\n";
+            script_text += "var currentUserID = \"ADMIN\";\n";
+            script_text += "sysDate = aa.date.getCurrentDate();\n";
+            script_text += "batchJobResult = aa.batchJob.getJobID();\n";
+            script_text += "batchJobName = \"\" + aa.env.getValue(\"BatchJobName\");\n";
+            script_text += "wfObjArray = null;\n";
+            script_text += "batchJobID = 0;\n";
+            script_text += "if (batchJobResult.getSuccess()) \n";
+            script_text += "{\n";
+            script_text += "	batchJobID = batchJobResult.getOutput();\n";
+            script_text += "	logDebug(\"Batch Job \" + batchJobName + \" Job ID is \" + batchJobID + br);\n";
+            script_text += "}\n";
+            script_text += "else\n";
+            script_text += "{\n";
+            script_text += "	logDebug(\"Batch job ID not found \" + batchJobResult.getErrorMessage());\n";
+            script_text += "}\n";
+            script_text += "\n";
+            script_text += "eval(getScriptText(\"INCLUDES_ACCELA_FUNCTIONS\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_ACCELA_GLOBALS\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_CUSTOM\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"));\n";
+            script_text += "	\n";
+            script_text += "function getScriptText(vScriptName){\n";
+            script_text += "	vScriptName = vScriptName.toUpperCase();\n";
+            script_text += "	var emseBiz = aa.proxyInvoker.newInstance(\"com.accela.aa.emse.emse.EMSEBusiness\").getOutput();\n";
+            script_text += "	var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(),vScriptName);\n";
+            script_text += "	return emseScript.getScriptText() + \"\";	\n";
+            script_text += "}\n";
+            script_text += "/*----------------------------------------------------------------------------------------------------/\n";
+            script_text += "| Start: BATCH PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "var startDate = new Date();\n";
+            script_text += "var timeDate = new Date();\n";
+            script_text += "var startTime = timeDate.getTime();// Start timer\n";
+            script_text += "var systemUserObj = aa.person.getUser(\"ADMIN\").getOutput();\n";
+            script_text += "var timeExpired = false;\n";
+            script_text += "var emailAddress = \"\";//email to send report\n";
+            script_text += "var fromDate; \n";
+            script_text += "var toDate;\n";
+            script_text += "var statusCheck;\n";
+            script_text += "var statusSet;\n";
+            script_text += "var workAppStatus = \"\";\n";
+            script_text += "var childCapId;\n";
+            script_text += "var capId;\n";
+            script_text += "var altId;\n";
+            script_text += "var cap;\n";
+            script_text += "var appTypeResult;\n";
+            script_text += "var appTypeString;\n";
+            script_text += "var appTypeArray;\n";
+            script_text += "/*----------------------------------------------------------------------------------------------------/\n";
+            script_text += "| End: BATCH PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| <===========Main=Loop=================>\n";
+            script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
+            script_text += "logDebug(\"Run Date: \" + startDate);\n";
+            script_text += "var ateDate = new Date(dateAdd((startDate.getMonth() + 1) + \"/\" + startDate.getDate() + \"/\" + startDate.getFullYear(), "
+            script_text += this.props.state.batch.lic_only.range;
+            script_text += "));\n";
+            script_text += "fromDate = (ateDate.getMonth() + 1) + \"/\" + ateDate.getDate() + \"/\" + ateDate.getFullYear(); \n";
+            script_text += "toDate = (ateDate.getMonth() + 1) + \"/\" + ateDate.getDate() + \"/\" + ateDate.getFullYear();\n";
+            script_text += "statusCheck = \""
+            script_text += this.props.state.batch.lic_only.current_status;
+            script_text += "\";\n";
+            script_text += "statusSet = \""
+            script_text += this.props.state.batch.lic_only.new_status;
+            script_text += "\";\n";
+            script_text += "workAppStatus = \""
+            script_text += this.props.state.batch.lic_only.new_status;
+            script_text += "\";\n";
+            script_text += "\n";
+            script_text += "logDebug(\"Set currently \" + statusCheck + \" licenses to \" + statusSet + \" for date range -- From Date: \" + fromDate + \", To Date: \" + toDate + \".\" + br);\n";
+            script_text += "var expResult = aa.expiration.getLicensesByDate(statusCheck, fromDate, toDate);\n";
+            script_text += "if (expResult.getSuccess()) \n";
+            script_text += "{\n";
+            script_text += "	myExp = expResult.getOutput();\n";
+            script_text += "	logDebug(\"Processing \" + myExp.length + \" expiration records.\" + br);\n";
+            script_text += "}\n";
+            script_text += "else \n";
+            script_text += "{ \n";
+            script_text += "	logDebug(\"ERROR: Getting Expirations, reason is: \" + expResult.getErrorType() + \":\" + expResult.getErrorMessage()); \n";
+            script_text += "	return false;\n";
+            script_text += "}	\n";
+            script_text += "for (thisExp in myExp) \n";
+            script_text += "{	\n";
+            script_text += "	if (elapsed() > maxSeconds) \n";
+            script_text += "	{\n";
+            script_text += "		logDebug(\"A script timeout has caused partial completion of this process.  Please re-run.  \" + elapsed() + \" seconds elapsed, \" + maxSeconds + \" allowed.\");\n";
+            script_text += "		timeExpired = true;\n";
+            script_text += "		break;\n";
+            script_text += "	}	\n";
+            script_text += "	b1Exp = myExp[thisExp];\n";
+            script_text += "	var expDate = b1Exp.getExpDate();\n";
+            script_text += "	if (expDate) \n";
+            script_text += "	{	\n";
+            script_text += "		var b1ExpDate = expDate.getMonth() + \"/\" + expDate.getDayOfMonth() + \"/\" + expDate.getYear();\n";
+            script_text += "		var b1Status = b1Exp.getExpStatus();\n";
+            script_text += "		capId = aa.cap.getCapID(b1Exp.getCapID().getID1(),b1Exp.getCapID().getID2(),b1Exp.getCapID().getID3()).getOutput();   \n";
+        } else {
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| Program: "
+            script_text += this.props.state.batch.name;
+            script_text += ".js  Trigger: Batch\n";
+            script_text += "| Version 1.0 Zachary McVicker\n";
+            script_text += "| Built with sCube Script Builder - ";
+            let today = new Date();
+            script_text += (today.getMonth()+1) +"/"
+                            + today.getDate() + "/"
+                            + today.getFullYear() + "\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| START: USER CONFIGURABLE PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "var emailText = \"\";\n";
+            script_text += "var showDebug = true;// Set to true to see debug messages in email confirmation\n";
+            script_text += "var maxSeconds = 60 * 5;// number of seconds allowed for batch processing, usually < 5*60\n";
+            script_text += "var showMessage = false;\n";
+            script_text += "var useAppSpecificGroupName = false;\n";
+            script_text += "var br = \"<BR>\";\n";
+            script_text += "sysDate = aa.date.getCurrentDate();\n";
+            script_text += "batchJobResult = aa.batchJob.getJobID();\n";
+            script_text += "batchJobName = \"\" + aa.env.getValue(\"BatchJobName\");\n";
+            script_text += "batchJobID = 0;\n";
+            script_text += "if (batchJobResult.getSuccess()) \n";
+            script_text += "{\n";
+            script_text += "	batchJobID = batchJobResult.getOutput();\n";
+            script_text += "	logDebug(\"Batch Job \" + batchJobName + \" Job ID is \" + batchJobID + br);\n";
+            script_text += "}\n";
+            script_text += "else\n";
+            script_text += "{\n";
+            script_text += "	logDebug(\"Batch job ID not found \" + batchJobResult.getErrorMessage());\n";
+            script_text += "}\n";
+            script_text += "\n";
+            script_text += "eval(getScriptText(\"INCLUDES_ACCELA_FUNCTIONS\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_ACCELA_GLOBALS\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_CUSTOM\"));\n";
+            script_text += "eval(getScriptText(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"));\n";
+            script_text += "	\n";
+            script_text += "function getScriptText(vScriptName){\n";
+            script_text += "	vScriptName = vScriptName.toUpperCase();\n";
+            script_text += "	var emseBiz = aa.proxyInvoker.newInstance(\"com.accela.aa.emse.emse.EMSEBusiness\").getOutput();\n";
+            script_text += "	var emseScript = emseBiz.getMasterScript(aa.getServiceProviderCode(),vScriptName);\n";
+            script_text += "	return emseScript.getScriptText() + \"\";	\n";
+            script_text += "}\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| START: END CONFIGURABLE PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "\n";
+            script_text += "/*----------------------------------------------------------------------------------------------------/\n";
+            script_text += "| Start: BATCH PARAMETERS\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "var message = \"\";\n";
+            script_text += "var startDate = new Date();\n";
+            script_text += "var startTime = startDate.getTime(); // Start timer\n";
+            script_text += "var todayDate = \"\" + startDate.getFullYear() + \"-\" + (startDate.getMonth() + 1) + \"-\" + startDate.getDate();\n";
+            script_text += "var rtArray = ["
+            for (let s in this.props.state.batch.structures) {
+                if (s !== "1") {
+                    script_text += ", ";
+                }
+                let struct = this.props.state.batch.structures[s];
+                script_text += "\""
+                script_text += struct.module + "/";
+                script_text += struct.type + "/";
+                script_text += struct.subtype + "/";
+                script_text += struct.category + "\"";
+            }
+            script_text += "];\n";
+            script_text += "/*----------------------------------------------------------------------------------------------------/\n";
+            script_text += "| End: BATCH PARAMETERS//\n";
+            script_text += "/------------------------------------------------------------------------------------------------------*/\n";
+            script_text += "\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| <===========Main=Loop================>\n";
+            script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
+            script_text += "try \n";
+            script_text += "{\n";
+            script_text += "	for (var i in rtArray) \n";
+            script_text += "	{\n";
+            script_text += "		var thisType = rtArray[i];\n";
+            script_text += "		var capModel = aa.cap.getCapModel().getOutput();\n";
+            script_text += "		var appTypeArray = thisType.split(\"/\");\n";
+            script_text += "		// Specify the record type to query\n";
+            script_text += "		capTypeModel = capModel.getCapType();\n";
+            script_text += "		capTypeModel.setGroup(appTypeArray[0]);\n";
+            script_text += "		capTypeModel.setType(appTypeArray[1]);\n";
+            script_text += "		capTypeModel.setSubType(appTypeArray[2]);\n";
+            script_text += "		capTypeModel.setCategory(appTypeArray[3]);\n";
+            script_text += "		capModel.setCapType(capTypeModel);\n";
+            script_text += "		//capModel.setCapStatus(sArray[i]); if needed\n";
+            script_text += "\n";
+            script_text += "		var recordListResult = aa.cap.getCapIDListByCapModel(capModel);\n";
+            script_text += "		if (!recordListResult.getSuccess()) \n";
+            script_text += "		{\n";
+            script_text += "			logDebug(\"**ERROR: Failed to get capId List : \" + recordListResult.getErrorMessage());\n";
+            script_text += "			continue;\n";
+            script_text += "		}\n";
+            script_text += "		var recArray = recordListResult.getOutput();\n";
+            script_text += "		logDebug(\"Looping through \" + recArray.length + \" records of type \" + thisType);\n";
+            script_text += "\n";
+            script_text += "		for (var j in recArray) \n";
+            script_text += "		{\n";
+            script_text += "			capId = aa.cap.getCapID(recArray[j].getID1(), recArray[j].getID2(), recArray[j].getID3()).getOutput();\n";
+            script_text += "\n";
+        }
+    }
+
+    generateBatchScriptEnd = () => {
+        if (this.props.state.batch.use_lic) {
+            script_text += "\n";
+            script_text += "		altId = capId.getCustomID();\n";
+            script_text += "		cap = aa.cap.getCap(capId).getOutput();	\n";
+            script_text += "		if (cap) \n";
+            script_text += "		{\n";
+            script_text += "			appTypeResult = cap.getCapType();\n";
+            script_text += "			appTypeString = appTypeResult.toString();\n";
+            script_text += "			appTypeArray = appTypeString.split(\"/\");\n";
+            script_text += "			if(appTypeArray[0] == \"Licenses\" && appTypeArray[1] == \"Contractor Registration\" && appTypeArray[2] == \"Registration\" && appTypeArray[3] == \"NA\") \n";
+            script_text += "			{\n";
+            script_text += "				logDebug(\"<b>\" + altId + \"</b>\");\n";
+            script_text += "				logDebug(\"Registration: \" + appTypeArray[1]);\n";
+            script_text += "				b1Exp.setExpStatus(statusSet);\n";
+            script_text += "				aa.expiration.editB1Expiration(b1Exp.getB1Expiration());\n";
+            script_text += "				updateAppStatus(workAppStatus, \"Set to \" + workAppStatus + \" by batch process.\");\n";
+            script_text += "				updateTask(\"Registration Status\", workAppStatus, \"Updated by renewal batch\", \"Updated by renewal batch\", \"LIC_CON\", capId);\n";
+            script_text += "			} \n";
+            script_text += "		}\n";
+            script_text += "	}\n";
+            script_text += "}\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| <===========END=Main=Loop================>\n";
+            script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
+        } else {
+            script_text += "            \n";
+            script_text += "		}\n";
+            script_text += "	}\n";
+            script_text += "} \n";
+            script_text += "catch (err) \n";
+            script_text += "{\n";
+            script_text += "	logDebug(\"**ERROR** runtime error \" + err.message + \" at \" + err.lineNumber + \" stack: \" + err.stack);\n";
+            script_text += "}\n";
+            script_text += "logDebug(\"End of Job: Elapsed Time : \" + elapsed() + \" Seconds\");\n";
+            script_text += "/*------------------------------------------------------------------------------------------------------/\n";
+            script_text += "| <===========END=Main=Loop================>\n";
+            script_text += "/-----------------------------------------------------------------------------------------------------*/\n";
+        }
     }
 
     parseParameters(initialTab=0) {
@@ -351,7 +646,7 @@ class CORE_GenerateOutput extends Component {
                     let param_name = "set"+sets[s].key+"_p"+param.key+"_"+param_ref;
                     this.appendScript(set_tab,"var "+param_name+" = "+param.script+";")
                 }
-                this.appendScript(set_tab,""); //Blank Line
+                this.appendScript(set_tab," "); //Blank Line
                 //Add to hash
                 for (let p in sets[s].parameters) {
                     let param = sets[s].parameters[p];
@@ -364,7 +659,7 @@ class CORE_GenerateOutput extends Component {
                         this.appendScript(set_tab,hash_name+".put(\""+param.ref+"\", "+param_name+");");
                     }
                 }
-                this.appendScript(set_tab,""); //Blank Line
+                this.appendScript(set_tab," "); //Blank Line
             }
         }
     }
@@ -431,8 +726,15 @@ class CORE_GenerateOutput extends Component {
             }
         } else {
             //Parse everything individually
+            //New Records
+            if (this.props.state.functionality.new_record === true) {
+                for (let r in this.props.state.new_records) {
+                    this.appendScript(set_tab, this.genRecordText(r, set_tab));
+                }
+            }
+
             //StatusItem
-            if (this.props.state.functionality.status === true) {
+            if (this.props.state.functionality.status_update === true) {
                 for (let s in this.props.state.status) {
                     this.appendScript(set_tab, this.genStatusText(s));
                 }
@@ -441,7 +743,7 @@ class CORE_GenerateOutput extends Component {
             //Fees
             if (this.props.state.functionality.fees === true) {
                 for (let f in this.props.state.fees) {
-                    this.appendScript(set_tab, this.genFeeText(f));
+                    this.appendScript(set_tab, this.genFeeText(f, set_tab));
                 }
             }
 
@@ -462,11 +764,18 @@ class CORE_GenerateOutput extends Component {
             //Inspections
             if (this.props.state.functionality.inspections === true) {
                 for (let i in this.props.state.inspections) {
-                    this.appendScript(set_tab, this.genInspectionText(i));
+                    this.appendScript(set_tab, this.genInspectionText(i, set_tab));
                 }
             }
 
-            //Cancels
+            //ASIs
+            if (this.props.state.functionality.asi === true) {
+                for (let a in this.props.state.asis) {
+                    this.appendScript(set_tab, this.genASIText(a));
+                }
+            }
+
+            //Cancels: THIS SHOULD ALWASY BE THE LAST ONE
             if (this.props.state.functionality.cancel === true
                 && ((this.props.state.event_type
                 && ["ASB", "IRSB", "WTUB"].includes(this.props.state.event_type))
@@ -477,13 +786,8 @@ class CORE_GenerateOutput extends Component {
                 }
             }
 
-            //ASIs
-            if (this.props.state.functionality.asi === true) {
-                for (let a in this.props.state.asis) {
-                    this.appendScript(set_tab, this.genASIText(a));
-                }
-            }
         }
+        //Conditions or Not
     }
 
     parseAction = (tab, action, optional=false) => {
@@ -510,7 +814,7 @@ class CORE_GenerateOutput extends Component {
                 break;
             }
             case "Inspection": {
-                action_text = this.genInspectionText(action[1]);
+                action_text = this.genInspectionText(action[1], tab);
                 break;
             }
             case "Cancelation": {
@@ -519,6 +823,10 @@ class CORE_GenerateOutput extends Component {
             }
             case "ASI": {
                 action_text = this.genASIText(action[1], tab);
+                break;
+            }
+            case "New Record": {
+                action_text = this.genRecordText(action[1], tab);
                 break;
             }
             default: return null;
@@ -625,13 +933,16 @@ class CORE_GenerateOutput extends Component {
         return work_text;
     }
 
-    genInspectionText = insp_num => {
+    genInspectionText = (insp_num, tab="") => {
         let insp_text = "";
         if (this.props.state.functionality.inspections === true) {
             let insp = this.props.state.inspections[insp_num];
-            insp_text += "scheduleInspection(\""
-                        + insp.type + "\", "
-                        + insp.days_out + ");";
+            //scheduleInspectDate("Dumpster Inspection",  nextWorkDay(dateAdd(r,30)), "JCLARK4", null, "Scheduled by Script");
+            insp_text += "var n = aa.date.getCurrentDate();\n"
+	        insp_text += tab + "var r = dateFormatted(n.getMonth(), n.getDayOfMonth(), n.getYear(), \"MM/DD/YYYY\");\n"
+            insp_text += tab + "scheduleInspectDate(\""
+                        + insp.type + "\", nextWorkDay(dateAdd(r, "
+                        + insp.days_out + "));";
         }
         return insp_text;
     }
@@ -648,17 +959,15 @@ class CORE_GenerateOutput extends Component {
             if (!setup) {
                 cancel_text += "cancel = true;\n";
                 cancel_text += tab + "showMessage = true;\n";
-                cancel_text += tab + "comment = \"" + cancel.message + "\\n\";";
+                cancel_text += tab + "var sCube_comment = \"" + cancel.message + "\\n\";";
             } else {
-                cancel_text += "comment += \"" + cancel.message + "\\n\";";
+                cancel_text += "sCube_comment += \"" + cancel.message + "\\n\";";
             }
         }
         return cancel_text;
     }
 
     cancelIsSetup(check, myId) {
-        console.log(check);
-        console.log(myId);
         if (myId) {
             //Check if this is the first action of this level
             if (!(check.actions[Object.keys(check.actions)[0]] === myId)) {
@@ -668,18 +977,33 @@ class CORE_GenerateOutput extends Component {
 
         //Do I have a parent?
         let myParent = _.initial(check.key.split(".")).join(".");
-        console.log(myParent);
         if (!myParent) {
             return false;
         } else {
             //Does my parent set it up?
             for (let a in this.props.state.conditions[myParent].actions) {
-                console.log(a);
                 if (this.props.state.conditions[myParent].actions[a].split("-")[0] === "Cancelation") return true;
             }
             //How about their parent?
             return this.cancelIsSetup(this.props.state.conditions[myParent], null)
         }
+    }
+
+    genCancelExtra(tab="") {
+        if (!this.props.state.functionality.cancel) return null;
+        let extra_text = "if (cancel) comment(sCube_comment);";
+        return extra_text;
+    }
+
+    cancelIsUsed() {
+        if (this.props.state.functionality.conditions === false) return true;
+        let tree = _.cloneDeep(this.props.state.conditions);
+        for (let c in tree) {
+            for (let a in tree[c].actions) {
+                if (tree[c].actions[a].split("-")[0] === "Cancelation") return true;
+            }
+        }
+        return false;
     }
 
     genASIText = (asi_num) => {
@@ -691,6 +1015,53 @@ class CORE_GenerateOutput extends Component {
                         + asi.value + "\");";
         }
         return asi_text;
+    }
+
+    genRecordText = (rec_num, tab="") => {
+        let rec_text = "";
+        if (this.props.state.functionality.new_record === true) {
+            let rec = this.props.state.new_records[rec_num];
+            rec_text += "var new_record_" + rec.key + " = createCap(\""
+                        + rec.structure.module + "/"
+                        + rec.structure.type + "/"
+                        + rec.structure.subtype + "/"
+                        + rec.structure.category + "\", \"\");";
+
+            switch (rec.relationship) {
+                case "parent": {
+                    rec_text += "\n" + tab + "aa.cap.createAppHierarchy(new_record_" + rec.key + " , capId)";
+                    break;
+                }
+                case "child": {
+                    rec_text += "\n" + tab + "aa.cap.createAppHierarchy(capId, new_record_" + rec.key + ")";
+                    break;
+                }
+                default: break;
+            }
+
+            if (rec.copy_data.asi) {
+                rec_text += "\n" + tab + "copyAppSpecificInfoForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.asit) {
+                rec_text += "\n" + tab + "copyAppSpecificTableForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.contacts) {
+                rec_text += "\n" + tab + "copyPeopleForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.address) {
+                rec_text += "\n" + tab + "copyAddressForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.parcel) {
+                rec_text += "\n" + tab + "copyParcelForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.owners) {
+                rec_text += "\n" + tab + "copyOwnerForLic(capId, new_record_" + rec.key + ");";
+            }
+            if (rec.copy_data.Professionals) {
+                rec_text += "\n" + tab + "copyLicenseProfessionalForLic(capId, new_record_" + rec.key + ");";
+            }
+        }
+        return rec_text;
     }
 
     render() {
@@ -711,7 +1082,7 @@ class CORE_GenerateOutput extends Component {
             </div> : null }
             {this.props.state.mode === "pageflow" ? <div>
             </div> : null }
-            <textarea rows="20" cols="100" value={this.generateHelper()} readOnly={true} />
+            <textarea rows="20" style={{width: "100%"}} value={this.generateHelper()} readOnly={true} />
         </div>
         );
     }

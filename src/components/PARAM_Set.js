@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Table from "react-bootstrap/Table"
 import Form from "react-bootstrap/Form";
-
 import ParamItem from "./PARAM_Item.js";
 
 class PARAM_Container extends Component {
@@ -20,7 +21,7 @@ class PARAM_Container extends Component {
     }
 
     handleChange(event) {
-        let newSets = this.props.parameter_sets;
+        let newSets = _.cloneDeep(this.props.parameter_sets);
         let id = event.target.id.split(".");
         if (id[0] === "name") {
             newSets[this.props.set_number].name = event.target.value;
@@ -44,19 +45,6 @@ class PARAM_Container extends Component {
         }
         return items;
     }
-
-    // genLevels() {
-    //     let levels = 0;
-    //     for (let p in this.props.parameter_sets[this.props.set_number].parameters) {
-    //         levels = Math.max(levels,Object.keys(this.props.parameter_sets[this.props.set_number].parameters[p]).length);
-    //     }
-    //     levels-=3;
-    //     let headers = [];
-    //     for (let i=1; i<=levels;i++) {
-    //         headers.push(<th key={i}>Level{"\n"}{i}</th>);
-    //     }
-    //     return headers;
-    // }
 
     render() {
         return (

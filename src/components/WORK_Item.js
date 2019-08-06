@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash"
+
 import Form from "react-bootstrap/Form";
 
 class WORK_Item extends Component {
@@ -10,7 +12,7 @@ class WORK_Item extends Component {
     }
 
     handleChange(event) {
-        let newWorkflows = this.props.workflows;
+        let newWorkflows = _.cloneDeep(this.props.workflows);
         let newValue = event.target.value;
         newWorkflows[this.props.work_number][event.target.id] = newValue;
         this.props.update({
@@ -53,7 +55,7 @@ class WORK_Item extends Component {
                     Delete
                 </button>
             </td>
-            : <td></td>}
+            : null}
         </tr>
         );
     }

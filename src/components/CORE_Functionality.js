@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form'
-
 import { connect } from "react-redux";
+import _ from "lodash";
+
+import Form from 'react-bootstrap/Form';
 
 class CORE_Function extends Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class CORE_Function extends Component {
     }
 
     handleChange(event) {
-        let newFunctionality = this.props.functionality;
+        let newFunctionality = _.cloneDeep(this.props.functionality);
         newFunctionality[event.target.id] = event.target.checked;
         this.props.update({
             functionality: newFunctionality
@@ -30,19 +31,20 @@ class CORE_Function extends Component {
                 <Form.Label>
                     Please select what you would like this script to do:
                 </Form.Label>
-                    <Form.Check id="status_update" type="checkbox" label="Update the Status" onChange={this.handleChange}/>
-                    <Form.Check id="asi" type="checkbox" label="Edit ASI" onChange={this.handleChange}/>
-                    <Form.Check id="fees" type="checkbox" label="Add a Fee" onChange={this.handleChange}/>
-                    <Form.Check id="notifications" type="checkbox" label="Send a Notification" onChange={this.handleChange}/>
-                    <Form.Check id="workflow" type="checkbox" label="Change the Workflow" onChange={this.handleChange}/>
-                    <Form.Check id="inspections" type="checkbox" label="Schedule an Inspection" onChange={this.handleChange}/>
-                    {(this.props.event_type && ["ASB", "IRSB", "WTUB"].includes(this.props.event_type)) || this.props.mode === "pageflow" ?
-                        <Form.Check id="cancel" type="checkbox" label="Prevent Submission/Action" onChange={this.handleChange}/>
-                    : null}
-                    {this.props.mode === "pageflow" ?
-                        <Form.Check id="pageflow_documents" type="checkbox" label="Something about pageflow docs, not sure" onChange={this.handleChange}/>
-                    : null}
-                <br/>
+                <Form.Check id="status_update" type="checkbox" label="Update the Status" onChange={this.handleChange}/>
+                <Form.Check id="asi" type="checkbox" label="Edit ASI" onChange={this.handleChange}/>
+                <Form.Check id="fees" type="checkbox" label="Add a Fee" onChange={this.handleChange}/>
+                <Form.Check id="notifications" type="checkbox" label="Send a Notification" onChange={this.handleChange}/>
+                <Form.Check id="workflow" type="checkbox" label="Change the Workflow" onChange={this.handleChange}/>
+                <Form.Check id="inspections" type="checkbox" label="Schedule an Inspection" onChange={this.handleChange}/>
+                <Form.Check id="new_record" type="checkbox" label="Create a new Record" onChange={this.handleChange}/>
+                {(((this.props.event_type && ["ASB", "IRSB", "WTUB"].includes(this.props.event_type)) || this.props.mode === "pageflow") && this.props.mode !== "batch_script") ?
+                    <Form.Check id="cancel" type="checkbox" label="Prevent Submission/Action" onChange={this.handleChange}/>
+                : null}
+                {this.props.mode === "pageflow" ?
+                    <Form.Check id="pageflow_documents" type="checkbox" label="PLACEHOLDER FOR PAGEFLOW DOCUMENTS" onChange={this.handleChange}/>
+                : null}
+                <hr/>
                 <Form.Label>
                     Should this script use conditions?
                 </Form.Label>

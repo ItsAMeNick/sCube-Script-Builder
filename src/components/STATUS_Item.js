@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Form from "react-bootstrap/Form";
 
 class STATUS_Item extends Component {
@@ -10,7 +12,7 @@ class STATUS_Item extends Component {
     }
 
     handleChange(event) {
-        let newStatus = this.props.status;
+        let newStatus = _.cloneDeep(this.props.status);
         let newValue = event.target.value;
         if (event.target.id === "optional_cap") {
             newValue = event.target.checked;
@@ -48,7 +50,7 @@ class STATUS_Item extends Component {
                     Delete
                 </button>
             </td>
-            : <td></td>}
+            : null}
         </tr>
         );
     }
