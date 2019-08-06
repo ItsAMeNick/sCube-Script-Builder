@@ -883,7 +883,9 @@ class CORE_GenerateOutput extends Component {
         if (this.props.state.functionality.notifications === true) {
             let note = this.props.state.notifications[note_num];
             let contacts = note.contacts;
+            if (!contacts) contacts = "\"\"";
             let professionals = note.professionals;
+            if (!professionals) professionals = "\"\"";
             let reportName = null;
             if (this.props.state.notifications[note_num].report_name) {
                 reportName = "\""+this.props.state.notifications[note_num].report_name+"\"";
@@ -895,12 +897,12 @@ class CORE_GenerateOutput extends Component {
             let reportParameter = null;
             if (this.props.state.notifications[note_num].report_parameters) {
                 let params = this.props.state.parameter_sets[this.props.state.notifications[note_num].report_parameters];
-                reportParameter = "set_" + params.key + "_" + params.name;
+                reportParameter = "set_" + params.key + "_" + params.name.replace(/\W/g, '_');
             }
             let emailParams = null;
             if (this.props.state.notifications[note_num].email_params) {
                 let params = this.props.state.parameter_sets[this.props.state.notifications[note_num].email_params];
-                emailParams = "set_" + params.key + "_" + params.name;
+                emailParams = "set_" + params.key + "_" + params.name.replace(/\W/g, '_');
             }
             note_text += "sendNotificationSCUBE(\"" + note.template + "\", "
                                                 + "\"" + note.from + "\", "
@@ -1082,7 +1084,7 @@ class CORE_GenerateOutput extends Component {
             </div> : null }
             {this.props.state.mode === "pageflow" ? <div>
             </div> : null }
-            <textarea rows="20" style={{width: "100%"}} value={this.generateHelper()} readOnly={true} />
+            <textarea rows="20" className="output" style={{width: "100%", fontFamily: "\"Courier New\", Courier, monospace"}} value={this.generateHelper()} readOnly={true} />
         </div>
         );
     }
