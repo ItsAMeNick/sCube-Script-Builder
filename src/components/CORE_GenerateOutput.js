@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import _ from "lodash";
 
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { vs } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
 var script_text = "";
 
 class CORE_GenerateOutput extends Component {
@@ -626,7 +629,7 @@ class CORE_GenerateOutput extends Component {
 
     parseParameters(initialTab=0) {
         let set_tab = "\t".repeat(initialTab);
-        if (this.props.state.functionality.notifications) {
+        if (this.props.state.functionality.notifications || this.props.state.functionality.report) {
             let sets = this.props.state.parameter_sets;
             for (let s in sets) {
                 this.appendScript(set_tab, "//Generating the Hashtable for Set: "+sets[s].key+", Named: "+sets[s].name+", Style: "+sets[s].style);
@@ -754,6 +757,13 @@ class CORE_GenerateOutput extends Component {
                 }
             }
 
+            //Reports
+            if (this.props.state.functionality.report === true) {
+                for (let r in this.props.state.reports) {
+                    this.appendScript(set_tab, this.genReportText(r));
+                }
+            }
+
             //Workflows
             if (this.props.state.functionality.workflow === true) {
                 for (let w in this.props.state.workflows) {
@@ -807,6 +817,10 @@ class CORE_GenerateOutput extends Component {
             }
             case "Notification": {
                 action_text = this.genNoteText(action[1]);
+                break;
+            }
+            case "Report": {
+                action_text = this.genReportText(action[1]);
                 break;
             }
             case "Workflow": {
@@ -915,6 +929,22 @@ class CORE_GenerateOutput extends Component {
                                                 + emailParams + ");";
         }
         return note_text;
+    }
+
+    genReportText = report_num => {
+        let report_text = "";
+        if (this.props.state.functionality.report === true) {
+            let report = this.props.state.reports[report_num];
+            let reportParameter = null;
+            if (report.parameters) {
+                let params = this.props.state.parameter_sets[report.parameters];
+                reportParameter = "set_" + params.key + "_" + params.name.replace(/\W/g, '_');
+            }
+            report_text += "generateReport(capId, \"" + report.name + "\", "
+                                                + "\"" + report.module + "\", "
+                                                + reportParameter + ");";
+        }
+        return report_text;
     }
 
     genWorkText = work_num => {
@@ -1084,7 +1114,13 @@ class CORE_GenerateOutput extends Component {
             </div> : null }
             {this.props.state.mode === "pageflow" ? <div>
             </div> : null }
-            <textarea rows="20" style={{width: "100%", fontFamily: "\"Courier New\", Courier, monospace"}} value={this.generateHelper()} readOnly={true} />
+            <textarea rows="10" style={{width: "100%", fontFamily: "\"Courier New\", Courier, monospace", "tabSize": 2}} value={this.generateHelper()} readOnly={true} />
+            <hr/>
+            <div style={{"border": "darkgrey solid 1px"}}>
+                <SyntaxHighlighter language="javascript" showLineNumbers style={vs}>
+                  {this.generateHelper()}
+                </SyntaxHighlighter>
+            </div>
         </div>
         );
     }
