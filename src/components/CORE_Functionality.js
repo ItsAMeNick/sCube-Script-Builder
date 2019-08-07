@@ -38,6 +38,7 @@ class CORE_Function extends Component {
                 <Form.Check id="workflow" type="checkbox" label="Change the Workflow" onChange={this.handleChange}/>
                 <Form.Check id="inspections" type="checkbox" label="Schedule an Inspection" onChange={this.handleChange}/>
                 <Form.Check id="new_record" type="checkbox" label="Create a new Record" onChange={this.handleChange}/>
+                <Form.Check id="report" type="checkbox" label="Generate a Report" onChange={this.handleChange}/>
                 {(((this.props.event_type && ["ASB", "IRSB", "WTUB"].includes(this.props.event_type)) || this.props.mode === "pageflow") && this.props.mode !== "batch_script") ?
                     <Form.Check id="cancel" type="checkbox" label="Prevent Submission/Action" onChange={this.handleChange}/>
                 : null}

@@ -52,7 +52,8 @@ const initialState = {
         inspections: false,
         cancel: false,
         pageflow_documents: false,
-        new_record: false
+        new_record: false,
+        report: false,
     },
     status: {
         "1": {
@@ -126,6 +127,14 @@ const initialState = {
             report_parameters: null,
             report_module: null,
             email_params: null
+        }
+    },
+    reports: {
+        "1": {
+            key: 1,
+            name: "",
+            module: "",
+            parameters: null
         }
     },
     workflows: {
@@ -406,6 +415,39 @@ const sCubeReducer = (state = initialState, action) => {
             return newState;
         }
         delete newState.notifications[action.payload]
+        return newState;
+    }
+
+    //Reports
+    case "update_reports": {
+        let newState = _.cloneDeep(state);
+        newState.reports = action.payload.reports;
+        return newState;
+    }
+    case "add_report": {
+        let newState = _.cloneDeep(state);
+        let report_codes = Object.keys(state.reports);
+        let m = 0;
+        for (let s in report_codes) {
+            m = Math.max(m,state.reports[report_codes[s]].key);
+        }
+        m+=1;
+        newState.reports[m] =
+            {
+                key: m,
+                name: "",
+                module: "",
+                parameters: false
+            }
+        return newState;
+    }
+    case "delete_report": {
+        let newState = _.cloneDeep(state);
+        //Safeguard, should be prevented by the REPORT_Item
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.reports[action.payload]
         return newState;
     }
 

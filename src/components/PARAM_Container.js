@@ -33,7 +33,7 @@ class PARAM_Container extends Component {
 }
 
 const mapStateToProps = state => ({
-    isOn: state.functionality.notifications,
+    isOn: (state.functionality.notifications || state.functionality.report),
     parameter_sets: state.parameter_sets
 });
 
