@@ -19,15 +19,12 @@ class CONDIT_Item extends Component {
     handleChange(event) {
         let newConditions = _.cloneDeep(this.props.conditions);
 
-        //Clear some things
-        newConditions[this.props.id].comparison_x = null;
-        newConditions[this.props.id].free = "";
-
         let type = event.target.id.split("-")[0];
         newConditions[this.props.id][type] = event.target.value;
 
         if (this.props.conditions[this.props.id].portlet === "ACA Document Name") {
             document.getElementById("comparison_y-"+this.props.id).readOnly = true;
+            document.getElementById("comparison_y-"+this.props.id).value = "";
             document.getElementById("comparison_y-"+this.props.id).placeholder = "NA";
         } else {
             document.getElementById("comparison_y-"+this.props.id).readOnly = false;
@@ -41,6 +38,12 @@ class CONDIT_Item extends Component {
             level = 0;
         } else if (type[0] === "x") {
             level = parseInt(event.target.id.split(".")[1]);
+        }
+
+        if (type === "portlet") {
+            // Clear some things
+            newConditions[this.props.id].comparison_x = null;
+            newConditions[this.props.id].free = "";
         }
 
         //Do the map clearing

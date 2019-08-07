@@ -42,7 +42,7 @@ class CORE_Function extends Component {
                     <Form.Check id="cancel" type="checkbox" label="Prevent Submission/Action" onChange={this.handleChange}/>
                 : null}
                 {this.props.mode === "pageflow" ?
-                    <Form.Check id="pageflow_documents" type="checkbox" label="PLACEHOLDER FOR PAGEFLOW DOCUMENTS" onChange={this.handleChange}/>
+                    null
                 : null}
                 <hr/>
                 <Form.Label>
