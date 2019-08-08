@@ -61,6 +61,13 @@ class CONDIT_Action extends Component {
             }
         }
 
+        //Gather Reports
+        if (this.props.functionality.report) {
+            for (let r in this.props.reports)  {
+                actions.push("Report-"+this.props.reports[r].key);
+            }
+        }
+
         //Gather Workflows
         if (this.props.functionality.workflow) {
             for (let w in this.props.workflows)  {
@@ -133,7 +140,8 @@ const mapStateToProps = state => ({
     workflows: state.workflows,
     inspections: state.inspections,
     cancels: state.cancels,
-    asis: state.asis
+    asis: state.asis,
+    reports: state.reports
 });
 
 const mapDispatchToProps = dispatch => ({
