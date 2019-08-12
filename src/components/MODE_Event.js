@@ -47,7 +47,7 @@ class CORE_Event extends Component {
                 <option value="ASB">ASB - Before an application can be submitted.</option>
                 <option value="CTRCA">CTRCA - After a record is assigned its CAP.</option>
                 <option value="IRSA">IRSA - After inspection results have been submitted.</option>
-                <option value="IRSB">IRSB - Before inspcetion results can be submitted.</option>
+                <option value="IRSB">IRSB - Before inspection results can be submitted.</option>
                 <option value="PRA">PRA - After a payment is made.</option>
                 <option value="WTUA">WTUA - After the workflow has advanced.</option>
                 <option value="WTUB">WTUB - Before the workflow is able to advance.</option>
