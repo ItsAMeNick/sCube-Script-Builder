@@ -975,7 +975,7 @@ class CORE_GenerateOutput extends Component {
 	        insp_text += tab + "var r = dateFormatted(n.getMonth(), n.getDayOfMonth(), n.getYear(), \"MM/DD/YYYY\");\n"
             insp_text += tab + "scheduleInspectDate(\""
                         + insp.type + "\", nextWorkDay(dateAdd(r, "
-                        + insp.days_out + "));";
+                        + insp.days_out + ")));";
         }
         return insp_text;
     }
@@ -1146,7 +1146,24 @@ class CORE_GenerateOutput extends Component {
                 this.appendScript(set_tab, condition_start);
                 this.appendScript(set_tab, "{");
 
-                let message_x = conditions[c].portlet + ": ";
+                let message_x = "";
+
+                if (conditions[c].portlet === "Event Specific") {
+                    if (["ASA", "ASB"].includes(this.props.state.event_type)) {
+                        message_x += "Application Information: ";
+                    } else if (["CTRCA"].includes(this.props.state.event_type)) {
+                        message_x += "CAP Information: ";
+                    } else if (["IRSA", "IRSB"].includes(this.props.state.event_type)) {
+                        message_x += "Inspection Information: ";
+                    } else if (["PRA"].includes(this.props.state.event_type)) {
+                        message_x += "Payment Information: ";
+                    } else if (["WTUA","WTUB"].includes(this.props.state.event_type)) {
+                        message_x += "Workflow Information: ";
+                    }
+                } else {
+                    message_x += conditions[c].portlet + ": ";
+                }
+
                 let keys = Object.keys(conditions[c]).filter(k => {
                     return (
                         (k.includes("type") && !k.includes("comparison"))
@@ -1166,28 +1183,28 @@ class CORE_GenerateOutput extends Component {
                 switch(conditions[c].comparison_type) {
                     case "==": {message_c = "equal to"; break;}
                     case "!=": {message_c = "not equal to"; break;}
-                    case ">": {message_c = "greater than, but not equal to"; break;}
+                    case ">": {message_c = "greater than but not equal to"; break;}
                     case ">=": {message_c = "greater than or equal to"; break;}
                     case "<=": {message_c = "less than or equal to"; break;}
-                    case "<": {message_c = "less than, but not equal to"; break;}
+                    case "<": {message_c = "less than but not equal to"; break;}
                     case "Attached": {message_c = "attached to the record"; break;}
-                    case "Not Attached": {message_c = "attached to the record"; break;}
+                    case "Not Attached": {message_c = "not attached to the record"; break;}
                     default: break;
                 }
 
-                this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+good_color+"'>"+message_x+" was "+message_c+" "+conditions[c].comparison_y+".</h4>\";");
+                this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+good_color+"'>"+set_tab.replace("\t", "").replace(/\t/g, "--")+message_x+" was "+message_c+" "+conditions[c].comparison_y+".</h4>\";");
 
                 for (let a in conditions[c].actions) {
-                    this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+good_color+"'> Action Fired: "+conditions[c].actions[a]+"</h4>\";");
+                    this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+good_color+"'>"+set_tab_in.replace("\t", "").replace(/\t/g, "--")+"Action Fired: "+this.action2Debug(conditions[c].actions[a])+"</h4>\";");
                 }
 
                 this.genDebugLogger(level+1, conditions[c].key, initialTab);
 
                 this.appendScript(set_tab, "} else {");
-                this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+bad_color+"'>"+message_x+" was NOT "+message_c+" "+conditions[c].comparison_y+".</h4>\";");
+                this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+bad_color+"'>"+set_tab.replace("\t", "").replace(/\t/g, "--")+message_x+" was NOT "+message_c+" "+conditions[c].comparison_y+".</h4>\";");
 
                 for (let a in conditions[c].actions) {
-                    this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+bad_color+"'> Action Skipped: "+conditions[c].actions[a]+"</h4>\";");
+                    this.appendScript(set_tab_in, "log_message += \"<h4 style='color:"+bad_color+"'>"+set_tab_in.replace("\t", "").replace(/\t/g, "--")+"Action Skipped: "+this.action2Debug(conditions[c].actions[a])+"</h4>\";");
                 }
 
                 this.appendScript(set_tab, "}");
@@ -1200,8 +1217,49 @@ class CORE_GenerateOutput extends Component {
         if (!parent) script_text += set_tab + "logDebug(log_message);\n"
     }
 
-    genDebugHelper() {
-
+    action2Debug(action) {
+        let type = action.split("-")[0];
+        let ref = action.split("-")[1];
+        switch(type) {
+            case "Status": {
+                let mes = "Updating application status to <i>" + this.props.state.status[ref].label + "</i>.";
+                return mes;
+            }
+            case "Fee": {
+                let mes = "Updating the fee <i>" + this.props.state.fees[ref].schedule + "::" + this.props.state.fees[ref].code + "</i> to have a quantity of <i>" + this.props.state.fees[ref].quantity + "</i>.";
+                return mes;
+            }
+            case "Notification": {
+                let mes = "Sending notification named <i>"+this.props.state.notifications[ref].template+"</i>.";
+                return mes;
+            }
+            case "Report": {
+                let mes = "Generating report named <i>" + this.props.state.reports[ref].name + "</i> from the <i>" + this.props.state.reports[ref].module + "</i> module.";
+                return mes;
+            }
+            case "Workflow": {
+                let mes = "<i>"+this.props.state.workflows[ref].action+"ing</i> workflow task <i>"+this.props.state.workflows[ref].task+"</i>.";
+                return mes;
+            }
+            case "Inspection": {
+                let mes = "Scheduling inspection <i>"+this.props.state.inspections[ref].type+" "+this.props.state.inspections[ref].days_out+"</i> days from now.";
+                return mes;
+            }
+            case "Cancelation": {
+                let mes = "Stopping application from progressing.";
+                return mes;
+            }
+            case "ASI": {
+                let mes = "Updating the custom field, <i>"+this.props.state.asis[ref].name+"</i> to <i>"+this.props.state.asis[ref].value+"</i>.";
+                return mes;
+            }
+            case "New Record": {
+                let copied_portlets = Object.keys(this.props.state.new_records[ref].copy_data).filter(k=>this.props.state.new_records[ref].copy_data[k]).join(", ");
+                let mes = "Creating a <i>"+this.props.state.new_records[ref].relationship+"</i> record.  Copying the data from: <i>"+copied_portlets+"</i>.";
+                return mes;
+            }
+            default: return "Invalid";
+        }
     }
 
     render() {
