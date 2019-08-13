@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import _ from "lodash";
 
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { vs } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
@@ -12,6 +13,7 @@ class CORE_GenerateOutput extends Component {
         super(props);
         this.state = {};
         this.parseConditions = this.parseConditions.bind(this);
+        this.storeSession = this.storeSession.bind(this);
     }
 
     genName = u => {
@@ -1262,6 +1264,10 @@ class CORE_GenerateOutput extends Component {
         }
     }
 
+    storeSession() {
+        console.log(JSON.stringify(this.props.state));
+    }
+
     render() {
         return (
         <div>
@@ -1280,8 +1286,10 @@ class CORE_GenerateOutput extends Component {
             </div> : null }
             {this.props.state.mode === "pageflow" ? <div>
             </div> : null }
-            <textarea rows="10" style={{width: "100%", fontFamily: "\"Courier New\", Courier, monospace", "tabSize": 2}} value={this.generateHelper()} readOnly={true} />
             <hr/>
+            <CopyToClipboard text={this.generateHelper()} onCopy={this.storeSession}>
+                <button>Copy to Clipboard</button>
+            </CopyToClipboard>
             <div style={{"border": "darkgrey solid 1px"}}>
                 <SyntaxHighlighter language="javascript" showLineNumbers style={vs}>
                   {this.generateHelper()}
@@ -1291,6 +1299,8 @@ class CORE_GenerateOutput extends Component {
         );
     }
 }
+
+//<textarea rows="10" style={{width: "100%", fontFamily: "\"Courier New\", Courier, monospace", "tabSize": 2}} value={this.generateHelper()} readOnly={true} />
 
 const mapStateToProps = state => ({
     state: state
