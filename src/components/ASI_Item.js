@@ -30,9 +30,18 @@ class ASI_Item extends Component {
         }).filter(item => {
             return item.group === "APPLICATION";
         }).sort((item1, item2) => {
-            return item1.type.localeCompare(item2.type);
+            console.log()
+            if (item1.code.localeCompare(item2.code) === 0) {
+                return 0;
+            } else {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return 0;
+                } else {
+                    return item1.name.localeCompare(item2.name);
+                }
+            }
         }).map(item => {
-            return <option key={item.key} label={item.alias ? item.type+"-"+item.alias : item.type+"-"+item.name} value={item.name}/>
+            return <option key={item.key} label={item.alias ? item.code+"-"+item.type+"-"+item.alias : item.code+"-"+item.type+"-"+item.name} value={item.name}/>
         }));
     }
 
