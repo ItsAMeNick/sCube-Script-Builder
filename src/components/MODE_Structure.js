@@ -66,8 +66,6 @@ class CORE_Structure extends Component {
             default: break;
         }
 
-        console.log(mod, type, sub, cat);
-
         for (let i in this.props.loaded_data) {
             if (this.props.loaded_data[i].module === mod
                 && this.props.loaded_data[i].type === type

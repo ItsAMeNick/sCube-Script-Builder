@@ -23,9 +23,8 @@ class CORE_Upload extends Component {
                     file.async("text").then(file_text => {
                         switch(file_names[f]) {
                             case "CapTypeModel.xml": {
-                                console.log("Loading CAP File");
+                                console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list;
-                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 for (let i in rawJSON) {
                                     for (let a in rawJSON[i]) {
@@ -42,14 +41,12 @@ class CORE_Upload extends Component {
                                         });
                                     }
                                 }
-                                console.log(filteredJSON);
                                 this.props.update("caps", filteredJSON);
                                 break;
                             }
                             case "ASIGroupModel.xml": {
-                                console.log("Loading ASI File");
+                                console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.asiGroup;
-                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 for (let i in rawJSON) {
                                     for (let a in rawJSON[i].asiModels.asiModel) {
@@ -64,7 +61,6 @@ class CORE_Upload extends Component {
                                         });
                                     }
                                 }
-                                console.log(filteredJSON);
                                 this.props.update("asis", filteredJSON);
                                 break;
                             }
