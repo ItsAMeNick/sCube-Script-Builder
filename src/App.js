@@ -5,6 +5,8 @@ import Row from "react-bootstrap/Row";
 
 import "./App.css";
 
+import Upload from "./components/CORE_Upload.js";
+
 import CoreMode from "./components/CORE_Mode.js";
 import Core from "./components/CORE.js";
 import CoreFunctionality from "./components/CORE_Functionality.js";
@@ -42,6 +44,7 @@ class App extends Component {
         return (
         <ReduxProvider store={reduxStore}>
         <div className="App">
+        <Upload/>
         <Container>
             <Row> <h6>&nbsp;</h6> </Row>
             <Row>
