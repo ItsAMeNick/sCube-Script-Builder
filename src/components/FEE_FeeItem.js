@@ -23,15 +23,66 @@ class FEE_FeeItem extends Component {
         this.forceUpdate();
     }
 
+    loadSchedules() {
+        let used_schedules = []
+        let schedules = [<option key={-1}/>].concat(this.props.loaded_fees.filter(item => {
+            if (used_schedules.includes(item.schedule)) {
+                return false;
+            } else {
+                used_schedules.push(item.schedule);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.schedule.localeCompare(item2.schedule);
+        }).map(item => {
+            return <option key={item.key} label={item.schedule} value={item.schedule}/>
+        }));
+        return schedules;
+    }
+
+    loadCodes() {
+        let codes = [<option key={-1}/>]
+        if (this.props.fees[this.props.fee_number].schedule) {
+            let used_codes = []
+            codes = codes.concat(this.props.loaded_fees.filter(item => {
+                return item.schedule === this.props.fees[this.props.fee_number].schedule;
+            }).filter(item => {
+                if (used_codes.includes(item.code)) {
+                    return false;
+                } else {
+                    used_codes.push(item.code);
+                    return true;
+                }
+            }).sort((item1, item2) => {
+                return item1.code.localeCompare(item2.code);
+            }).map(item => {
+                return <option key={item.key} label={item.code} value={item.code}/>
+            }));
+        }
+        return codes;
+    }
+
     render() {
         return (
         <tr>
             <td>{this.props.fee_number}</td>
             <td>
-                <Form.Control id={"schedule-"+this.props.fee_number} defaultValue={this.props.fees[this.props.fee_number].schedule} type="text" onChange={this.handleChange}/>
+                {this.props.loaded_fees ?
+                    <Form.Control id={"schedule-"+this.props.fee_number} defaultValue={this.props.fees[this.props.fee_number].schedule} type="text" as="select" onChange={this.handleChange}>
+                        {this.loadSchedules()}
+                    </Form.Control>
+                :
+                    <Form.Control id={"schedule-"+this.props.fee_number} defaultValue={this.props.fees[this.props.fee_number].schedule} type="text" onChange={this.handleChange}/>
+                }
             </td>
             <td>
-                <Form.Control id={"code-"+this.props.fee_number} type="text" onChange={this.handleChange}/>
+                {this.props.loaded_fees ?
+                    <Form.Control id={"code-"+this.props.fee_number} type="text" as="select" onChange={this.handleChange}>
+                        {this.loadCodes()}
+                    </Form.Control>
+                :
+                    <Form.Control id={"code-"+this.props.fee_number} type="text" onChange={this.handleChange}/>
+                }
             </td>
             {this.props.isAdvanced ?
             <td>
@@ -71,7 +122,10 @@ class FEE_FeeItem extends Component {
 
 const mapStateToProps = state => ({
     fees: state.fees,
-    isAdvanced: state.functionality.fees_advanced
+    isAdvanced: state.functionality.fees_advanced,
+    loaded_fees: state.loaded_data.fees,
+    loaded_data: state.loaded_data.caps,
+    loaded_id: state.structure.loaded_id
 });
 
 const mapDispatchToProps = dispatch => ({

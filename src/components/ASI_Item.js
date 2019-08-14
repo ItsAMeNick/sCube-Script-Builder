@@ -32,13 +32,13 @@ class ASI_Item extends Component {
         }).sort((item1, item2) => {
             console.log()
             if (item1.code.localeCompare(item2.code) === 0) {
-                return 0;
-            } else {
                 if (item1.type.localeCompare(item2.type) === 0) {
-                    return 0;
-                } else {
                     return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
                 }
+            } else {
+                return item1.code.localeCompare(item2.code);
             }
         }).map(item => {
             return <option key={item.key} label={item.alias ? item.code+"-"+item.type+"-"+item.alias : item.code+"-"+item.type+"-"+item.name} value={item.name}/>
