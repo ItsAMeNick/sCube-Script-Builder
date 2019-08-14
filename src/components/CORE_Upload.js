@@ -19,13 +19,13 @@ class CORE_Upload extends Component {
                     return !zip.files[f].dir
                 });
                 for (let f in file_names) {
-                    console.log(file_names[f]);
                     let file = zip.files[file_names[f]]
                     file.async("text").then(file_text => {
                         switch(file_names[f]) {
                             case "ASIGroupModel.xml": {
                                 console.log("Loading ASI Model");
                                 let rawJSON = fxp.parse(file_text).list.asiGroup;
+                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 for (let i in rawJSON) {
                                     for (let a in rawJSON[i].asiModels.asiModel) {
@@ -36,16 +36,16 @@ class CORE_Upload extends Component {
                                             name: asi.r1CheckboxDesc,
                                             group: asi.r1CheckboxGroup,
                                             type: asi.r1CheckboxType,
+                                            alias: asi.subGroupAlias
                                         });
                                     }
                                 }
-                                console.log(rawJSON);
                                 console.log(filteredJSON);
                                 this.props.update("asis", filteredJSON);
                                 break;
                             }
                             default: {
-                                console.log("Ignoring File: " + file_names[f].split("/")[1]);
+                                console.log("Ignoring File: " + file_names[f]);
                                 break;
                             }
                         }

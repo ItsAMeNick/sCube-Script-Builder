@@ -20,12 +20,28 @@ class ASI_Item extends Component {
         });
     };
 
+    loadOptionsFromData() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            return item1.type.localeCompare(item2.type);
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.type+"-"+item.alias : item.type+"-"+item.name} value={item.name}/>
+        }));
+    }
+
     render() {
         return (
         <tr>
             <td>{this.props.asi_number}</td>
             <td>
-                <Form.Control id="name"onChange={this.handleChange}/>
+                {this.props.loaded_asis ?
+                    <Form.Control id="name" as="select" onChange={this.handleChange}>
+                        {this.loadOptionsFromData()}
+                    </Form.Control>
+                :
+                    <Form.Control id="name" onChange={this.handleChange}/>
+                }
             </td>
             <td>
                 <Form.Control id="value" onChange={this.handleChange}/>
@@ -45,7 +61,8 @@ class ASI_Item extends Component {
 }
 
 const mapStateToProps = state => ({
-    asis: state.asis
+    asis: state.asis,
+    loaded_asis: state.loaded_data.asis
 });
 
 const mapDispatchToProps = dispatch => ({
