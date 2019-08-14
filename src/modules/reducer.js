@@ -160,7 +160,8 @@ const initialState = {
         }
     },
     loaded_data: {
-        asis: null
+        caps: null,
+        asis: null,
     }
 };
 

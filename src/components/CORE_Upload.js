@@ -22,8 +22,32 @@ class CORE_Upload extends Component {
                     let file = zip.files[file_names[f]]
                     file.async("text").then(file_text => {
                         switch(file_names[f]) {
+                            case "CapTypeModel.xml": {
+                                console.log("Loading CAP File");
+                                let rawJSON = fxp.parse(file_text).list;
+                                console.log(rawJSON);
+                                let filteredJSON = [];
+                                for (let i in rawJSON) {
+                                    for (let a in rawJSON[i]) {
+                                        let cap = rawJSON[i][a];
+                                        filteredJSON.push({
+                                            key: filteredJSON.length,
+                                            module: cap.group,
+                                            type: cap.type,
+                                            subtype: cap.subType,
+                                            category: cap.category,
+                                            alias: cap.alias,
+                                            asi_code: cap.specInfoCode,
+                                            fee_code: cap.feeScheduleName
+                                        });
+                                    }
+                                }
+                                console.log(filteredJSON);
+                                this.props.update("caps", filteredJSON);
+                                break;
+                            }
                             case "ASIGroupModel.xml": {
-                                console.log("Loading ASI Model");
+                                console.log("Loading ASI File");
                                 let rawJSON = fxp.parse(file_text).list.asiGroup;
                                 console.log(rawJSON);
                                 let filteredJSON = [];
