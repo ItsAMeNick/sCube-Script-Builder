@@ -8,7 +8,8 @@ const initialState = {
         module: "NA",
         type: "NA",
         subtype: "NA",
-        category: "NA"
+        category: "NA",
+        loaded_id: -1
     },
     mode_extras: {
         function_name: "",
