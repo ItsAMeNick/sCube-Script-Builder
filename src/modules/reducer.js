@@ -8,7 +8,8 @@ const initialState = {
         module: "NA",
         type: "NA",
         subtype: "NA",
-        category: "NA"
+        category: "NA",
+        loaded_id: -1
     },
     mode_extras: {
         function_name: "",
@@ -158,6 +159,11 @@ const initialState = {
             key: 1,
             message: null
         }
+    },
+    loaded_data: {
+        caps: null,
+        asis: null,
+        fees: null
     }
 };
 
@@ -678,6 +684,13 @@ const sCubeReducer = (state = initialState, action) => {
     case "delete_action": {
         let newState = _.cloneDeep(state);
         delete newState.conditions[action.payload.parent].actions[action.payload.id];
+        return newState;
+    }
+
+    //Below is related to file uploads
+    case "load_file_data": {
+        let newState = _.cloneDeep(state);
+        newState.loaded_data[action.payload.type] = action.payload.data
         return newState;
     }
 
