@@ -64,6 +64,24 @@ class CORE_Upload extends Component {
                                 this.props.update("asis", filteredJSON);
                                 break;
                             }
+                            case "RefFeeScheduleModel.xml": {
+                                console.log("LOADING File: " + file_names[f]);
+                                let rawJSON = fxp.parse(file_text).list.refFeeSchedule;
+                                console.log(rawJSON);
+                                let filteredJSON = [];
+                                for (let i in rawJSON) {
+                                    for (let f in rawJSON[i].refFeeItemModels.refFeeItem) {
+                                        let fee = rawJSON[i].refFeeItemModels.refFeeItem[f];
+                                        filteredJSON.push({
+                                            key: filteredJSON.length,
+                                            schedule: fee.feeScheduleName,
+                                            code: fee.feeCod,
+                                        });
+                                    }
+                                }
+                                this.props.update("fees", filteredJSON);
+                                break;
+                            }
                             default: {
                                 console.log("Ignoring File: " + file_names[f]);
                                 break;
