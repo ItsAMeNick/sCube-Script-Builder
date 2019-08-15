@@ -14,6 +14,7 @@ class PARAM_Item extends Component {
     }
 
     handleChange(event) {
+        console.log(event.target.value);
         let newParameters = _.cloneDeep(this.props.parameter_sets[this.props.set_number].parameters);
 
         //Reset the special values upon change
@@ -136,7 +137,19 @@ class PARAM_Item extends Component {
                 })}
             </Form.Control></td>);
         } else if (keys[1] === "free") {
-            row.push(<td key={newId}><Form.Control id={"free"} onChange={this.handleChange}/></td>);
+            if (this.props.loaded_asis && this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["portlet"] === "Custom Field") {
+                row.push(
+                    <td key={newId}><Form.Control id={"free"} as="select" onChange={this.handleChange}>
+                        {this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["level1"] === "From Parent" ?
+                            this.loadAllASI()
+                        :
+                            this.loadMyASI()
+                        }
+                    </Form.Control></td>
+                        );
+            } else {
+                row.push(<td key={newId}><Form.Control id={"free"} placeholder={"--Name--"} onChange={this.handleChange}/></td>);
+            }
         } else if (keys[1] === "type") {
             row.push(<td key={newId}><Form.Control id={"type"} placeholder="Type" onChange={this.handleChange}/></td>);
         }
@@ -146,6 +159,50 @@ class PARAM_Item extends Component {
             this.generateMap(map[levelValue], level + 1, levelValue, row);
         }
         return row;
+    }
+
+    loadAllASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            console.log()
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
+    }
+
+    loadMyASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].asi_code === item.code;
+            } else {
+                return true;
+            }
+        }).filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            console.log()
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
     }
 
     render() {
@@ -164,7 +221,10 @@ class PARAM_Item extends Component {
 const mapStateToProps = state => ({
     parameter_sets: state.parameter_sets,
     event_type: state.event_type,
-    mode: state.mode
+    mode: state.mode,
+    loaded_data: state.loaded_data.caps,
+    loaded_id: state.structure.loaded_id,
+    loaded_asis: state.loaded_data.asis
 });
 
 const mapDispatchToProps = dispatch => ({
