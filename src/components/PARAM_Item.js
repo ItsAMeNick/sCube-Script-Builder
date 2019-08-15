@@ -14,7 +14,6 @@ class PARAM_Item extends Component {
     }
 
     handleChange(event) {
-        console.log(event.target.value);
         let newParameters = _.cloneDeep(this.props.parameter_sets[this.props.set_number].parameters);
 
         //Reset the special values upon change
@@ -151,7 +150,15 @@ class PARAM_Item extends Component {
                 row.push(<td key={newId}><Form.Control id={"free"} placeholder={"--Name--"} onChange={this.handleChange}/></td>);
             }
         } else if (keys[1] === "type") {
-            row.push(<td key={newId}><Form.Control id={"type"} placeholder="Type" onChange={this.handleChange}/></td>);
+            if (this.props.loaded_contacts && this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["portlet"] === "Contact") {
+                row.push(
+                    <td key={newId}><Form.Control id={"type"} as="select" onChange={this.handleChange}>
+                        {this.loadContacts()}
+                    </Form.Control></td>
+                        );
+            } else {
+                row.push(<td key={newId}><Form.Control id={"type"} placeholder="Type" onChange={this.handleChange}/></td>);
+            }
         }
 
         //Check if you should go to the next level
@@ -205,6 +212,15 @@ class PARAM_Item extends Component {
         }));
     }
 
+    loadContacts() {
+        return [<option key={-1}/>].concat(this.props.loaded_contacts
+            .sort((item1, item2) => {
+                return item1.value.localeCompare(item2.value);
+            }).map(item => {
+                return <option key={item.key} label={item.value} value={item.value}/>
+            }));
+    }
+
     render() {
         return (
             <tr>
@@ -233,7 +249,8 @@ const mapStateToProps = state => ({
     mode: state.mode,
     loaded_data: state.loaded_data.caps,
     loaded_id: state.structure.loaded_id,
-    loaded_asis: state.loaded_data.asis
+    loaded_asis: state.loaded_data.asis,
+    loaded_contacts: state.loaded_data.contact_types
 });
 
 const mapDispatchToProps = dispatch => ({

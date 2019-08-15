@@ -159,7 +159,7 @@ class NOTE_Item extends Component {
                 </td>
             :
                 <td>
-                    <Form.Control id="from" type="email" onChange={this.handleChange}/>
+                    <Form.Control id="from_READONLY" type="email" onChange={this.handleChange}/>
                 </td>
             }
             {this.props.loaded_contacts ?
