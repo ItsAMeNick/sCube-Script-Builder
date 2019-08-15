@@ -164,6 +164,7 @@ const initialState = {
         caps: null,
         asis: null,
         fees: null,
+        notes: null,
         contact_types: null,
         lp_types: null
     }

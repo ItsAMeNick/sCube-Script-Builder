@@ -12,7 +12,6 @@ class CORE_Upload extends Component {
     }
 
     handleChange(event) {
-        console.log(event.target.files[0])
         if (event.target.files[0] && event.target.files[0].type === "application/x-zip-compressed") {
             jszip.loadAsync(event.target.files[0]).then(zip => {
                 let file_names = Object.keys(zip.files).filter(f => {
@@ -24,11 +23,23 @@ class CORE_Upload extends Component {
                         switch(file_names[f]) {
                             case "CapTypeModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
-                                let rawJSON = fxp.parse(file_text).list;
+                                let rawJSON = fxp.parse(file_text).list.capType;
                                 let filteredJSON = [];
-                                for (let i in rawJSON) {
-                                    for (let a in rawJSON[i]) {
-                                        let cap = rawJSON[i][a];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                    let cap = rawJSON;
+                                    filteredJSON.push({
+                                        key: filteredJSON.length,
+                                        module: cap.group,
+                                        type: cap.type,
+                                        subtype: cap.subType,
+                                        category: cap.category,
+                                        alias: cap.alias,
+                                        asi_code: cap.specInfoCode,
+                                        fee_code: cap.feeScheduleName
+                                    });
+                                } else {
+                                    for (let i in rawJSON) {
+                                        let cap = rawJSON[i];
                                         filteredJSON.push({
                                             key: filteredJSON.length,
                                             module: cap.group,
@@ -48,9 +59,9 @@ class CORE_Upload extends Component {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.asiGroup;
                                 let filteredJSON = [];
-                                for (let i in rawJSON) {
-                                    for (let a in rawJSON[i].asiModels.asiModel) {
-                                        let asi = rawJSON[i].asiModels.asiModel[a];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                    for (let a in rawJSON.asiModels.asiModel) {
+                                        let asi = rawJSON.asiModels.asiModel[a];
                                         filteredJSON.push({
                                             key: filteredJSON.length,
                                             code: asi.r1CheckboxCode,
@@ -60,6 +71,20 @@ class CORE_Upload extends Component {
                                             alias: asi.subGroupAlias
                                         });
                                     }
+                                } else {
+                                    for (let i in rawJSON) {
+                                        for (let a in rawJSON[i].asiModels.asiModel) {
+                                            let asi = rawJSON[i].asiModels.asiModel[a];
+                                            filteredJSON.push({
+                                                key: filteredJSON.length,
+                                                code: asi.r1CheckboxCode,
+                                                name: asi.r1CheckboxDesc,
+                                                group: asi.r1CheckboxGroup,
+                                                type: asi.r1CheckboxType,
+                                                alias: asi.subGroupAlias
+                                            });
+                                        }
+                                    }
                                 }
                                 this.props.update("asis", filteredJSON);
                                 break;
@@ -68,9 +93,9 @@ class CORE_Upload extends Component {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.refFeeSchedule;
                                 let filteredJSON = [];
-                                for (let i in rawJSON) {
-                                    for (let f in rawJSON[i].refFeeItemModels.refFeeItem) {
-                                        let fee = rawJSON[i].refFeeItemModels.refFeeItem[f];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                    for (let f in rawJSON.refFeeItemModels.refFeeItem) {
+                                        let fee = rawJSON.refFeeItemModels.refFeeItem[f];
                                         filteredJSON.push({
                                             key: filteredJSON.length,
                                             schedule: fee.feeScheduleName,
@@ -78,8 +103,50 @@ class CORE_Upload extends Component {
                                             desc: fee.feeDes
                                         });
                                     }
+                                } else {
+                                    for (let i in rawJSON) {
+                                        for (let f in rawJSON[i].refFeeItemModels.refFeeItem) {
+                                            let fee = rawJSON[i].refFeeItemModels.refFeeItem[f];
+                                            filteredJSON.push({
+                                                key: filteredJSON.length,
+                                                schedule: fee.feeScheduleName,
+                                                code: fee.feeCod,
+                                                desc: fee.feeDes
+                                            });
+                                        }
+                                    }
                                 }
                                 this.props.update("fees", filteredJSON);
+                                break;
+                            }
+
+                            case "NotificationTemplateModel.xml": {
+                                console.log("LOADING File: " + file_names[f]);
+                                let rawJSON = fxp.parse(file_text).list.notificationTemplate;
+                                console.log(rawJSON);
+                                let filteredJSON = [];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                //     for (let f in rawJSON.refFeeItemModels.refFeeItem) {
+                                //         let fee = rawJSON.refFeeItemModels.refFeeItem[f];
+                                //         filteredJSON.push({
+                                //             key: filteredJSON.length,
+                                //             schedule: fee.feeScheduleName,
+                                //             code: fee.feeCod,
+                                //             desc: fee.feeDes
+                                //         });
+                                //     }
+                                } else {
+                                    for (let i in rawJSON) {
+                                        let note = rawJSON[i].emailTemplate;
+                                        console.log(note);
+                                        filteredJSON.push({
+                                            key: filteredJSON.length,
+                                            template: note.templateName,
+                                            from: note.from,
+                                        });
+                                    }
+                                }
+                                this.props.update("notes", filteredJSON);
                                 break;
                             }
 
@@ -114,18 +181,7 @@ class CORE_Upload extends Component {
                                         }
                                         default: break;
                                     }
-                                //     for (let f in rawJSON[i].refFeeItemModels.refFeeItem) {
-                                //         let fee = rawJSON[i].refFeeItemModels.refFeeItem[f];
-                                //         filteredJSON.push({
-                                //             key: filteredJSON.length,
-                                //             schedule: fee.feeScheduleName,
-                                //             code: fee.feeCod,
-                                //             desc: fee.feeDes
-                                //         });
-                                //     }
                                 }
-                                // console.log(filteredJSON);
-                                // this.props.update("fees", filteredJSON);
                                 break;
                             }
 
