@@ -39,6 +39,15 @@ class BATCH_Item extends Component {
             <td>
                 <Form.Control id={"category-"+this.props.bsi_number} type="text" onChange={this.handleChange}/>
             </td>
+            {this.props.bsi_number !== 1 ?
+            <td>
+                <button onClick={() => {
+                    this.props.delete(this.props.bsi_number);
+                }}>
+                    Delete
+                </button>
+            </td>
+            : null}
         </tr> : null}
         </React.Fragment>
         );
@@ -53,6 +62,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     update: batch => dispatch({
         type: "update_batch",
+        payload: batch
+    }),
+    delete: batch => dispatch({
+        type: "delete_batch_structure",
         payload: batch
     }),
 });

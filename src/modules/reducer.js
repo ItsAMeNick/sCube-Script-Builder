@@ -218,7 +218,10 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "delete_batch_structure": {
         let newState = _.cloneDeep(state);
-        newState.batch = action.payload.batch;
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.batch.structures[action.payload];
         return newState;
     }
 
