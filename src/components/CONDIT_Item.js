@@ -308,7 +308,6 @@ class CONDIT_Item extends Component {
     }
 
     loadDocuments() {
-        console.log("LOading Docs");
         return [<option key={-1}/>].concat(this.props.loaded_docs.filter(item => {
             if (this.props.loaded_id >= 0) {
                 return this.props.loaded_data[this.props.loaded_id].doc_code === item.code;

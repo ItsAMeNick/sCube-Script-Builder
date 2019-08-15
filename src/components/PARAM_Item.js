@@ -146,6 +146,12 @@ class PARAM_Item extends Component {
                         }
                     </Form.Control></td>
                         );
+            } else if (this.props.loaded_docs && this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["portlet"] === "ACA Document Name") {
+                row.push(
+                    <td key={newId}><Form.Control id={"free"} as="select" onChange={this.handleChange}>
+                        {this.loadDocuments()}
+                    </Form.Control></td>
+                        );
             } else {
                 row.push(<td key={newId}><Form.Control id={"free"} placeholder={"--Name--"} onChange={this.handleChange}/></td>);
             }
@@ -221,6 +227,20 @@ class PARAM_Item extends Component {
             }));
     }
 
+    loadDocuments() {
+        return [<option key={-1}/>].concat(this.props.loaded_docs.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].doc_code === item.code;
+            } else {
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.type.localeCompare(item2.type);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
     render() {
         return (
             <tr>
@@ -250,7 +270,8 @@ const mapStateToProps = state => ({
     loaded_data: state.loaded_data.caps,
     loaded_id: state.structure.loaded_id,
     loaded_asis: state.loaded_data.asis,
-    loaded_contacts: state.loaded_data.contact_types
+    loaded_contacts: state.loaded_data.contact_types,
+    loaded_docs: state.loaded_data.doc_types
 });
 
 const mapDispatchToProps = dispatch => ({
