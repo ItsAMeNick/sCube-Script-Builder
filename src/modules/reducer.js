@@ -169,6 +169,7 @@ const initialState = {
         contact_types: null,
         lp_types: null,
         doc_types: null,
+        workflows: null,
     }
 };
 

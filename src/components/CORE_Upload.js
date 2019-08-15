@@ -243,26 +243,28 @@ class CORE_Upload extends Component {
                                 break;
                             }
 
-                            // case "WorkflowModel.xml": {
-                            //     console.log("LOADING File: " + file_names[f]);
-                            //     let rawJSON = fxp.parse(file_text).list.workflow;
-                            //     console.log(rawJSON);
-                            //     let filteredJSON = [];
-                            //     for (let i in rawJSON) {
-                            //         let meta_text = rawJSON[i].workflowMetadata.metaDataDefinition.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&quot;/g, "\"");
-                            //         console.log(meta_text);
-                            //         // let chunks = meta_text.match(/<Flow[\s\S]customObject="([\s\S]+?}]")/g);
-                            //         // chunks = chunks.map(s => /<Flow[\s\S]customObject="([\s\S]+?}]")/.exec(s)[1])
-                            //         // console.log(chunks);
-                            //         let status = meta_text.match(/"statusDescription":"([-.\w\s]+)/g);
-                            //         status = status.map(s => /"statusDescription":"([-.\w\s]+)/.exec(s)[1]);
-                            //         let task = meta_text.match(/"taskName":"([-.\w\s]+)/g);
-                            //         task = task.map(t => /"taskName":"([-.\w\s]+)/.exec(t)[1]);
-                            //         console.log(status)
-                            //     }
-                            //     // this.props.update("fees", filteredJSON);
-                            //     break;
-                            // }
+                            case "WorkflowModel.xml": {
+                                console.log("LOADING File: " + file_names[f]);
+                                let rawJSON = fxp.parse(file_text).list.workflow;
+                                console.log(rawJSON);
+                                let filteredJSON = [];
+                                for (let i in rawJSON) {
+                                    let meta_text = rawJSON[i].workflowMetadata.metaDataDefinition.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&quot;/g, "\"");
+                                    // let chunks = meta_text.match(/<Flow[\s\S]customObject="([\s\S]+?}]")/g);
+                                    // chunks = chunks.map(s => /<Flow[\s\S]customObject="([\s\S]+?}]")/.exec(s)[1])
+                                    // console.log(chunks);
+                                    let status = meta_text.match(/"statusDescription":"([-.\w\s]+?)"/g);
+                                    status = status.map(s => /"statusDescription":"([-.\w\s]+?)"/.exec(s)[1]);
+                                    let tasks = meta_text.match(/"taskName":"([-.\w\s]+?)"/g);
+                                    tasks = tasks.map(t => /"taskName":"([-.\w\s]+?)"/.exec(t)[1]);
+                                    filteredJSON.push({
+                                        tasks: tasks,
+                                        status: status,
+                                    });
+                                }
+                                this.props.update("workflows", filteredJSON);
+                                break;
+                            }
 
                             default: {
                                 console.log("Ignoring File: " + file_names[f]);
