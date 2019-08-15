@@ -123,22 +123,17 @@ class CORE_Upload extends Component {
                             case "NotificationTemplateModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.notificationTemplate;
-                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 if (!Object.keys(rawJSON).includes("0")) {
-                                //     for (let f in rawJSON.refFeeItemModels.refFeeItem) {
-                                //         let fee = rawJSON.refFeeItemModels.refFeeItem[f];
-                                //         filteredJSON.push({
-                                //             key: filteredJSON.length,
-                                //             schedule: fee.feeScheduleName,
-                                //             code: fee.feeCod,
-                                //             desc: fee.feeDes
-                                //         });
-                                //     }
+                                    let note = rawJSON.emailTemplate;
+                                    filteredJSON.push({
+                                        key: filteredJSON.length,
+                                        template: note.templateName,
+                                        from: note.from,
+                                    });
                                 } else {
                                     for (let i in rawJSON) {
                                         let note = rawJSON[i].emailTemplate;
-                                        console.log(note);
                                         filteredJSON.push({
                                             key: filteredJSON.length,
                                             template: note.templateName,
@@ -147,6 +142,41 @@ class CORE_Upload extends Component {
                                     }
                                 }
                                 this.props.update("notes", filteredJSON);
+                                break;
+                            }
+
+                            case "InspectionGroupModel.xml": {
+                                console.log("LOADING File: " + file_names[f]);
+                                let rawJSON = fxp.parse(file_text).list.inspectionGroup;
+                                console.log(rawJSON);
+                                let filteredJSON = [];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                    for (let ii in rawJSON.inspectionTypeModels.inspectionTypeModel) {
+                                        let insp = rawJSON.inspectionTypeModels.inspectionTypeModel[ii];
+                                        filteredJSON.push({
+                                            key: filteredJSON.length,
+                                            code: insp.inspCode,
+                                            group: insp.inspGroupName,
+                                            result: insp.inspResultGroup,
+                                            name: insp.inspType
+                                        });
+                                    }
+                                } else {
+                                    for (let i in rawJSON) {
+                                        for (let ii in rawJSON[i].inspectionTypeModels.inspectionTypeModel) {
+                                            let insp = rawJSON[i].inspectionTypeModels.inspectionTypeModel[ii];
+                                            filteredJSON.push({
+                                                key: filteredJSON.length,
+                                                code: insp.inspCode,
+                                                group: insp.inspGroupName,
+                                                result: insp.inspResultGroup,
+                                                name: insp.inspType
+                                            });
+                                        }
+                                    }
+                                    console.log(filteredJSON);
+                                }
+                                this.props.update("inspections", filteredJSON);
                                 break;
                             }
 

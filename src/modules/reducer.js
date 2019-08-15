@@ -165,6 +165,7 @@ const initialState = {
         asis: null,
         fees: null,
         notes: null,
+        inspections: null,
         contact_types: null,
         lp_types: null
     }
