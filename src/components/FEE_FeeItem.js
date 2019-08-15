@@ -32,6 +32,13 @@ class FEE_FeeItem extends Component {
                 used_schedules.push(item.schedule);
                 return true;
             }
+        }).filter(item => {
+            console.log(item);
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].fee_code === item.schedule;
+            } else {
+                return true;
+            }
         }).sort((item1, item2) => {
             return item1.schedule.localeCompare(item2.schedule);
         }).map(item => {
@@ -56,7 +63,7 @@ class FEE_FeeItem extends Component {
             }).sort((item1, item2) => {
                 return item1.code.localeCompare(item2.code);
             }).map(item => {
-                return <option key={item.key} label={item.code} value={item.code}/>
+                return <option key={item.key} label={item.code+" - "+item.desc} value={item.code}/>
             }));
         }
         return codes;
