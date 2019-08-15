@@ -163,7 +163,9 @@ const initialState = {
     loaded_data: {
         caps: null,
         asis: null,
-        fees: null
+        fees: null,
+        contact_types: null,
+        lp_types: null
     }
 };
 
