@@ -184,7 +184,19 @@ class CONDIT_Item extends Component {
                 })}
             </Form.Control>);
         } else if (keys[1] === "free") {
-            row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
+            if (this.props.loaded_asis && this.props.conditions[this.props.id].portlet === "Custom Field") {
+                row.push(
+                    <Form.Control id={"free-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
+                        {this.props.conditions[this.props.id]["x.1"] === "From Parent" ?
+                            this.loadAllASI()
+                        :
+                            this.loadMyASI()
+                        }
+                    </Form.Control>
+                        );
+            } else {
+                row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
+            }
         } else if (keys[1] === "type") {
             row.push(<Form.Control id={"type"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId}/>);
         }
@@ -228,6 +240,50 @@ class CONDIT_Item extends Component {
             if (_.isEqual(tree[me], _.initial(tree[c]))) return false;
         }
         return true;
+    }
+
+    loadAllASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            console.log()
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
+    }
+
+    loadMyASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].asi_code === item.code;
+            } else {
+                return true;
+            }
+        }).filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            console.log()
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
     }
 
     render() {
@@ -287,7 +343,10 @@ class CONDIT_Item extends Component {
 const mapStateToProps = state => ({
     conditions: state.conditions,
     event_type: state.event_type,
-    mode: state.mode
+    mode: state.mode,
+    loaded_asis: state.loaded_data.asis,
+    loaded_data: state.loaded_data.caps,
+    loaded_id: state.structure.loaded_id
 });
 
 const mapDispatchToProps = dispatch => ({
