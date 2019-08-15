@@ -167,7 +167,8 @@ const initialState = {
         notes: null,
         inspections: null,
         contact_types: null,
-        lp_types: null
+        lp_types: null,
+        doc_types: null,
     }
 };
 

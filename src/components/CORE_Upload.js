@@ -24,6 +24,7 @@ class CORE_Upload extends Component {
                             case "CapTypeModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.capType;
+                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 if (!Object.keys(rawJSON).includes("0")) {
                                     let cap = rawJSON;
@@ -37,6 +38,7 @@ class CORE_Upload extends Component {
                                         asi_code: cap.specInfoCode,
                                         fee_code: cap.feeScheduleName,
                                         insp_code: cap.inspectionGroupCode ? cap.inspectionGroupCode : null,
+                                        doc_code: cap.docCode ? cap.docCode : null,
                                     });
                                 } else {
                                     for (let i in rawJSON) {
@@ -51,6 +53,7 @@ class CORE_Upload extends Component {
                                             asi_code: cap.specInfoCode,
                                             fee_code: cap.feeScheduleName,
                                             insp_code: cap.inspectionGroupCode ? cap.inspectionGroupCode : null,
+                                            doc_code: cap.docCode ? cap.docCode : null,
                                         });
                                     }
                                 }
@@ -150,7 +153,6 @@ class CORE_Upload extends Component {
                             case "InspectionGroupModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.inspectionGroup;
-                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 if (!Object.keys(rawJSON).includes("0")) {
                                     for (let ii in rawJSON.inspectionTypeModels.inspectionTypeModel) {
@@ -176,9 +178,33 @@ class CORE_Upload extends Component {
                                             });
                                         }
                                     }
-                                    console.log(filteredJSON);
                                 }
                                 this.props.update("inspections", filteredJSON);
+                                break;
+                            }
+
+                            case "RefDocumentModel.xml": {
+                                console.log("LOADING File: " + file_names[f]);
+                                let rawJSON = fxp.parse(file_text).list.refDocument;
+                                let filteredJSON = [];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                    let doc = rawJSON;
+                                    filteredJSON.push({
+                                        key: filteredJSON.length,
+                                        code: doc.docCode,
+                                        type: doc.documentType,
+                                    });
+                                } else {
+                                    for (let i in rawJSON) {
+                                        let doc = rawJSON[i];
+                                        filteredJSON.push({
+                                            key: filteredJSON.length,
+                                            code: doc.docCode,
+                                            type: doc.documentType,
+                                        });
+                                    }
+                                }
+                                this.props.update("doc_types", filteredJSON);
                                 break;
                             }
 

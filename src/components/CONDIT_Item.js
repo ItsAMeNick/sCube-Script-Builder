@@ -194,18 +194,24 @@ class CONDIT_Item extends Component {
                         }
                     </Form.Control>
                         );
+            } else if (this.props.loaded_docs && this.props.conditions[this.props.id].portlet === "ACA Document Name") {
+                row.push(
+                            <Form.Control id={"free-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
+                                {this.loadDocuments()}
+                            </Form.Control>
+                        );
             } else {
                 row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
             }
         } else if (keys[1] === "type") {
             if (this.props.loaded_contacts && this.props.conditions[this.props.id].portlet === "Contact") {
                 row.push(
-                            <Form.Control id={"type"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
+                            <Form.Control id={"type-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
                                 {this.loadContacts()}
                             </Form.Control>
                         );
             } else {
-                row.push(<Form.Control id={"type"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId}/>);
+                row.push(<Form.Control id={"type-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId}/>);
             }
         }
 
@@ -301,6 +307,21 @@ class CONDIT_Item extends Component {
             }));
     }
 
+    loadDocuments() {
+        console.log("LOading Docs");
+        return [<option key={-1}/>].concat(this.props.loaded_docs.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].doc_code === item.code;
+            } else {
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.type.localeCompare(item2.type);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
     render() {
         return (
         <tr>
@@ -362,7 +383,8 @@ const mapStateToProps = state => ({
     loaded_asis: state.loaded_data.asis,
     loaded_data: state.loaded_data.caps,
     loaded_id: state.structure.loaded_id,
-    loaded_contacts: state.loaded_data.contact_types
+    loaded_contacts: state.loaded_data.contact_types,
+    loaded_docs: state.loaded_data.doc_types
 });
 
 const mapDispatchToProps = dispatch => ({
