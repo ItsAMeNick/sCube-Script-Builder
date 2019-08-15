@@ -213,6 +213,15 @@ class PARAM_Item extends Component {
                     <Form.Control id="ref" type="text" onChange={this.handleChange}/>
                 </td>
                 {this.generateMap(variable_map.variable_map, 0, null, null)}
+                {this.props.param_number !== 1 ?
+                    <td>
+                        <button onClick={() => {
+                            this.props.delete(this.props.set_number, this.props.param_number);
+                        }}>
+                            Delete
+                        </button>
+                    </td>
+                : null}
             </tr>
         );
     }
@@ -231,7 +240,14 @@ const mapDispatchToProps = dispatch => ({
     update: p => dispatch({
         type: "update_parameter",
         payload: p
-    })
+    }),
+    delete: (set, param) => dispatch({
+        type: "delete_parameter",
+        payload: {
+            set: set,
+            param: param
+        }
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PARAM_Item);

@@ -514,6 +514,22 @@ const sCubeReducer = (state = initialState, action) => {
         newState.parameter_sets[action.payload].parameters = myParams;
         return newState;
     }
+    case "delete_parameter_set": {
+        let newState = _.cloneDeep(state);
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.parameter_sets[action.payload]
+        return newState;
+    }
+    case "delete_parameter": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.param === "1") {
+            return newState;
+        }
+        delete newState.parameter_sets[action.payload.set].parameters[action.payload.param]
+        return newState;
+    }
 
     //Workflow
     case "update_workflow": {

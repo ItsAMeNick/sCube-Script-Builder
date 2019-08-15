@@ -63,6 +63,15 @@ class PARAM_Container extends Component {
                         <td>
                             <Form.Check id={"report."+this.props.set_number} label="Report Parameters" type="radio" name = {"style."+this.props.set_number} onChange={this.handleChange}/>
                         </td>
+                        {this.props.set_number !== 1 ?
+                            <td>
+                                <button onClick={() => {
+                                    this.props.delete(this.props.set_number, this.props.param_number);
+                                }}>
+                                    Delete
+                                </button>
+                            </td>
+                        : null}
                     </tr>
                     <tr>
                         <th>#</th>
@@ -93,6 +102,10 @@ const mapDispatchToProps = dispatch => ({
     }),
     update: s => dispatch({
         type: "update_parameter_set",
+        payload: s
+    }),
+    delete: s => dispatch({
+        type: "delete_parameter_set",
         payload: s
     })
 });
