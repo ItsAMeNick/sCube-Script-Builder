@@ -41,7 +41,7 @@ class ASI_Item extends Component {
                 return item1.code.localeCompare(item2.code);
             }
         }).map(item => {
-            return <option key={item.key} label={item.alias ? item.code+"-"+item.type+"-"+item.alias : item.code+"-"+item.type+"-"+item.name} value={item.name}/>
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
         }));
     }
 
