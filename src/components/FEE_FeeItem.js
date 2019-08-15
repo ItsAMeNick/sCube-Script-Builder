@@ -85,10 +85,9 @@ class FEE_FeeItem extends Component {
         }).filter(item => {
             return item.group === "APPLICATION";
         }).sort((item1, item2) => {
-            console.log()
             if (item1.code.localeCompare(item2.code) === 0) {
                 if (item1.type.localeCompare(item2.type) === 0) {
-                    return item1.name.localeCompare(item2.name);
+                    return (item1.alias ? item1.alias : item1.name).localeCompare((item2.alias ? item2.alias : item2.name));
                 } else {
                     return item1.type.localeCompare(item2.type)
                 }

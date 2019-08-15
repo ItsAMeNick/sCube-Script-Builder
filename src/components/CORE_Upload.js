@@ -35,7 +35,8 @@ class CORE_Upload extends Component {
                                         category: cap.category,
                                         alias: cap.alias,
                                         asi_code: cap.specInfoCode,
-                                        fee_code: cap.feeScheduleName
+                                        fee_code: cap.feeScheduleName,
+                                        insp_code: cap.inspectionGroupCode ? cap.inspectionGroupCode : null,
                                     });
                                 } else {
                                     for (let i in rawJSON) {
@@ -48,7 +49,8 @@ class CORE_Upload extends Component {
                                             category: cap.category,
                                             alias: cap.alias,
                                             asi_code: cap.specInfoCode,
-                                            fee_code: cap.feeScheduleName
+                                            fee_code: cap.feeScheduleName,
+                                            insp_code: cap.inspectionGroupCode ? cap.inspectionGroupCode : null,
                                         });
                                     }
                                 }
@@ -158,7 +160,7 @@ class CORE_Upload extends Component {
                                             code: insp.inspCode,
                                             group: insp.inspGroupName,
                                             result: insp.inspResultGroup,
-                                            name: insp.inspType
+                                            type: insp.inspType
                                         });
                                     }
                                 } else {
@@ -170,7 +172,7 @@ class CORE_Upload extends Component {
                                                 code: insp.inspCode,
                                                 group: insp.inspGroupName,
                                                 result: insp.inspResultGroup,
-                                                name: insp.inspType
+                                                type: insp.inspType
                                             });
                                         }
                                     }
