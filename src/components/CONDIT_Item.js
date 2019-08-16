@@ -44,6 +44,24 @@ class CONDIT_Item extends Component {
             // Clear some things
             newConditions[this.props.id].comparison_x = null;
             newConditions[this.props.id].free = "";
+
+            let types = Object.keys(newConditions[this.props.id]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            for (let t in types) {
+                delete newConditions[this.props.id][types[t]];
+            }
+        }
+
+        //Delete all types past this one
+        if (type.split(".")[0] === "type") {
+            let myTypeId = type.split(".")[1];
+            let types = Object.keys(newConditions[this.props.id]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            for (let t in types) {
+                if (types[t].split(".")[1] > myTypeId) delete newConditions[this.props.id][types[t]];
+            }
         }
 
         //Do the map clearing
@@ -123,7 +141,6 @@ class CONDIT_Item extends Component {
                 return row;
             }
         }
-
         let keys = [""].concat(Object.keys(map));
 
         //Remove invalid keys then sort
@@ -151,9 +168,14 @@ class CONDIT_Item extends Component {
 
         //Handle Special Cases
         if (keys[1] === "script") {
-            if (this.props.conditions[this.props.id].type) {
+            let types = Object.keys(this.props.conditions[this.props.id]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            if (types.length >= 1) {
                 let newText = map.script;
-                newText = newText.replace("^$*$^", this.props.conditions[this.props.id].type);
+                for (let t in types) {
+                    newText = newText.replace("^$"+types[t].split(".")[1]+"$^", this.props.conditions[this.props.id][types[t]]);
+                }
                 if (newText !== this.props.conditions[this.props.id].comparison_x) {
                     this.addX(newText);
                 }
@@ -171,11 +193,11 @@ class CONDIT_Item extends Component {
             if (free_text !== this.props.conditions[this.props.id].script) {
                 this.addX(free_text);
             }
-        } else if (keys[1] === "type") {
-            levelValue = "type";
+        } else if (keys[1].split(".")[0] === "type") {
+            levelValue = keys[1];
         }
 
-        if (keys[1] !== "free" && keys[1] !== "type") {
+        if (keys[1] !== "free" && keys[1].split(".")[0] !== "type") {
             let c = 0;
             row.push(<Form.Control key={newId} id={newId} as="select" value={levelValue} onChange={this.handleChange}>
                 {keys.map((k) => {
@@ -203,15 +225,15 @@ class CONDIT_Item extends Component {
             } else {
                 row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
             }
-        } else if (keys[1] === "type") {
+        } else if (keys[1].split(".")[0] === "type") {
             if (this.props.loaded_contacts && this.props.conditions[this.props.id].portlet === "Contact") {
                 row.push(
-                            <Form.Control id={"type-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
+                            <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
                                 {this.loadContacts()}
                             </Form.Control>
                         );
             } else {
-                row.push(<Form.Control id={"type-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId}/>);
+                row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
             }
         }
 

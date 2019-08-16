@@ -43,6 +43,29 @@ class ASI_Item extends Component {
         } else {
             level = parseInt(event.target.id.split("level")[1]);
         }
+
+        if (event.target.id === "portlet") {
+            // Clear some types
+            let types = Object.keys(newASIs[this.props.asi_number]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            for (let t in types) {
+                delete newASIs[this.props.asi_number][types[t]];
+            }
+        }
+
+        //Delete all types past this one
+        if (event.target.id.split(".")[0] === "type") {
+            let myTypeId = event.target.id.split(".")[1];
+            let types = Object.keys(newASIs[this.props.asi_number]).filter(item => {
+                return event.target.id.split(".")[0] === "type";
+            });
+            for (let t in types) {
+                if (types[t].split(".")[1] > myTypeId) delete newASIs[this.props.asi_number][types[t]];
+            }
+        }
+
+        //Do the map clearing
         level++;
         while (newASIs[this.props.asi_number]["level"+level]) {
             delete newASIs[this.props.asi_number]["level"+level];
@@ -64,7 +87,6 @@ class ASI_Item extends Component {
         }).filter(item => {
             return item.group === "APPLICATION";
         }).sort((item1, item2) => {
-            console.log()
             if (item1.code.localeCompare(item2.code) === 0) {
                 if (item1.type.localeCompare(item2.type) === 0) {
                     return item1.name.localeCompare(item2.name);
@@ -133,9 +155,14 @@ class ASI_Item extends Component {
 
         //Handle Special Cases
         if (keys[1] === "script") {
-            if (this.props.asis[this.props.asi_number].type) {
+            let types = Object.keys(this.props.asis[this.props.asi_number]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            if (types.length >= 1) {
                 let newText = map.script;
-                newText = newText.replace("^$*$^", this.props.asis[this.props.asi_number].type);
+                for (let t in types) {
+                    newText = newText.replace("^$"+types[t].split(".")[1]+"$^", this.props.asis[this.props.asi_number][types[t]]);
+                }
                 if (newText !== this.props.asis[this.props.asi_number].value) {
                     this.handleChange({
                         target: {
@@ -168,11 +195,11 @@ class ASI_Item extends Component {
                     }
                 })
             }
-        } else if (keys[1] === "type") {
-            levelValue = "type";
+        } else if (keys[1].split(".")[0] === "type") {
+            levelValue = keys[1];
         }
 
-        if (keys[1] !== "free" && keys[1] !== "type") {
+        if (keys[1] !== "free" && keys[1].split(".")[0] !== "type") {
             let c = 0;
             row.push(<td key={newId}><Form.Control id={newId} as="select" value={levelValue} onChange={this.handleChange}>
                 {keys.map((k) => {
@@ -200,15 +227,15 @@ class ASI_Item extends Component {
             } else {
                 row.push(<td key={newId}><Form.Control id={"free"} placeholder={"--Name--"} onChange={this.handleChange}/></td>);
             }
-        } else if (keys[1] === "type") {
+        } else if (keys[1].split(".")[0] === "type") {
             if (this.props.loaded_contacts && this.props.asis[this.props.asi_number]["portlet"] === "Contact") {
                 row.push(
-                    <td key={newId}><Form.Control id={"type"} as="select" onChange={this.handleChange}>
+                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange}>
                         {this.loadContacts()}
                     </Form.Control></td>
                         );
             } else {
-                row.push(<td key={newId}><Form.Control id={"type"} placeholder="Type" onChange={this.handleChange}/></td>);
+                row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="Type" onChange={this.handleChange} value={this.props.asis[this.props.asi_number][keys[1]] ? this.props.asis[this.props.asi_number][keys[1]] : ""}/></td>);
             }
         }
 
@@ -223,7 +250,6 @@ class ASI_Item extends Component {
         return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
             return item.group === "APPLICATION";
         }).sort((item1, item2) => {
-            console.log()
             if (item1.code.localeCompare(item2.code) === 0) {
                 if (item1.type.localeCompare(item2.type) === 0) {
                     return item1.name.localeCompare(item2.name);
@@ -248,7 +274,6 @@ class ASI_Item extends Component {
         }).filter(item => {
             return item.group === "APPLICATION";
         }).sort((item1, item2) => {
-            console.log()
             if (item1.code.localeCompare(item2.code) === 0) {
                 if (item1.type.localeCompare(item2.type) === 0) {
                     return item1.name.localeCompare(item2.name);
