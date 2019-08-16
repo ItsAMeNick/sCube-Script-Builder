@@ -153,7 +153,6 @@ class CORE_Upload extends Component {
                             case "InspectionGroupModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.inspectionGroup;
-                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 if (!Object.keys(rawJSON).includes("0")) {
                                     for (let ii in rawJSON.inspectionTypeModels.inspectionTypeModel) {
@@ -187,7 +186,6 @@ class CORE_Upload extends Component {
                             case "RefInspectionResultGroupModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.refInspResultGroup;
-                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 if (!Object.keys(rawJSON).includes("0")) {
                                     for (let ii in rawJSON.inspectionResultGroupModels.inspectionResultGroupModel) {
@@ -279,9 +277,9 @@ class CORE_Upload extends Component {
                             case "WorkflowModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.workflow;
-                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 for (let i in rawJSON) {
+                                    if (!rawJSON[i].workflowMetadata) continue;
                                     let meta_text = rawJSON[i].workflowMetadata.metaDataDefinition.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&quot;/g, "\"");
                                     // let chunks = meta_text.match(/<Flow[\s\S]customObject="([\s\S]+?}]")/g);
                                     // chunks = chunks.map(s => /<Flow[\s\S]customObject="([\s\S]+?}]")/.exec(s)[1])
