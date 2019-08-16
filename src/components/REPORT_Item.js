@@ -35,6 +35,23 @@ class REPORT_Item extends Component {
         return options;
     }
 
+    loadModules() {
+        let used_modules = []
+        let modules = [<option key={-1}/>].concat(this.props.loaded_data.filter(item => {
+            if (used_modules.includes(item.module)) {
+                return false;
+            } else {
+                used_modules.push(item.module);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.module.localeCompare(item2.module);
+        }).map(item => {
+            return <option key={item.key} label={item.module} value={item.module}/>
+        }));
+        return modules;
+    }
+
     render() {
         return (
         <tr>
@@ -42,9 +59,17 @@ class REPORT_Item extends Component {
             <td>
                 <Form.Control id="name" type="text" onChange={this.handleChange}/>
             </td>
-            <td>
-                <Form.Control id="module" type="text" onChange={this.handleChange}/>
-            </td>
+            {this.props.loaded_data ?
+                <td>
+                    <Form.Control id="module" as="select" onChange={this.handleChange}>
+                        {this.loadModules()}
+                    </Form.Control>
+                </td>
+            :
+                <td>
+                    <Form.Control id="module" type="text" onChange={this.handleChange}/>
+                </td>
+            }
             <td>
                 <Form.Control id="parameters" as="select" onChange={this.handleChange}>
                     {this.generateOptions("report")}
@@ -66,7 +91,8 @@ class REPORT_Item extends Component {
 
 const mapStateToProps = state => ({
     reports: state.reports,
-    parameter_sets: state.parameter_sets
+    parameter_sets: state.parameter_sets,
+    loaded_data: state.loaded_data.caps
 });
 
 const mapDispatchToProps = dispatch => ({
