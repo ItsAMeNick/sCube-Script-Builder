@@ -232,6 +232,22 @@ class CONDIT_Item extends Component {
                                 {this.loadContacts()}
                             </Form.Control>
                         );
+            } else if ((this.props.loaded_inspections && this.props.conditions[this.props.id].portlet === "Inspection")) {
+                if (keys[1] === "type.1") {
+                    row.push(
+                                <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                    {this.loadInspections()}
+                                </Form.Control>
+                            );
+                } else if (keys[1] === "type.2") {
+                    row.push(
+                                <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                    {this.loadInspectionResults()}
+                                </Form.Control>
+                            );
+                } else {
+                    row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                }
             } else {
                 row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
             }
@@ -343,6 +359,32 @@ class CONDIT_Item extends Component {
         }));
     }
 
+    loadInspections() {
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            //Filter using CAP ID
+            return true;
+        }).sort((item1, item2) => {
+            let i1 = item1.group +"/"+item1.type
+            let i2 = item2.group +"/"+item2.type
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.group +"/"+item.type} value={item.type}/>
+        }));
+    }
+
+    loadInspectionResults() {
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            //Filter using CAP ID
+            return true;
+        }).sort((item1, item2) => {
+            let i1 = item1.group +"/"+item1.type
+            let i2 = item2.group +"/"+item2.type
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.group +"/"+item.type} value={item.type}/>
+        }));
+    }
+
     render() {
         return (
         <tr>
@@ -405,7 +447,9 @@ const mapStateToProps = state => ({
     loaded_data: state.loaded_data.caps,
     loaded_id: state.structure.loaded_id,
     loaded_contacts: state.loaded_data.contact_types,
-    loaded_docs: state.loaded_data.doc_types
+    loaded_docs: state.loaded_data.doc_types,
+    loaded_inspections: state.loaded_data.inspections,
+    loaded_results: state.loaded_data.inspection_results
 });
 
 const mapDispatchToProps = dispatch => ({

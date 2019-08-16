@@ -78,7 +78,6 @@ class CORE_Upload extends Component {
                                     }
                                 } else {
                                     for (let i in rawJSON) {
-                                        console.log(rawJSON[i]);
                                         for (let a in rawJSON[i].asiModels.asiModel) {
                                             if (!Object.keys(rawJSON[i].asiModels.asiModel).includes("0")) {
                                                 let asi = rawJSON[i].asiModels.asiModel;
