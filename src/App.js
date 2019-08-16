@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
@@ -43,13 +42,12 @@ class App extends Component {
     render() {
         return (
         <ReduxProvider store={reduxStore}>
-        <div className="App">
-        <Upload/>
-        <Container>
-            <Row> <h6>&nbsp;</h6> </Row>
+        <Col className="main">
             <Row>
                 <h1>[s]Cube Script Builder</h1>
             </Row>
+            <hr/>
+            <Upload/>
             <hr/>
             <CoreMode/>
             <hr/>
@@ -93,8 +91,7 @@ class App extends Component {
             </Col> <hr/> <Row>
                 <TestDump/>
             </Row>
-        </Container>
-        </div>
+        </Col>
         </ReduxProvider>
         );
     }
