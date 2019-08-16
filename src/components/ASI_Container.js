@@ -30,6 +30,7 @@ class ASI_Container extends Component {
                     <tr>
                     <th>#</th>
                     <th>Field Name</th>
+                    <th>Static</th>
                     <th>New Value</th>
                     </tr>
                 </thead>

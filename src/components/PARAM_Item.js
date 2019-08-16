@@ -24,7 +24,7 @@ class PARAM_Item extends Component {
         //Need to remove any parameters past this one
         let level;
         if (event.target.id === "portlet") {
-            level = 0
+            level = 0;
         } else {
             level = parseInt(event.target.id.split("level")[1]);
         }
@@ -49,7 +49,7 @@ class PARAM_Item extends Component {
         });
     }
 
-    //Changes made to this function should be checked in CONDIT_Item
+    //Changes made to this function should be checked in CONDIT_Item && ASI_ITEM
     generateMap(map, level, parent, row) {
         if (row === null) row = [];
 

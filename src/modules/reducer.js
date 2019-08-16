@@ -68,6 +68,7 @@ const initialState = {
     asis: {
         "1": {
             key: 1,
+            static: true,
             name: null,
             value: null
         }
