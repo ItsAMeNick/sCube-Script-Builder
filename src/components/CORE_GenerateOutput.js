@@ -1045,9 +1045,24 @@ class CORE_GenerateOutput extends Component {
         let asi_text = "";
         if (this.props.state.functionality.asi === true) {
             let asi = this.props.state.asis[asi_num];
-            asi_text += "editAppSpecific(\""
-                        + asi.name + "\", \""
-                        + asi.value + "\");";
+            if (asi.static) {
+                if (isNaN(asi.value)) {
+                    //This handles non-numeric static values
+                    asi_text += "editAppSpecific(\""
+                                + asi.name + "\", \""
+                                + asi.value + "\");";
+                } else {
+                    //This is the numeric static handler
+                    asi_text += "editAppSpecific(\""
+                                + asi.name + "\", "
+                                + asi.value + ");";
+                }
+            } else {
+                //Pulling in a oneline script call
+                asi_text += "editAppSpecific(\""
+                            + asi.name + "\", "
+                            + asi.value + ");";
+            }
         }
         return asi_text;
     }

@@ -30,7 +30,9 @@ class ASI_Item extends Component {
         let newValue = event.target.value;
 
         //Reset the special values upon change
-        newASIs[this.props.asi_number].value = null;
+        if (event.target.id !== "name") {
+            newASIs[this.props.asi_number].value = null;
+        }
 
         newASIs[this.props.asi_number][event.target.id] = newValue;
 
@@ -217,6 +219,73 @@ class ASI_Item extends Component {
         return row;
     }
 
+    loadAllASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            console.log()
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
+    }
+
+    loadMyASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].asi_code === item.code;
+            } else {
+                return true;
+            }
+        }).filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            console.log()
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
+    }
+
+    loadContacts() {
+        return [<option key={-1}/>].concat(this.props.loaded_contacts
+            .sort((item1, item2) => {
+                return item1.value.localeCompare(item2.value);
+            }).map(item => {
+                return <option key={item.key} label={item.value} value={item.value}/>
+            }));
+    }
+
+    loadDocuments() {
+        return [<option key={-1}/>].concat(this.props.loaded_docs.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].doc_code === item.code;
+            } else {
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.type.localeCompare(item2.type);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
     render() {
         return (
         <tr>
@@ -260,7 +329,9 @@ const mapStateToProps = state => ({
     loaded_data: state.loaded_data.caps,
     loaded_id: state.structure.loaded_id,
     event_type: state.event_type,
-    mode: state.mode
+    mode: state.mode,
+    loaded_contacts: state.loaded_data.contact_types,
+    loaded_docs: state.loaded_data.doc_types
 });
 
 const mapDispatchToProps = dispatch => ({
