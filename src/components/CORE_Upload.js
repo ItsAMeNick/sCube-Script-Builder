@@ -78,16 +78,30 @@ class CORE_Upload extends Component {
                                     }
                                 } else {
                                     for (let i in rawJSON) {
+                                        console.log(rawJSON[i]);
                                         for (let a in rawJSON[i].asiModels.asiModel) {
-                                            let asi = rawJSON[i].asiModels.asiModel[a];
-                                            filteredJSON.push({
-                                                key: filteredJSON.length,
-                                                code: asi.r1CheckboxCode,
-                                                name: asi.r1CheckboxDesc,
-                                                group: asi.r1CheckboxGroup,
-                                                type: asi.r1CheckboxType,
-                                                alias: asi.subGroupAlias
-                                            });
+                                            if (!Object.keys(rawJSON[i].asiModels.asiModel).includes("0")) {
+                                                let asi = rawJSON[i].asiModels.asiModel;
+                                                filteredJSON.push({
+                                                    key: filteredJSON.length,
+                                                    code: asi.r1CheckboxCode,
+                                                    name: asi.r1CheckboxDesc,
+                                                    group: asi.r1CheckboxGroup,
+                                                    type: asi.r1CheckboxType,
+                                                    alias: asi.subGroupAlias
+                                                });
+                                                break;
+                                            } else {
+                                                let asi = rawJSON[i].asiModels.asiModel[a];
+                                                filteredJSON.push({
+                                                    key: filteredJSON.length,
+                                                    code: asi.r1CheckboxCode,
+                                                    name: asi.r1CheckboxDesc,
+                                                    group: asi.r1CheckboxGroup,
+                                                    type: asi.r1CheckboxType,
+                                                    alias: asi.subGroupAlias
+                                                });
+                                            }
                                         }
                                     }
                                 }
