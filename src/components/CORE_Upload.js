@@ -153,6 +153,7 @@ class CORE_Upload extends Component {
                             case "InspectionGroupModel.xml": {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.inspectionGroup;
+                                console.log(rawJSON);
                                 let filteredJSON = [];
                                 if (!Object.keys(rawJSON).includes("0")) {
                                     for (let ii in rawJSON.inspectionTypeModels.inspectionTypeModel) {
@@ -180,6 +181,38 @@ class CORE_Upload extends Component {
                                     }
                                 }
                                 this.props.update("inspections", filteredJSON);
+                                break;
+                            }
+
+                            case "RefInspectionResultGroupModel.xml": {
+                                console.log("LOADING File: " + file_names[f]);
+                                let rawJSON = fxp.parse(file_text).list.refInspResultGroup;
+                                console.log(rawJSON);
+                                let filteredJSON = [];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                    for (let ii in rawJSON.inspectionResultGroupModels.inspectionResultGroupModel) {
+                                        let insp = rawJSON.inspectionResultGroupModels.inspectionResultGroupModel[ii];
+                                        filteredJSON.push({
+                                            key: filteredJSON.length,
+                                            group: insp.inspResultGroup,
+                                            result: insp.inspResult,
+                                            type: insp.inspResultType
+                                        });
+                                    }
+                                } else {
+                                    for (let i in rawJSON) {
+                                        for (let ii in rawJSON[i].inspectionResultGroupModels.inspectionResultGroupModel) {
+                                            let insp = rawJSON[i].inspectionResultGroupModels.inspectionResultGroupModel[ii];
+                                            filteredJSON.push({
+                                                key: filteredJSON.length,
+                                                group: insp.inspResultGroup,
+                                                result: insp.inspResult,
+                                                type: insp.inspResultType
+                                            });
+                                        }
+                                    }
+                                }
+                                this.props.update("inspection_results", filteredJSON);
                                 break;
                             }
 
