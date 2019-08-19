@@ -273,11 +273,15 @@ class CONDIT_Item extends Component {
                     }
                     case "type.4": {
                         if (this.props.loaded_checklists) {
-                            row.push(
-                                    <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
-                                        {this.loadChecklistItems()}
-                                    </Form.Control>
-                                );
+                            if (this.loadChecklistItems().length <= 1) {
+                                row.push(<Form.Control id={keys[1]+"-"+this.props.id} readOnly value="No Guidesheet" key={newId}/>);
+                            } else {
+                                row.push(
+                                        <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                            {this.loadChecklistItems()}
+                                        </Form.Control>
+                                    );
+                            }
                         } else {
                             row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Checklist Item--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
                         }
@@ -324,8 +328,13 @@ class CONDIT_Item extends Component {
             }
         }
 
+        console.log(levelValue);
+
         //Check if you should go to the next level
         if (levelValue) {
+            if (levelValue.split(".")[0] === "type") {
+                if (!this.props.conditions[this.props.id][levelValue]) return row;
+            }
             this.generateX(map[levelValue], level + 1, levelValue, row);
         }
         return row;
