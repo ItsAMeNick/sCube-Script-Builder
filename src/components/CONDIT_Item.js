@@ -44,6 +44,24 @@ class CONDIT_Item extends Component {
             // Clear some things
             newConditions[this.props.id].comparison_x = null;
             newConditions[this.props.id].free = "";
+
+            let types = Object.keys(newConditions[this.props.id]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            for (let t in types) {
+                delete newConditions[this.props.id][types[t]];
+            }
+        }
+
+        //Delete all types past this one
+        if (type.split(".")[0] === "type") {
+            let myTypeId = type.split(".")[1];
+            let types = Object.keys(newConditions[this.props.id]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            for (let t in types) {
+                if (types[t].split(".")[1] > myTypeId) delete newConditions[this.props.id][types[t]];
+            }
         }
 
         //Do the map clearing
@@ -123,7 +141,6 @@ class CONDIT_Item extends Component {
                 return row;
             }
         }
-
         let keys = [""].concat(Object.keys(map));
 
         //Remove invalid keys then sort
@@ -151,9 +168,14 @@ class CONDIT_Item extends Component {
 
         //Handle Special Cases
         if (keys[1] === "script") {
-            if (this.props.conditions[this.props.id].type) {
+            let types = Object.keys(this.props.conditions[this.props.id]).filter(item => {
+                return item.split(".")[0] === "type";
+            });
+            if (types.length >= 1) {
                 let newText = map.script;
-                newText = newText.replace("^$*$^", this.props.conditions[this.props.id].type);
+                for (let t in types) {
+                    newText = newText.replace("^$"+types[t].split(".")[1]+"$^", this.props.conditions[this.props.id][types[t]]);
+                }
                 if (newText !== this.props.conditions[this.props.id].comparison_x) {
                     this.addX(newText);
                 }
@@ -171,11 +193,11 @@ class CONDIT_Item extends Component {
             if (free_text !== this.props.conditions[this.props.id].script) {
                 this.addX(free_text);
             }
-        } else if (keys[1] === "type") {
-            levelValue = "type";
+        } else if (keys[1].split(".")[0] === "type") {
+            levelValue = keys[1];
         }
 
-        if (keys[1] !== "free" && keys[1] !== "type") {
+        if (keys[1] !== "free" && keys[1].split(".")[0] !== "type") {
             let c = 0;
             row.push(<Form.Control key={newId} id={newId} as="select" value={levelValue} onChange={this.handleChange}>
                 {keys.map((k) => {
@@ -184,13 +206,138 @@ class CONDIT_Item extends Component {
                 })}
             </Form.Control>);
         } else if (keys[1] === "free") {
-            row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
-        } else if (keys[1] === "type") {
-            row.push(<Form.Control id={"type"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId}/>);
+            if (this.props.loaded_asis && this.props.conditions[this.props.id].portlet === "Custom Field") {
+                row.push(
+                    <Form.Control id={"free-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
+                        {this.props.conditions[this.props.id]["x.1"] === "From Parent" ?
+                            this.loadAllASI()
+                        :
+                            this.loadMyASI()
+                        }
+                    </Form.Control>
+                        );
+            } else if (this.props.loaded_docs && this.props.conditions[this.props.id].portlet === "ACA Document Name") {
+                row.push(
+                        <Form.Control id={"free-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
+                            {this.loadDocuments()}
+                        </Form.Control>
+                        );
+            } else {
+                row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
+            }
+        } else if (keys[1].split(".")[0] === "type") {
+            if (this.props.conditions[this.props.id].portlet === "Contact") {
+                if (this.props.loaded_contacts) {
+                    row.push(
+                            <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                {this.loadContacts()}
+                            </Form.Control>
+                            );
+                } else {
+                    row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Contact Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                }
+            } else if (this.props.conditions[this.props.id].portlet === "Inspection") {
+                switch (keys[1]) {
+                    case "type.1": {
+                        if (this.props.loaded_inspections) {
+                            row.push(
+                                    <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                        {this.loadInspections()}
+                                    </Form.Control>
+                                );
+                        } else {
+                            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Inspection Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                        }
+                        break;
+                    }
+                    case "type.2": {
+                        if (this.props.loaded_inspections) {
+                            row.push(
+                                    <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                        {this.loadInspectionResultGroups()}
+                                    </Form.Control>
+                                );
+                        } else {
+                            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Result Group--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                        }
+                        break;
+                    }
+                    case "type.3": {
+                        if (this.props.loaded_inspections) {
+                            row.push(
+                                    <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                        {this.loadChecklistGroups()}
+                                    </Form.Control>
+                                );
+                        } else {
+                            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Checklist Group--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                        }
+                        break;
+                    }
+                    case "type.4": {
+                        if (this.props.loaded_checklists) {
+                            if (this.loadChecklistItems().length <= 1) {
+                                row.push(<Form.Control id={keys[1]+"-"+this.props.id} readOnly value="No Guidesheet" key={newId}/>);
+                            } else {
+                                row.push(
+                                        <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                            {this.loadChecklistItems()}
+                                        </Form.Control>
+                                    );
+                            }
+                        } else {
+                            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Checklist Item--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                        }
+                        break;
+                    }
+                    case "type.5": {
+                        if (this.props.loaded_checklists) {
+                            row.push(
+                                    <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                        {this.loadChecklistASI()}
+                                    </Form.Control>
+                                );
+                        } else {
+                            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--ASI Group Code--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                        }
+                        break;
+                    }
+                    case "type.6": {
+                        if (this.props.loaded_asis) {
+                            row.push(
+                                    <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                        {this.loadASISubs()}
+                                    </Form.Control>
+                                );
+                        } else {
+                            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--ASI Group--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                        }
+                        break;
+                    }
+                    case "type.7": {
+                        if (this.props.loaded_asis) {
+                            row.push(
+                                    <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
+                                        {this.loadASIFields()}
+                                    </Form.Control>
+                                );
+                        } else {
+                            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--ASI Field--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                        }
+                        break;
+                    }
+                    default: row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                }
+            }
+        } else {
+            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
         }
 
         //Check if you should go to the next level
         if (levelValue) {
+            if (levelValue.split(".")[0] === "type") {
+                if (!this.props.conditions[this.props.id][levelValue]) return row;
+            }
             this.generateX(map[levelValue], level + 1, levelValue, row);
         }
         return row;
@@ -228,6 +375,248 @@ class CONDIT_Item extends Component {
             if (_.isEqual(tree[me], _.initial(tree[c]))) return false;
         }
         return true;
+    }
+
+    loadAllASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
+    }
+
+    loadMyASI() {
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].asi_code === item.code;
+            } else {
+                return true;
+            }
+        }).filter(item => {
+            return item.group === "APPLICATION";
+        }).sort((item1, item2) => {
+            if (item1.code.localeCompare(item2.code) === 0) {
+                if (item1.type.localeCompare(item2.type) === 0) {
+                    return item1.name.localeCompare(item2.name);
+                } else {
+                    return item1.type.localeCompare(item2.type)
+                }
+            } else {
+                return item1.code.localeCompare(item2.code);
+            }
+        }).map(item => {
+            return <option key={item.key} label={item.alias ? item.code+" - "+item.type+" - "+item.alias : item.code+" - "+item.type+" - "+item.name} value={item.name}/>
+        }));
+    }
+
+    loadContacts() {
+        return [<option key={-1}/>].concat(this.props.loaded_contacts
+            .sort((item1, item2) => {
+                return item1.value.localeCompare(item2.value);
+            }).map(item => {
+                return <option key={item.key} label={item.value} value={item.value}/>
+            }));
+    }
+
+    loadDocuments() {
+        return [<option key={-1}/>].concat(this.props.loaded_docs.filter(item => {
+            if (this.props.loaded_id >= 0) {
+                return this.props.loaded_data[this.props.loaded_id].doc_code === item.code;
+            } else {
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.type.localeCompare(item2.type);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
+    //This function is used to generate the list of inspection groups/type
+    //Removes duplicates
+    loadInspections() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            //Filter using CAP ID
+            return true;
+        }).filter(item => {
+            //Filter out duplicates
+            if (used.includes(item.code)) {
+                return false;
+            } else {
+                used.push(item.code);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.code
+            let i2 = item2.code
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.group +"/"+item.code} value={item.code}/>
+        }));
+    }
+
+    //This function generates a list of inspection result groups based on the inspection chosen.
+    //This function assumes that inspection will be a "type.1" variable
+    //Removes duplicates
+    loadInspectionResultGroups() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            if (this.props.conditions[this.props.id]["type.1"]) {
+                return item.code === this.props.conditions[this.props.id]["type.1"];
+            }
+            return false;
+        }).filter(item => {
+            //Filter out duplicates
+            if (used.includes(item.code)) {
+                return false;
+            } else {
+                used.push(item.code);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.result;
+            let i2 = item2.result;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.result} value={item.result}/>
+        }));
+    }
+
+    //This function generates a list of checklist groups based on the inspection chosen.
+    //This function assumes that inspection will be a "type.1" variable
+    loadChecklistGroups() {
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            if (this.props.conditions[this.props.id]["type.1"]) {
+                return item.code === this.props.conditions[this.props.id]["type.1"];
+            }
+            return false;
+        }).sort((item1, item2) => {
+            let i1 = item1.type;
+            let i2 = item2.type;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
+    //This function loads checklist items for the dropdown menu
+    //It removes duplicates
+    //Assumes type is a "type.3" variable, then finds guidesheet
+    loadChecklistItems() {
+        let used = [];
+        let guidesheets = [];
+        if (this.props.conditions[this.props.id]["type.3"] && this.props.loaded_inspections) {
+            for (let i in this.props.loaded_inspections) {
+                if (this.props.loaded_inspections[i].type === this.props.conditions[this.props.id]["type.3"]) {
+                    if (this.props.loaded_inspections[i].guidesheet) guidesheets.push(this.props.loaded_inspections[i].guidesheet);
+                }
+            }
+        }
+        return [<option key={-1}/>].concat(this.props.loaded_checklists.filter(item => {
+            if (guidesheets.length >= 1) {
+                return guidesheets.includes(item.type);
+            }
+            return false;
+        }).filter(item => {
+            if (used.includes(item.group)) {
+                return false;
+            } else {
+                used.push(item.group);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.group;
+            let i2 = item2.group;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.group} value={item.group}/>
+        }));
+    }
+
+    //This function loads checklist asi's based on the value in "type.4"
+    loadChecklistASI() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_checklists.filter(item => {
+            if (this.props.conditions[this.props.id]["type.4"]) {
+                return item.group === this.props.conditions[this.props.id]["type.4"];
+            }
+            return false;
+        }).filter(item => {
+            if (!item.asi_group) return false;
+            if (used.includes(item.asi_group)) {
+                return false;
+            } else {
+                used.push(item.asi_group);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.asi_group;
+            let i2 = item2.asi_group;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.asi_group} value={item.asi_group}/>
+        }));
+    }
+
+    //This function loads asi's subgroups based on the value in "type.5"
+    loadASISubs() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.conditions[this.props.id]["type.5"]) {
+                return item.code === this.props.conditions[this.props.id]["type.5"];
+            }
+            return false;
+        }).filter(item => {
+            if (!item.type) return false;
+            if (used.includes(item.type)) {
+                return false;
+            } else {
+                used.push(item.type);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.type;
+            let i2 = item2.type;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
+    //This function loads asi's fields based on the value in "type.6"
+    loadASIFields() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.conditions[this.props.id]["type.6"]) {
+                return item.type === this.props.conditions[this.props.id]["type.6"];
+            }
+            return false;
+        }).filter(item => {
+            if (!item.name) return false;
+            if (used.includes(item.name)) {
+                return false;
+            } else {
+                used.push(item.name);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.name;
+            let i2 = item2.name;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.name} value={item.name}/>
+        }));
     }
 
     render() {
@@ -287,7 +676,15 @@ class CONDIT_Item extends Component {
 const mapStateToProps = state => ({
     conditions: state.conditions,
     event_type: state.event_type,
-    mode: state.mode
+    mode: state.mode,
+    loaded_asis: state.loaded_data.asis,
+    loaded_data: state.loaded_data.caps,
+    loaded_id: state.structure.loaded_id,
+    loaded_contacts: state.loaded_data.contact_types,
+    loaded_docs: state.loaded_data.doc_types,
+    loaded_inspections: state.loaded_data.inspections,
+    loaded_results: state.loaded_data.inspection_results,
+    loaded_checklists: state.loaded_data.checklists
 });
 
 const mapDispatchToProps = dispatch => ({

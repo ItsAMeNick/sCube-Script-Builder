@@ -57,113 +57,124 @@ const initialState = {
         report: false,
     },
     status: {
-        "1": {
-            key: 1,
-            label: null,
-            comment: null,
-            optional_cap: false,
-            cap: null
-        }
+        // "1": {
+        //     key: 1,
+        //     label: null,
+        //     comment: null,
+        //     optional_cap: false,
+        //     cap: null
+        // }
     },
     asis: {
-        "1": {
-            key: 1,
-            name: null,
-            value: null
-        }
+        // "1": {
+        //     key: 1,
+        //     static: true,
+        //     name: null,
+        //     value: null
+        // }
     },
     fees: {
-        "1": {
-        key: 1,
-        code: null,
-        schedule: null,
-        period: "FINAL",
-        quantity: null,
-        invoice: "Y"
-    }},
+        // "1": {
+        //     key: 1,
+        //     code: null,
+        //     schedule: null,
+        //     period: "FINAL",
+        //     quantity: null,
+        //     invoice: "Y"
+        // }
+    },
     parameter_sets: {
-        "1": {
-            key: 1,
-            name: "set 1",
-            style: "email",
-            parameters: {
-                "1": {
-                    key: 1,
-                    ref: null,
-                    script: null,
-                    portlet: null,
-                }
-            }
-        }
+        // "1": {
+        //     key: 1,
+        //     name: "set 1",
+        //     style: "email",
+        //     parameters: {
+        //         "1": {
+        //             key: 1,
+        //             ref: null,
+        //             script: null,
+        //             portlet: null,
+        //         }
+        //     }
+        // }
     },
     new_records: {
-        "1": {
-            key: 1,
-            structure: {
-                module: "NA",
-                type: "NA",
-                subtype: "NA",
-                category: "NA"
-            },
-            relationship: null,
-            copy_data: {
-                asi: false,
-                asit: false,
-                contacts: false,
-                owners: false,
-                professionals: false,
-                address: false,
-                parcel: false
-            }
-        }
+        // "1": {
+        //     key: 1,
+        //     structure: {
+        //         module: "NA",
+        //         type: "NA",
+        //         subtype: "NA",
+        //         category: "NA"
+        //     },
+        //     relationship: null,
+        //     copy_data: {
+        //         asi: false,
+        //         asit: false,
+        //         contacts: false,
+        //         owners: false,
+        //         professionals: false,
+        //         address: false,
+        //         parcel: false
+        //     }
+        // }
     },
     notifications: {
-        "1": {
-            key: 1,
-            template: null,
-            from: null,
-            contacts: "",
-            professionals: "",
-            report_name: null,
-            report_parameters: null,
-            report_module: null,
-            email_params: null
-        }
+        // "1": {
+        //     key: 1,
+        //     template: null,
+        //     from: null,
+        //     contacts: "",
+        //     professionals: "",
+        //     report_name: null,
+        //     report_parameters: null,
+        //     report_module: null,
+        //     email_params: null
+        // }
     },
     reports: {
-        "1": {
-            key: 1,
-            name: "",
-            module: "",
-            parameters: null
-        }
+        // "1": {
+        //     key: 1,
+        //     name: "",
+        //     module: "",
+        //     parameters: null
+        // }
     },
     workflows: {
-        "1": {
-            key: 1,
-            action: null,
-            task: null,
-            status: null,
-            comment: null
-        }
+        // "1": {
+        //     key: 1,
+        //     action: null,
+        //     task: null,
+        //     status: null,
+        //     comment: null
+        // }
     },
     inspections: {
-        "1": {
-            key: 1,
-            type: null,
-            days_out: null
-        }
+        // "1": {
+        //     key: 1,
+        //     type: null,
+        //     days_out: null
+        // }
     },
     cancels: {
-        "1": {
-            key: 1,
-            message: null
-        }
+        // "1": {
+        //     key: 1,
+        //     message: null
+        // }
     },
     loaded_data: {
+        svp: null,
         caps: null,
         asis: null,
-        fees: null
+        fees: null,
+        notes: null,
+        inspections: null,
+        inspection_results: null,
+        contact_types: null,
+        lp_types: null,
+        doc_types: null,
+        workflows: null,
+        checklists: null,
     }
 };
 
@@ -215,7 +226,10 @@ const sCubeReducer = (state = initialState, action) => {
     }
     case "delete_batch_structure": {
         let newState = _.cloneDeep(state);
-        newState.batch = action.payload.batch;
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.batch.structures[action.payload];
         return newState;
     }
 
@@ -368,7 +382,7 @@ const sCubeReducer = (state = initialState, action) => {
             {
                 key: m,
                 code: null,
-                schedule: state.fees[prev].schedule,
+                schedule: (state.fees[prev] ? state.fees[prev].schedule : ""),
                 period: "FINAL",
                 quantity: null,
                 invoice: "Y"
@@ -509,6 +523,22 @@ const sCubeReducer = (state = initialState, action) => {
                 portlet: null,
             }
         newState.parameter_sets[action.payload].parameters = myParams;
+        return newState;
+    }
+    case "delete_parameter_set": {
+        let newState = _.cloneDeep(state);
+        if (action.payload === "1") {
+            return newState;
+        }
+        delete newState.parameter_sets[action.payload]
+        return newState;
+    }
+    case "delete_parameter": {
+        let newState = _.cloneDeep(state);
+        if (action.payload.param === "1") {
+            return newState;
+        }
+        delete newState.parameter_sets[action.payload.set].parameters[action.payload.param]
         return newState;
     }
 

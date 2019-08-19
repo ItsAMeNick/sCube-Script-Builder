@@ -77,8 +77,8 @@ class CORE_Structure extends Component {
     }
 
     loadModules() {
-        let used_modules = []
-        let modules = [<option key={-1}/>].concat(this.props.loaded_data.filter(item => {
+        let used_modules = [];
+        let modules = [<option key={-1}/>, <option key={"*"} label={"*"} value={"*"}/>].concat(this.props.loaded_data.filter(item => {
             if (used_modules.includes(item.module)) {
                 return false;
             } else {
@@ -94,9 +94,9 @@ class CORE_Structure extends Component {
     }
 
     loadTypes() {
-        let types = [<option key={-1}/>]
+        let types = [<option key={-1}/>, <option key={"*"} label={"*"} value={"*"}/>, <option key={"NA"} label={"NA"} value={"NA"}/>]
         if (this.props.structure.module) {
-            let used_types = []
+            let used_types = ["NA"];
             types = types.concat(this.props.loaded_data.filter(item => {
                 return item.module === this.props.structure.module;
             }).filter(item => {
@@ -116,9 +116,9 @@ class CORE_Structure extends Component {
     }
 
     loadSubTypes() {
-        let subtypes = [<option key={-1}/>]
+        let subtypes = [<option key={-1}/>, <option key={"*"} label={"*"} value={"*"}/>, <option key={"NA"} label={"NA"} value={"NA"}/>]
         if (this.props.structure.type) {
-            let used_subtypes = []
+            let used_subtypes = ["NA"];
             subtypes = subtypes.concat(this.props.loaded_data.filter(item => {
                 return item.type === this.props.structure.type;
             }).filter(item => {
@@ -138,11 +138,11 @@ class CORE_Structure extends Component {
     }
 
     loadCategories() {
-        let categories = [<option key={-1}/>]
-        if (this.props.structure.category) {
-            let used_categories = []
+        let categories = [<option key={-1}/>, <option key={"*"} label={"*"} value={"*"}/>, <option key={"NA"} label={"NA"} value={"NA"}/>]
+        if (this.props.structure.subtype) {
+            let used_categories = ["NA"];
             categories = categories.concat(this.props.loaded_data.filter(item => {
-                return item.category === this.props.structure.category;
+                return item.subtype === this.props.structure.subtype;
             }).filter(item => {
                 if (used_categories.includes(item.category)) {
                     return false;

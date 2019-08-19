@@ -3,11 +3,23 @@
 //A branch terminates when a "script" is met
 //The words "free" and "type" allow for special funcationality
 //DO NOT USE SCRIPT/FREE/TYPE AS KEYS, THEY IMPLY SPECIAL FUNCTIONALITY
+//------------------------------------
 //Free has a child of script and the *** in the script is replaced with the
 //  value of free.
-//if script == "***ADD ME!" the parameter will go red to show this is not ready
-
+//------------------------------------
+// SO I went around to beefing up "type".
+// now use "type.SOMETHING"
+// in the eventual script use ^$SOMETHING$^ as your placeholder
+// the SOMETHING can techincally be anything, but nested
+// types' SOMETHING must be evaluate as > the preceding one
+// they are evaluated as strings for comparison purposes
+// Basically if you use string good luck, but numbers should have no issue as
+// long as you remain below 9 (0-9)
+// you could also use a-Z which would provide 52 levels if you really need
+// that kind of mess in your life.
+//-----------------------------------------
 //EVENT SPECIFIC ALSO HAS CUSTOM SCRIPTING, contact Nick Zoner for information.
+// I probably wont even know... :'(
 
 var variable_map = {
     "General":
@@ -236,108 +248,108 @@ var variable_map = {
     },
     "Contact":
     {
-        type:
+        "type.1":
         {
             "Personal Information":
             {
                 "First Name":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'firstName')"
+                    script: "getContactComponent(capId, '^$1$^', 'firstName')"
                 },
                 "Last Name":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'lastName')"
+                    script: "getContactComponent(capId, '^$1$^', 'lastName')"
                 },
                 "Middle Name":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'middleName')"
+                    script: "getContactComponent(capId, '^$1$^', 'middleName')"
                 },
                 "Full Name":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'fullName')"
+                    script: "getContactComponent(capId, '^$1$^', 'fullName')"
                 },
                 "Email":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'email')"
+                    script: "getContactComponent(capId, '^$1$^', 'email')"
                 },
                 "Phone 1":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'phone1')"
+                    script: "getContactComponent(capId, '^$1$^', 'phone1')"
                 },
                 "Phone 2":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'phone2')"
+                    script: "getContactComponent(capId, '^$1$^', 'phone2')"
                 },
                 "Phone 3":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'phone3')"
+                    script: "getContactComponent(capId, '^$1$^', 'phone3')"
                 },
                 "Fax":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'fax')"
+                    script: "getContactComponent(capId, '^$1$^', 'fax')"
                 },
                 "Business Name":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'businessName')"
+                    script: "getContactComponent(capId, '^$1$^', 'businessName')"
                 },
                 "Business Name 2":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'businessName2')"
+                    script: "getContactComponent(capId, '^$1$^', 'businessName2')"
                 },
                 "Title":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'title')"
+                    script: "getContactComponent(capId, '^$1$^', 'title')"
                 },
                 "Social Security Number":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'socialSecurity')"
+                    script: "getContactComponent(capId, '^$1$^', 'socialSecurity')"
                 },
                 "Driver's License Number":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'driversLicenseNumber')"
+                    script: "getContactComponent(capId, '^$1$^', 'driversLicenseNumber')"
                 },
                 "Driver's License State":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'driversLicenseState')"
+                    script: "getContactComponent(capId, '^$1$^', 'driversLicenseState')"
                 },
                 "Birth Date":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'birthDate')"
+                    script: "getContactComponent(capId, '^$1$^', 'birthDate')"
                 },
                 "Trade Name":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'tradeName')"
+                    script: "getContactComponent(capId, '^$1$^', 'tradeName')"
                 }
             },
             "Address":
             {
                 "Line 1":
                 {
-                    script:  "getContactComponent(capId, '^$*$^', 'contactAddressLine1')"
+                    script:  "getContactComponent(capId, '^$1$^', 'contactAddressLine1')"
                 },
                 "Line 2":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'contactAddressLine2')"
+                    script: "getContactComponent(capId, '^$1$^', 'contactAddressLine2')"
                 },
                 "Line 3":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'contactAddressLine3')"
+                    script: "getContactComponent(capId, '^$1$^', 'contactAddressLine3')"
                 },
                 "City":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'contactAddressCity')"
+                    script: "getContactComponent(capId, '^$1$^', 'contactAddressCity')"
                 },
                 "State":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'contactAddressState')"
+                    script: "getContactComponent(capId, '^$1$^', 'contactAddressState')"
                 },
                 "Zip":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'contactAddressZip')"
+                    script: "getContactComponent(capId, '^$1$^', 'contactAddressZip')"
                 },
                 "Country":
                 {
-                    script: "getContactComponent(capId, '^$*$^', 'contactAddressCountry')"
+                    script: "getContactComponent(capId, '^$1$^', 'contactAddressCountry')"
                 }
             },
             "External Address":
@@ -346,204 +358,204 @@ var variable_map = {
                 {
                     "Line 1":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalAddressLine1')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalAddressLine1')"
                     },
                     "Line 2":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalAddressLine2')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalAddressLine2')"
                     },
                     "Line 3":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalAddressLine3')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalAddressLine3')"
                     },
                     "City":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalCity')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalCity')"
                     },
                     "State":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalState')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalState')"
                     },
                     "Zip":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalZip')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalZip')"
                     },
                     "Unit Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalUnitStart')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalUnitStart')"
                     },
                     "Unit Type":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalUnitType')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalUnitType')"
                     },
                     "House Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalHouseNumber')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalHouseNumber')"
                     },
                     "Street Prefix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalStreetPrefix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalStreetPrefix')"
                     },
                     "Street Direction":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalStreetDirection')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalStreetDirection')"
                     },
                     "Street Suffix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Mailing', 'externalStreetSuffix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Mailing', 'externalStreetSuffix')"
                     }
                 },
                 "Billing":
                 {
                     "Line 1":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalAddressLine1')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalAddressLine1')"
                     },
                     "Line 2":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalAddressLine2')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalAddressLine2')"
                     },
                     "Line 3":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalAddressLine3')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalAddressLine3')"
                     },
                     "City":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalCity')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalCity')"
                     },
                     "State":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalState')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalState')"
                     },
                     "Zip":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalZip')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalZip')"
                     },
                     "Unit Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalUnitStart')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalUnitStart')"
                     },
                     "Unit Type":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalUnitType')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalUnitType')"
                     },
                     "House Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalHouseNumber')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalHouseNumber')"
                     },
                     "Street Prefix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalStreetPrefix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalStreetPrefix')"
                     },
                     "Street Direction":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalStreetDirection')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalStreetDirection')"
                     },
                     "Street Suffix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Billing', 'externalStreetSuffix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Billing', 'externalStreetSuffix')"
                     }
                 },
                 "Business":
                 {
                     "Line 1":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalAddressLine1')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalAddressLine1')"
                     },
                     "Line 2":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalAddressLine2')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalAddressLine2')"
                     },
                     "Line 3":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalAddressLine3')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalAddressLine3')"
                     },
                     "City":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalCity')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalCity')"
                     },
                     "State":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalState')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalState')"
                     },
                     "Zip":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalZip')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalZip')"
                     },
                     "Unit Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalUnitStart')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalUnitStart')"
                     },
                     "Unit Type":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalUnitType')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalUnitType')"
                     },
                     "House Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalHouseNumber')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalHouseNumber')"
                     },
                     "Street Prefix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalStreetPrefix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalStreetPrefix')"
                     },
                     "Street Direction":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalStreetDirection')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalStreetDirection')"
                     },
                     "Street Suffix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Business', 'externalStreetSuffix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Business', 'externalStreetSuffix')"
                     }
                 },
                 "Home":
                 {
                     "Line 1":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalAddressLine1')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalAddressLine1')"
                     },
                     "Line 2":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalAddressLine2')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalAddressLine2')"
                     },
                     "Line 3":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalAddressLine3')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalAddressLine3')"
                     },
                     "City":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalCity')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalCity')"
                     },
                     "State":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalState')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalState')"
                     },
                     "Zip":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalZip')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalZip')"
                     },
                     "Unit Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalUnitStart')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalUnitStart')"
                     },
                     "Unit Type":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalUnitType')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalUnitType')"
                     },
                     "House Number":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalHouseNumber')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalHouseNumber')"
                     },
                     "Street Prefix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalStreetPrefix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalStreetPrefix')"
                     },
                     "Street Direction":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalStreetDirection')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalStreetDirection')"
                     },
                     "Street Suffix":
                     {
-                        script: "getContactAddressComponent(capId, '^$*$^', 'Home', 'externalStreetSuffix')"
+                        script: "getContactAddressComponent(capId, '^$1$^', 'Home', 'externalStreetSuffix')"
                     }
                 }
             },
@@ -645,6 +657,36 @@ var variable_map = {
         "Parent CAP ID":
         {
             script: "parentCapId"
+        }
+    },
+    "Inspection":
+    {
+        "type.1":
+        {
+            "type.2":
+            {
+                "type.3":
+                {
+                    "Status": {
+                        script: "Status of ^$1$^, ^$2$^, ^$3$^"
+                    },
+                    "Guidesheet Item": {
+                        "type.4":
+                        {
+                            "type.5":
+                            {
+                                "type.6":
+                                {
+                                    "type.7":
+                                    {
+                                        script: "zachsCoolFunction('^$1$^', '^$2$^', '^$3$^', '^$4$^', '^$5$^', '^$6$^', '^$7$^')"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

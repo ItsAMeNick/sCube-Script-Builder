@@ -13,7 +13,7 @@ class CORE_GenerateOutput extends Component {
         super(props);
         this.state = {};
         this.parseConditions = this.parseConditions.bind(this);
-        this.storeSession = this.storeSession.bind(this);
+        this.generateOutputLog = this.generateOutputLog.bind(this);
     }
 
     genName = u => {
@@ -1045,9 +1045,24 @@ class CORE_GenerateOutput extends Component {
         let asi_text = "";
         if (this.props.state.functionality.asi === true) {
             let asi = this.props.state.asis[asi_num];
-            asi_text += "editAppSpecific(\""
-                        + asi.name + "\", \""
-                        + asi.value + "\");";
+            if (asi.static) {
+                if (isNaN(asi.value)) {
+                    //This handles non-numeric static values
+                    asi_text += "editAppSpecific(\""
+                                + asi.name + "\", \""
+                                + asi.value + "\");";
+                } else {
+                    //This is the numeric static handler
+                    asi_text += "editAppSpecific(\""
+                                + asi.name + "\", "
+                                + asi.value + ");";
+                }
+            } else {
+                //Pulling in a oneline script call
+                asi_text += "editAppSpecific(\""
+                            + asi.name + "\", "
+                            + asi.value + ");";
+            }
         }
         return asi_text;
     }
@@ -1264,8 +1279,121 @@ class CORE_GenerateOutput extends Component {
         }
     }
 
-    storeSession() {
-        console.log(JSON.stringify(this.props.state));
+    generateOutputLog() {
+        let log = {};
+        let state_keys = Object.keys(this.props.state);
+        for (let i in state_keys) {
+            switch (state_keys[i]) {
+                case "mode": {
+                    log["Mode"] = this.props.state["mode"];
+                    break;
+                }
+                case "structure": {
+                    log["Structure"] = (this.props.state["structure"].module + "/" + this.props.state["structure"].type + "/" + this.props.state["structure"].subtype + "/" + this.props.state["structure"].category);
+                    break;
+                }
+                case "batch": {
+                    if (this.props.state.mode === "batch") {
+                        log["Batch Structures"] = [];
+                        for (let b in this.props.state.batch.structures) {
+                            log["Batch Structures"].push(this.props.state.batch.structures[b].module + "/" + this.props.state.batch.structures[b].type + "/" + this.props.state.batch.structures[b].subtype + "/" + this.props.state.batch.structures[b].category)
+                        }
+                        log["Count: Batch"] = Object.keys(this.props.state.batch.structures).length;
+                    } else {
+                        log["Batch Structures"] = "NA";
+                        log["Count: Batch"] = 0;
+                    }
+                    break;
+                }
+                case "status": {
+                    if (this.props.state.functionality["status_update"]) {
+                        log["Count: Status"] = Object.keys(this.props.state["status"]).length;
+                    } else {
+                        log["Count: Status"] = 0;
+                    }
+                    break;
+                }
+                case "asis": {
+                    if (this.props.state.functionality["asi"]) {
+                        log["Count: Edit ASI"] = Object.keys(this.props.state["asis"]).length;
+                    } else {
+                        log["Count: Edit ASI"] = 0;
+                    }
+                    break;
+                }
+                case "fees": {
+                    if (this.props.state.functionality["fees"]) {
+                        log["Count: Fees"] = Object.keys(this.props.state["fees"]).length;
+                    } else {
+                        log["Count: Fees"] = 0;
+                    }
+                    break;
+                }
+                case "new_records": {
+                    if (this.props.state.functionality["new_record"]) {
+                        log["Count: New Records"] = Object.keys(this.props.state["new_records"]).length;
+                    } else {
+                        log["Count: New Records"] = 0;
+                    }
+                    break;
+                }
+                case "notifications": {
+                    if (this.props.state.functionality["notifications"]) {
+                        log["Count: Notificaitons"] = Object.keys(this.props.state["notifications"]).length;
+                    } else {
+                        log["Count: Notificaitons"] = 0;
+                    }
+                    break;
+                }
+                case "reports": {
+                    if (this.props.state.functionality["report"]) {
+                        log["Count: Reports"] = Object.keys(this.props.state["reports"]).length;
+                    } else {
+                        log["Count: Reports"] = 0;
+                    }
+                    break;
+                }
+                case "workflows": {
+                    if (this.props.state.functionality["workflow"]) {
+                        log["Count: Workflow Changes"] = Object.keys(this.props.state["workflows"]).length;
+                    } else {
+                        log["Count: Workflow Changes"] = 0;
+                    }
+                    break;
+                }
+                case "inspections": {
+                    if (this.props.state.functionality["inspections"]) {
+                        log["Count: Inspections"] = Object.keys(this.props.state["inspections"]).length;
+                    } else {
+                        log["Count: Inspections"] = 0;
+                    }
+                    break;
+                }
+                case "cancels": {
+                    if (this.props.state.functionality["cancel"]) {
+                        log["Count: Prevent Submission"] = Object.keys(this.props.state["cancels"]).length;
+                    } else {
+                        log["Count: Prevent Submission"] = 0;
+                    }
+                    break;
+                }
+
+                case "loaded_data": {
+                    log["SVP"] = (this.props.state["loaded_data"].svp ? this.props.state["loaded_data"].svp : "NA");
+                    break;
+                }
+                case "event_type": break;
+                case "show_debug": break;
+                case "mode_extras": break;
+                case "conditions": break;
+                case "functionality": break;
+                case "parameter_sets": break;
+                default: console.log("Omitting: "+state_keys[i]);
+            }
+        }
+        log["raw"] = JSON.stringify(this.props.state);
+        log["timestamp"] = Date.now();
+        console.log(log);
     }
 
     render() {
@@ -1287,7 +1415,7 @@ class CORE_GenerateOutput extends Component {
             {this.props.state.mode === "pageflow" ? <div>
             </div> : null }
             <hr/>
-            <CopyToClipboard text={this.generateHelper()} onCopy={this.storeSession}>
+            <CopyToClipboard text={this.generateHelper()} onCopy={this.generateOutputLog}>
                 <button>Copy to Clipboard</button>
             </CopyToClipboard>
             <div style={{"border": "darkgrey solid 1px"}}>

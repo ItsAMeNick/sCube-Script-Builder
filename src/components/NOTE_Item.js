@@ -9,6 +9,7 @@ class NOTE_Item extends Component {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
+        this.handleMulti = this.handleMulti.bind(this);
     }
 
     handleChange(event) {
@@ -30,7 +31,14 @@ class NOTE_Item extends Component {
         } else {
             newValue = event.target.value;
         }
-        newNotifications[this.props.note_number][event.target.id] = newValue;
+
+        if (event.target.id === "template" && this.props.loaded_notes) {
+            newNotifications[this.props.note_number].template = this.props.loaded_notes[event.target.value].template;
+            newNotifications[this.props.note_number].from = this.props.loaded_notes[event.target.value].from;
+        } else {
+            newNotifications[this.props.note_number][event.target.id] = newValue;
+        }
+
         this.props.update({
             notifications: newNotifications
         });
@@ -50,23 +58,132 @@ class NOTE_Item extends Component {
         return options;
     }
 
+    handleMulti(event) {
+        let newNotifications = _.cloneDeep(this.props.notifications);
+        let selected;
+        if (!this.props.notifications[this.props.note_number][event.target.id]) {
+            selected = JSON.stringify([event.target.value]);
+        } else {
+            selected = [...event.target.options].filter(o => {
+                return o.selected;
+            }).map(o => {
+                return o.label;
+            })
+            selected = JSON.stringify(selected);
+        }
+        newNotifications[this.props.note_number][event.target.id] = selected;
+        this.props.update({
+            notifications: newNotifications
+        });
+    }
+
+    loadOptionsFromData(type) {
+        let loaded_data;
+        if (type === "contacts") {
+            loaded_data = this.props.loaded_contacts;
+        } else if (type === "lps") {
+            loaded_data = this.props.loaded_lps;
+        } else {
+            return <option/>
+        }
+
+        let used_types = []
+        let types = loaded_data.filter(item => {
+            if (used_types.includes(item.value)) {
+                return false;
+            } else {
+                used_types.push(item.value);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.value.localeCompare(item2.value);
+        }).map(item => {
+            return <option key={item.key} label={item.value} value={item.value}/>
+        });
+        return types;
+    }
+
+    loadNotesFromData(type) {
+        let used_notes = []
+        let notes = [<option key={-1}/>].concat(this.props.loaded_notes.filter(item => {
+            if (used_notes.includes(item.template)) {
+                return false;
+            } else {
+                used_notes.push(item.template);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.template.localeCompare(item2.template);
+        }).map(item => {
+            return <option key={item.key} label={item.template} value={item.key}/>
+        }));
+        return notes;
+    }
+
+    loadModules() {
+        let used_modules = []
+        let modules = [<option key={-1}/>].concat(this.props.loaded_data.filter(item => {
+            if (used_modules.includes(item.module)) {
+                return false;
+            } else {
+                used_modules.push(item.module);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            return item1.module.localeCompare(item2.module);
+        }).map(item => {
+            return <option key={item.key} label={item.module} value={item.module}/>
+        }));
+        return modules;
+    }
+
     render() {
         return (
         <React.Fragment>
         <tr>
             <td>{this.props.note_number}</td>
+            {this.props.loaded_notes ?
+            <td>
+                <Form.Control id="template" as="select" onChange={this.handleChange}>
+                    {this.loadNotesFromData()}
+                </Form.Control>
+            </td>
+            :
             <td>
                 <Form.Control id="template" type="text" onChange={this.handleChange}/>
             </td>
+            }
+            {this.props.loaded_notes ?
+                <td>
+                    <Form.Control id="from" type="email" readOnly value={this.props.notifications[this.props.note_number]["from"] ? this.props.notifications[this.props.note_number]["from"] : ""}/>
+                </td>
+            :
+                <td>
+                    <Form.Control id="from_READONLY" type="email" onChange={this.handleChange}/>
+                </td>
+            }
+            {this.props.loaded_contacts ?
             <td>
-                <Form.Control id="from" type="email" onChange={this.handleChange}/>
+                <Form.Control id="contacts" as="select" multiple onChange={this.handleMulti}>
+                    {this.loadOptionsFromData("contacts")}
+                </Form.Control>
             </td>
+            :
             <td>
                 <Form.Control id="contacts" type="text" onChange={this.handleChange}/>
             </td>
+            }
+            {this.props.loaded_lps ?
+            <td>
+                <Form.Control id="professionals" as="select" multiple onChange={this.handleMulti}>
+                    {this.loadOptionsFromData("lps")}
+                </Form.Control>
+            </td>
+            :
             <td>
                 <Form.Control id="professionals" type="text" onChange={this.handleChange}/>
             </td>
+            }
             <td>
                 <Form.Check id="report_bool" onChange={this.handleChange}/>
             </td>
@@ -92,9 +209,17 @@ class NOTE_Item extends Component {
                 <td colSpan="1">
                     <p>Report&nbsp;Module:</p>
                 </td>
-                <td>
-                    <Form.Control id="report_module" type="text" onChange={this.handleChange}/>
-                </td>
+                {this.props.loaded_data ?
+                    <td>
+                        <Form.Control id="report_module" as="select" onChange={this.handleChange}>
+                            {this.loadModules()}
+                        </Form.Control>
+                    </td>
+                :
+                    <td>
+                        <Form.Control id="report_module" type="text" onChange={this.handleChange}/>
+                    </td>
+                }
             </tr>
             <tr>
                 <td colSpan="4"/>
@@ -125,7 +250,11 @@ class NOTE_Item extends Component {
 
 const mapStateToProps = state => ({
     notifications: state.notifications,
-    parameter_sets: state.parameter_sets
+    parameter_sets: state.parameter_sets,
+    loaded_contacts: state.loaded_data.contact_types,
+    loaded_lps: state.loaded_data.lp_types,
+    loaded_notes: state.loaded_data.notes,
+    loaded_data: state.loaded_data.caps
 });
 
 const mapDispatchToProps = dispatch => ({

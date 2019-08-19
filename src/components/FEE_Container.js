@@ -48,6 +48,9 @@ class FEE_FeeContainer extends Component {
                     {this.props.isAdvanced ?
                         <th>Fee Period</th>
                     : null}
+                    {this.props.loaded_fees ?
+                        <th>Use Custom Field</th>
+                    : null}
                     <th>Quantity</th>
                     {this.props.isAdvanced ?
                         <th>Invoice</th>
@@ -68,7 +71,8 @@ class FEE_FeeContainer extends Component {
 const mapStateToProps = state => ({
     functionality: state.functionality,
     isAdvanced: state.functionality.fees_advanced,
-    fees: state.fees
+    fees: state.fees,
+    loaded_fees: state.loaded_data.fees
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -25,7 +25,7 @@ class PARAM_Container extends Component {
             <hr/>
             <h3>Parameter Manager</h3>
             {this.generateSets()}
-            <button onClick={() => {this.props.add()}}> Add Set</button>
+            <button onClick={() => {this.props.add()}}> Add Parameter Set</button>
         </div> : null}
         </div>
         );
