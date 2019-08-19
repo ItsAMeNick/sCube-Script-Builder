@@ -27,6 +27,7 @@ class CORE_Upload extends Component {
                                 console.log(rawJSON);
                                 let filteredJSON = [];
                                 if (!Object.keys(rawJSON).includes("0")) {
+                                    this.props.update("svp", rawJSON.serviceProviderCode);
                                     let cap = rawJSON;
                                     filteredJSON.push({
                                         key: filteredJSON.length,
@@ -41,6 +42,7 @@ class CORE_Upload extends Component {
                                         doc_code: cap.docCode ? cap.docCode : null,
                                     });
                                 } else {
+                                    this.props.update("svp", rawJSON["0"].serviceProviderCode);
                                     for (let i in rawJSON) {
                                         let cap = rawJSON[i];
                                         filteredJSON.push({
