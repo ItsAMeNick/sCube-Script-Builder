@@ -218,22 +218,25 @@ class CONDIT_Item extends Component {
                         );
             } else if (this.props.loaded_docs && this.props.conditions[this.props.id].portlet === "ACA Document Name") {
                 row.push(
-                            <Form.Control id={"free-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
-                                {this.loadDocuments()}
-                            </Form.Control>
+                        <Form.Control id={"free-"+this.props.id} as="select" onChange={this.handleChange} key={newId}>
+                            {this.loadDocuments()}
+                        </Form.Control>
                         );
             } else {
                 row.push(<Form.Control id={"free-"+this.props.id} placeholder={"--Name--"} onChange={this.handleChange} key={newId}/>);
             }
         } else if (keys[1].split(".")[0] === "type") {
-            if (this.props.loaded_contacts && this.props.conditions[this.props.id].portlet === "Contact") {
-                row.push(
+            if (this.props.conditions[this.props.id].portlet === "Contact") {
+                if (this.props.loaded_contacts) {
+                    row.push(
                             <Form.Control id={keys[1]+"-"+this.props.id} as="select" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}>
                                 {this.loadContacts()}
                             </Form.Control>
-                        );
+                            );
+                } else {
+                    row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Contact Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
+                }
             } else if (this.props.conditions[this.props.id].portlet === "Inspection") {
-
                 switch (keys[1]) {
                     case "type.1": {
                         if (this.props.loaded_inspections) {
@@ -326,9 +329,9 @@ class CONDIT_Item extends Component {
                     default: row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
                 }
             }
+        } else {
+            row.push(<Form.Control id={keys[1]+"-"+this.props.id} placeholder="--Type--" onChange={this.handleChange} key={newId} value={this.props.conditions[this.props.id][keys[1]] ? this.props.conditions[this.props.id][keys[1]] : ""}/>);
         }
-
-        console.log(levelValue);
 
         //Check if you should go to the next level
         if (levelValue) {

@@ -184,19 +184,118 @@ class PARAM_Item extends Component {
                 row.push(<td key={newId}><Form.Control id={"free"} placeholder={"--Name--"} onChange={this.handleChange}/></td>);
             }
         } else if (keys[1].split(".")[0] === "type") {
-            if (this.props.loaded_contacts && this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["portlet"] === "Contact") {
-                row.push(
-                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
-                        {this.loadContacts()}
-                    </Form.Control></td>
-                        );
-            } else {
-                row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="Type" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["portlet"] === "Contact") {
+                if (this.props.loaded_contacts) {
+                    row.push(
+                            <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange}>
+                                {this.loadContacts()}
+                            </Form.Control></td>
+                            );
+                } else {
+                    row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Contact Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                }
+            } else if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number].portlet === "Inspection") {
+                switch (keys[1]) {
+                    case "type.1": {
+                        if (this.props.loaded_inspections) {
+                            row.push(
+                                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
+                                        {this.loadInspections()}
+                                    </Form.Control></td>
+                                );
+                        } else {
+                            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                        }
+                        break;
+                    }
+                    case "type.2": {
+                        if (this.props.loaded_inspections) {
+                            row.push(
+                                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
+                                        {this.loadInspectionResultGroups()}
+                                    </Form.Control></td>
+                                );
+                        } else {
+                            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                        }
+                        break;
+                    }
+                    case "type.3": {
+                        if (this.props.loaded_inspections) {
+                            row.push(
+                                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
+                                        {this.loadChecklistGroups()}
+                                    </Form.Control></td>
+                                );
+                        } else {
+                            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                        }
+                        break;
+                    }
+                    case "type.4": {
+                        if (this.props.loaded_checklists) {
+                            if (this.loadChecklistItems().length <= 1) {
+                                row.push(<td key={newId}><Form.Control id={keys[1]} readOnly value="No Guidesheet"/></td>);
+                            } else {
+                                row.push(
+                                        <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
+                                            {this.loadChecklistItems()}
+                                        </Form.Control></td>
+                                    );
+                            }
+                        } else {
+                            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                        }
+                        break;
+                    }
+                    case "type.5": {
+                        if (this.props.loaded_checklists) {
+                            row.push(
+                                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
+                                        {this.loadChecklistASI()}
+                                    </Form.Control></td>
+                                );
+                        } else {
+                            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                        }
+                        break;
+                    }
+                    case "type.6": {
+                        if (this.props.loaded_asis) {
+                            row.push(
+                                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} key={newId} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
+                                        {this.loadASISubs()}
+                                    </Form.Control></td>
+                                );
+                        } else {
+                            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                        }
+                        break;
+                    }
+                    case "type.7": {
+                        if (this.props.loaded_asis) {
+                            row.push(
+                                    <td key={newId}><Form.Control id={keys[1]} as="select" onChange={this.handleChange} key={newId} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}>
+                                        {this.loadASIFields()}
+                                    </Form.Control></td>
+                                );
+                        } else {
+                            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                        }
+                        break;
+                    }
+                    default: row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
+                }
             }
+        } else {
+            row.push(<td key={newId}><Form.Control id={keys[1]} placeholder="--Type--" onChange={this.handleChange} value={this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] ? this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][keys[1]] : ""}/></td>);
         }
 
         //Check if you should go to the next level
         if (levelValue) {
+            if (levelValue.split(".")[0] === "type") {
+                if (!this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number][levelValue]) return row;
+            }
             this.generateMap(map[levelValue], level + 1, levelValue, row);
         }
         return row;
@@ -267,6 +366,183 @@ class PARAM_Item extends Component {
         }));
     }
 
+    //This function is used to generate the list of inspection groups/type
+    //Removes duplicates
+    loadInspections() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            //Filter using CAP ID
+            return true;
+        }).filter(item => {
+            //Filter out duplicates
+            if (used.includes(item.code)) {
+                return false;
+            } else {
+                used.push(item.code);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.code
+            let i2 = item2.code
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.group +"/"+item.code} value={item.code}/>
+        }));
+    }
+
+    //This function generates a list of inspection result groups based on the inspection chosen.
+    //This function assumes that inspection will be a "type.1" variable
+    //Removes duplicates
+    loadInspectionResultGroups() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.1"]) {
+                return item.code === this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.1"];
+            }
+            return false;
+        }).filter(item => {
+            //Filter out duplicates
+            if (used.includes(item.code)) {
+                return false;
+            } else {
+                used.push(item.code);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.result;
+            let i2 = item2.result;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.result} value={item.result}/>
+        }));
+    }
+
+    //This function generates a list of checklist groups based on the inspection chosen.
+    //This function assumes that inspection will be a "type.1" variable
+    loadChecklistGroups() {
+        return [<option key={-1}/>].concat(this.props.loaded_inspections.filter(item => {
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.1"]) {
+                return item.code === this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.1"];
+            }
+            return false;
+        }).sort((item1, item2) => {
+            let i1 = item1.type;
+            let i2 = item2.type;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
+    //This function loads checklist items for the dropdown menu
+    //It removes duplicates
+    //Assumes type is a "type.3" variable, then finds guidesheet
+    loadChecklistItems() {
+        let used = [];
+        let guidesheets = [];
+        if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.3"] && this.props.loaded_inspections) {
+            for (let i in this.props.loaded_inspections) {
+                if (this.props.loaded_inspections[i].type === this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.3"]) {
+                    if (this.props.loaded_inspections[i].guidesheet) guidesheets.push(this.props.loaded_inspections[i].guidesheet);
+                }
+            }
+        }
+        return [<option key={-1}/>].concat(this.props.loaded_checklists.filter(item => {
+            if (guidesheets.length >= 1) {
+                return guidesheets.includes(item.type);
+            }
+            return false;
+        }).filter(item => {
+            if (used.includes(item.group)) {
+                return false;
+            } else {
+                used.push(item.group);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.group;
+            let i2 = item2.group;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.group} value={item.group}/>
+        }));
+    }
+
+    //This function loads checklist asi's based on the value in "type.4"
+    loadChecklistASI() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_checklists.filter(item => {
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.4"]) {
+                return item.group === this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.4"];
+            }
+            return false;
+        }).filter(item => {
+            if (!item.asi_group) return false;
+            if (used.includes(item.asi_group)) {
+                return false;
+            } else {
+                used.push(item.asi_group);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.asi_group;
+            let i2 = item2.asi_group;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.asi_group} value={item.asi_group}/>
+        }));
+    }
+
+    //This function loads asi's subgroups based on the value in "type.5"
+    loadASISubs() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.5"]) {
+                return item.code === this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.5"];
+            }
+            return false;
+        }).filter(item => {
+            if (!item.type) return false;
+            if (used.includes(item.type)) {
+                return false;
+            } else {
+                used.push(item.type);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.type;
+            let i2 = item2.type;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.type} value={item.type}/>
+        }));
+    }
+
+    //This function loads asi's fields based on the value in "type.6"
+    loadASIFields() {
+        let used = [];
+        return [<option key={-1}/>].concat(this.props.loaded_asis.filter(item => {
+            if (this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.6"]) {
+                return item.type === this.props.parameter_sets[this.props.set_number].parameters[this.props.param_number]["type.6"];
+            }
+            return false;
+        }).filter(item => {
+            if (!item.name) return false;
+            if (used.includes(item.name)) {
+                return false;
+            } else {
+                used.push(item.name);
+                return true;
+            }
+        }).sort((item1, item2) => {
+            let i1 = item1.name;
+            let i2 = item2.name;
+            return i1.localeCompare(i2);
+        }).map(item => {
+            return <option key={item.key} label={item.name} value={item.name}/>
+        }));
+    }
+
     render() {
         return (
             <tr>
@@ -297,7 +573,10 @@ const mapStateToProps = state => ({
     loaded_id: state.structure.loaded_id,
     loaded_asis: state.loaded_data.asis,
     loaded_contacts: state.loaded_data.contact_types,
-    loaded_docs: state.loaded_data.doc_types
+    loaded_docs: state.loaded_data.doc_types,
+    loaded_inspections: state.loaded_data.inspections,
+    loaded_results: state.loaded_data.inspection_results,
+    loaded_checklists: state.loaded_data.checklists
 });
 
 const mapDispatchToProps = dispatch => ({
