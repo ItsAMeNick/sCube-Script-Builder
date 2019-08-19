@@ -172,6 +172,7 @@ const initialState = {
         lp_types: null,
         doc_types: null,
         workflows: null,
+        checklists: null,
     }
 };
 

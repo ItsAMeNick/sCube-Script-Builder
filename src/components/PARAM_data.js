@@ -667,15 +667,20 @@ var variable_map = {
             {
                 "type.3":
                 {
-                    "type.4":
-                    {
-                        "type.5":
+                    "Status": {
+                        script: "Status of ^$1$^, ^$2$^, ^$3$^"
+                    },
+                    "Guidesheet Item": {
+                        "type.4":
                         {
-                            "type.6":
+                            "type.5":
                             {
-                                "type.7":
+                                "type.6":
                                 {
-                                    script: "zachsCoolFunction('^$1$^', '^$2$^', '^$3$^', '^$4$^', '^$5$^', '^$6$^', '^$7$^')"
+                                    "type.7":
+                                    {
+                                        script: "zachsCoolFunction('^$1$^', '^$2$^', '^$3$^', '^$4$^', '^$5$^', '^$6$^', '^$7$^')"
+                                    }
                                 }
                             }
                         }

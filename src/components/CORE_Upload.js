@@ -167,6 +167,7 @@ class CORE_Upload extends Component {
                                 console.log("LOADING File: " + file_names[f]);
                                 let rawJSON = fxp.parse(file_text).list.inspectionGroup;
                                 let filteredJSON = [];
+                                console.log(rawJSON);
                                 if (!Object.keys(rawJSON).includes("0")) {
                                     for (let ii in rawJSON.inspectionTypeModels.inspectionTypeModel) {
                                         let insp = rawJSON.inspectionTypeModels.inspectionTypeModel[ii];
@@ -175,7 +176,8 @@ class CORE_Upload extends Component {
                                             code: insp.inspCode,
                                             group: insp.inspGroupName,
                                             result: insp.inspResultGroup,
-                                            type: insp.inspType
+                                            type: insp.inspType,
+                                            guidesheet: insp.guideGroup,
                                         });
                                     }
                                 } else {
@@ -187,7 +189,8 @@ class CORE_Upload extends Component {
                                                 code: insp.inspCode,
                                                 group: insp.inspGroupName,
                                                 result: insp.inspResultGroup,
-                                                type: insp.inspType
+                                                type: insp.inspType,
+                                                guidesheet: insp.guideGroup,
                                             });
                                         }
                                     }
@@ -224,6 +227,39 @@ class CORE_Upload extends Component {
                                     }
                                 }
                                 this.props.update("inspection_results", filteredJSON);
+                                break;
+                            }
+
+                            case "GuideSheetModel.xml": {
+                                console.log("LOADING File: " + file_names[f]);
+                                let rawJSON = fxp.parse(file_text).list.guideSheet;
+                                console.log(rawJSON);
+                                let filteredJSON = [];
+                                if (!Object.keys(rawJSON).includes("0")) {
+                                    for (let ii in rawJSON.GuideSheetItems.GuideSheetItem) {
+                                        let sheet = rawJSON.GuideSheetItems.GuideSheetItem[ii];
+                                        filteredJSON.push({
+                                            key: filteredJSON.length,
+                                            asi_group: sheet.asiGroupName,
+                                            group: sheet.guideItemStatusGroupName,
+                                            type: sheet.guideType
+                                        });
+                                    }
+                                } else {
+                                    for (let i in rawJSON) {
+                                        for (let ii in rawJSON[i].GuideSheetItems.GuideSheetItem) {
+                                            let sheet = rawJSON[i].GuideSheetItems.GuideSheetItem[ii];
+                                            filteredJSON.push({
+                                                key: filteredJSON.length,
+                                                asi_group: sheet.asiGroupName,
+                                                group: sheet.guideItemStatusGroupName,
+                                                type: sheet.guideType
+                                            });
+                                        }
+                                    }
+                                }
+                                console.log(filteredJSON);
+                                this.props.update("checklists", filteredJSON);
                                 break;
                             }
 

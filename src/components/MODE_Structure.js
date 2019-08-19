@@ -77,8 +77,8 @@ class CORE_Structure extends Component {
     }
 
     loadModules() {
-        let used_modules = ["NA"];
-        let modules = [<option key={-1}/>, <option key={"*"} label={"*"} value={"*"}/>, <option key={"NA"} label={"NA"} value={"NA"}/>].concat(this.props.loaded_data.filter(item => {
+        let used_modules = [];
+        let modules = [<option key={-1}/>, <option key={"*"} label={"*"} value={"*"}/>].concat(this.props.loaded_data.filter(item => {
             if (used_modules.includes(item.module)) {
                 return false;
             } else {
