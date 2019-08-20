@@ -119,7 +119,7 @@ class CORE_Upload extends Component {
                                         filteredJSON.push({
                                             key: filteredJSON.length,
                                             schedule: fee.feeScheduleName,
-                                            code: fee.feeCod,
+                                            code: (typeof fee.feeCod === "number" ? fee.feeCod.toString(10) : fee.feeCod),
                                             desc: fee.feeDes
                                         });
                                     }
@@ -130,7 +130,7 @@ class CORE_Upload extends Component {
                                             filteredJSON.push({
                                                 key: filteredJSON.length,
                                                 schedule: fee.feeScheduleName,
-                                                code: fee.feeCod,
+                                                code: (typeof fee.feeCod === "number" ? fee.feeCod.toString(10) : fee.feeCod),
                                                 desc: fee.feeDes
                                             });
                                         }
