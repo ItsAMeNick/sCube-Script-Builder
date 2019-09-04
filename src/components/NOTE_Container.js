@@ -41,7 +41,7 @@ class NOTE_Container extends Component {
                     {this.generateNoteItems()}
                 </tbody>
             </Table>
-            <p>*Please enter all contact types seperated by a comma or type ALL</p>
+            <p>*Please enter all contact types separated by a comma or type ALL</p>
             <button onClick={() => {this.props.add()}}> Add Notification</button>
         </div> : null}
         </div>

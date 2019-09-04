@@ -17,8 +17,7 @@ class NOTE_Item extends Component {
         let newValue = "";
         if (event.target.id === "report_bool") {
             newValue = event.target.checked;
-        }
-        if (event.target.id === "contacts" || event.target.id === "professionals") {
+        } else if (event.target.id === "contacts" || event.target.id === "professionals") {
             if (event.target.value.trim().toLowerCase() === "all") {
                 newValue = "\"ALL\"";
             } else {
