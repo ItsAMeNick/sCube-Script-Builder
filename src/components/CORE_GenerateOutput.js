@@ -1161,7 +1161,11 @@ class CORE_GenerateOutput extends Component {
                 } else {
                     condition_start += conditions[c].comparison_x + " ";
                     condition_start += conditions[c].comparison_type + " ";
-                    condition_start += "\"" + conditions[c].comparison_y + "\")";
+                    if (isNaN(conditions[c].comparison_y)) {
+                        condition_start += "\"" + conditions[c].comparison_y + "\")";
+                    } else {
+                        condition_start += conditions[c].comparison_y + ")";
+                    }
                 }
 
                 this.appendScript(set_tab, condition_start);
