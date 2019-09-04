@@ -708,7 +708,11 @@ class CORE_GenerateOutput extends Component {
                 } else {
                     condition_start += conditions[c].comparison_x + " ";
                     condition_start += conditions[c].comparison_type + " ";
-                    condition_start += "\"" + conditions[c].comparison_y + "\")";
+                    if (isNaN(conditions[c].comparison_y)) {
+                        condition_start += "\"" + conditions[c].comparison_y + "\")";
+                    } else {
+                        condition_start += conditions[c].comparison_y + ")";
+                    }
                 }
 
                 this.appendScript(set_tab, condition_start);
@@ -877,7 +881,7 @@ class CORE_GenerateOutput extends Component {
         if (this.props.state.functionality.fees === true) {
             let fee = this.props.state.fees[fee_num];
             if (!isNaN(parseFloat(fee.quantity))) {
-                fees_text += "updateFee(\"" + fee.code + "\", "
+                fees_text += "updateFeeASI(\"" + fee.code + "\", "
                             + "\"" + fee.schedule + "\", "
                             + "\"" + fee.period + "\", "
                             + fee.quantity + ", "
@@ -885,7 +889,7 @@ class CORE_GenerateOutput extends Component {
             } else {
                 fees_text += "var fee_"+fee_num+" = getAppSpecific(\""+fee.quantity+"\");\n";
                 fees_text += tab;
-                fees_text += "updateFee(\"" + fee.code + "\", "
+                fees_text += "updateFeeASI(\"" + fee.code + "\", "
                             + "\"" + fee.schedule + "\", "
                             + "\"" + fee.period + "\", "
                             + "fee_"+fee_num+", "
@@ -1255,7 +1259,7 @@ class CORE_GenerateOutput extends Component {
                 return mes;
             }
             case "Workflow": {
-                let mes = "<i>"+this.props.state.workflows[ref].action+"ing</i> workflow task <i>"+this.props.state.workflows[ref].task+"</i>.";
+                let mes = (this.props.state.workflows[ref].action === "Close" ? "<i>Closing</i>" : "<i>Opening</i>")+" workflow task <i>"+this.props.state.workflows[ref].task+"</i>.";
                 return mes;
             }
             case "Inspection": {
