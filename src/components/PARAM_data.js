@@ -187,62 +187,85 @@ var variable_map = {
         {
             "First Name":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'firstName')"
             },
             "Last Name":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'lastName')"
             },
             "Middle Name":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'middleName')"
+            },
+            "Full Name":
+            {
+                script: "getOwnerComponent(capId, 'fullName')"
             },
             "Email":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'email')"
             },
             "Phone 1":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'phone')"
             },
-            "Phone 2":
+            "Fax":
             {
-                script: "***ADD ME!"
-            },
-            "Phone 3":
-            {
-                script: "***ADD ME!"
-            },
-            "Fax?":
-            {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'fax')"
             }
         },
         "Address":
         {
             "Line 1":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'ownerAddressLine1')"
             },
             "Line 2":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'ownerAddressLine2')"
             },
             "Line 3":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'ownerAddressLine3')"
             },
             "City":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'ownerAddressCity')"
             },
             "State":
             {
-                script: "***ADD ME!"
+                script:"getOwnerComponent(capId, 'ownerAddressState')"
             },
             "Zip":
             {
-                script: "***ADD ME!"
+                script: "getOwnerComponent(capId, 'ownerAddressZip')"
+            }
+        },
+        "Mailing Address":
+        {
+            "Line 1":
+            {
+                script: "getOwnerComponent(capId, 'ownerMailingAddressLine1')"
+            },
+            "Line 2":
+            {
+                script: "getOwnerComponent(capId, 'ownerMailingAddressLine2')"
+            },
+            "Line 3":
+            {
+                script: "getOwnerComponent(capId, 'ownerMailingAddressLine3')"
+            },
+            "City":
+            {
+                script: "getOwnerComponent(capId, 'ownerMailingAddressCity')"
+            },
+            "State":
+            {
+                script:"getOwnerComponent(capId, 'ownerMailingAddressState')"
+            },
+            "Zip":
+            {
+                script: "getOwnerComponent(capId, 'ownerMailingAddressZip')"
             }
         },
     },

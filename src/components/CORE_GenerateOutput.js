@@ -137,7 +137,7 @@ class CORE_GenerateOutput extends Component {
 
         script_text += "if (appMatch(\"" + app_string + "\"))\n{\n"
 
-        script_text += "\teval(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\");\n"
+        script_text += "\teval(getScriptText(\"INCLUDES_CUSTOM_GENERATED_SCRIPTS\"));\n";
 
         if (this.props.state.show_debug === true) {
             script_text += "\tshowDebug = true;\n\n";
