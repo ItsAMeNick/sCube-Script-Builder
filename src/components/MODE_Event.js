@@ -45,7 +45,7 @@ class CORE_Event extends Component {
                 <option/>
                 <option value="ASA">ASA - After an application is submitted.</option>
                 <option value="ASB">ASB - Before an application can be submitted.</option>
-                <option value="CTRCA">CTRCA - After a record is assigned its CAP.</option>
+                <option value="CTRCA">CTRCA - After a record is submitted in ACA.</option>
                 <option value="IRSA">IRSA - After inspection results have been submitted.</option>
                 <option value="IRSB">IRSB - Before inspection results can be submitted.</option>
                 <option value="PRA">PRA - After a payment is made.</option>
