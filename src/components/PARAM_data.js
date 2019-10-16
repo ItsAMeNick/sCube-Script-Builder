@@ -631,15 +631,15 @@ var variable_map = {
         {
             "Type":
             {
-                script: "inspTypeArr[0]"
+                script: "inspType"
             },
             "Result":
             {
-                script: "inspResultArr[0]"
+                script: "inspResult"
             },
             "ID":
             {
-                script: "inspIdArr[0]"
+                script: "inspId"
             }
         }
     },
@@ -682,7 +682,7 @@ var variable_map = {
             script: "parentCapId"
         }
     },
-    "Inspection":
+  /*  "Inspection":
     {
         "type.1":
         {
@@ -711,7 +711,7 @@ var variable_map = {
                 }
             }
         }
-    }
+    }*/
 }
 
 export default {variable_map};
