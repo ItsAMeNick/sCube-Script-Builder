@@ -24,7 +24,7 @@ class PARAM_Container extends Component {
         <div>
             <hr/>
             <h3>Parameter Manager</h3>
-            <h5>Use this section to populate the notification with information from Accela</h5>
+            <h5>Use this section to populate the notification with information from Accela </h5>
             <h5>By putting two dollar signs on either side of the reference name, dynamic information will populate within the email</h5>
             <h5>For instance, if wanting to address the contact by their first name: $$REFERENCE_NAME$$</h5>
             <h5>(Dollar signs are not required here, just within your notification template)</h5>

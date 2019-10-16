@@ -682,7 +682,7 @@ var variable_map = {
             script: "parentCapId"
         }
     },
-  /*  "Inspection":
+  /*   "Inspection":
     {
         "type.1":
         {
