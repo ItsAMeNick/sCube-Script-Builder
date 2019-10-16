@@ -35,8 +35,7 @@ class STATUS_Container extends Component {
                     <th>#</th>
                     <th>Status</th>
                     <th>Comment*</th>
-                    <th>Optional</th>
-                    <th>Optional CAP</th>
+                 
                     </tr>
                 </thead>
                 <tbody>

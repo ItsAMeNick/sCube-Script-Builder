@@ -34,14 +34,7 @@ class STATUS_Item extends Component {
             <td>
                 <Form.Control id="comment" type="text" onChange={this.handleChange}/>
             </td>
-            <td>
-                <Form.Check id="optional_cap" onChange={this.handleChange}/>
-            </td>
-            <td>
-                {this.props.status[this.props.status_number].optional_cap ?
-                    <Form.Control id="cap" type="text" onChange={this.handleChange}/>
-                : null}
-            </td>
+
             {this.props.status_number !== 1 ?
             <td>
                 <button onClick={() => {
