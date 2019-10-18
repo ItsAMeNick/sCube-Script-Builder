@@ -10,7 +10,7 @@ class ASI_Item extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            static: true,
+            static: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSwitch = this.handleSwitch.bind(this);
